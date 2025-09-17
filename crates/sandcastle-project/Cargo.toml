@@ -4,3 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+kube.workspace = true
+k8s-openapi.workspace = true
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+validator.workspace = true
+sandcastle-utils = { workspace = true }
+snafu.workspace = true
+
+[dev-dependencies]
+serde_yaml.workspace = true
+insta.workspace = true
