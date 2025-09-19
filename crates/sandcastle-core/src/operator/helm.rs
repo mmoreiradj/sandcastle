@@ -392,6 +392,7 @@ impl<S: HttpSend> Helm for HelmCli<S> {
         &self,
         request: &InstallOrUpgradeRequest,
     ) -> Result<InstallOrUpgradeResponse, SandcastleProjectError> {
+        tracing::debug!("installing or upgrading helm chart");
         let chart: String = if let Some(repository) = request.spec.repository() {
             self.download_chart(
                 repository,
