@@ -6,7 +6,6 @@ use snafu::{OptionExt, ResultExt};
 use std::backtrace::Backtrace;
 use std::collections::HashMap;
 use std::env::temp_dir;
-use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
 use tokio::fs::File;
@@ -48,7 +47,7 @@ impl Auth {
 }
 
 #[derive(Clone, Debug, Validate)]
-pub struct InstallOrUpgradeRequest {
+pub struct InstallOrUpgradeReleaseRequest {
     #[validate(nested)]
     spec: HelmChartResourceSpec,
     #[validate(nested)]
@@ -56,19 +55,19 @@ pub struct InstallOrUpgradeRequest {
 }
 
 #[derive(Clone, Debug, Validate)]
-pub struct UninstallRequest {
+pub struct UninstallReleaseRequest {
     #[validate(custom(function = "validate_k8s_dns_label"))]
     namespace: String,
     #[validate(custom(function = "validate_k8s_dns_label"))]
     release_name: String,
 }
 
-impl UninstallRequest {
+impl UninstallReleaseRequest {
     pub fn try_new(
         namespace: String,
         release_name: String,
     ) -> Result<Self, SandcastleProjectError> {
-        let request = UninstallRequest {
+        let request = UninstallReleaseRequest {
             namespace,
             release_name,
         };
@@ -79,23 +78,112 @@ impl UninstallRequest {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct InstallOrUpgradeResponse {
-    release_name: String,
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "UPPERCASE")]
+pub struct InstallOrUpgradeReleaseResponse {
+    name: String,
     last_deployed: DateTime<Utc>,
     namespace: String,
     status: String,
     revision: i64,
 }
 
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "UPPERCASE")]
+pub struct HelmReleaseStatus {
+    name: String,
+    chart: String,
+    version: semver::Version,
+    app_version: semver::Version,
+    namespace: String,
+    revision: i64,
+    status: String,
+    deployed_at: DateTime<Utc>,
+}
+
+impl TryFrom<String> for HelmReleaseStatus {
+    type Error = SandcastleProjectError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let lines: Vec<&str> = value.lines().collect();
+        let mut filtered_lines = Vec::new();
+        let mut skip_until_next_field = false;
+
+        for line in lines {
+            if line.starts_with("ANNOTATIONS:") || line.starts_with("DEPENDENCIES:") {
+                skip_until_next_field = true;
+                continue;
+            }
+
+            if skip_until_next_field {
+                if line.starts_with(char::is_alphabetic)
+                    && line.contains(':')
+                    && !line.starts_with(' ')
+                {
+                    skip_until_next_field = false;
+                    filtered_lines.push(line);
+                }
+            } else {
+                filtered_lines.push(line);
+            }
+        }
+
+        let filtered_value = filtered_lines.join("\n");
+        println!("filtered_value: {}", filtered_value);
+
+        let helm_release_status: HelmReleaseStatus = serde_yaml::from_str(&filtered_value)
+            .whatever_context(format!(
+                "Failed to parse helm release status from {}",
+                value
+            ))?;
+        Ok(helm_release_status)
+    }
+}
+
+#[derive(Clone, Debug, Validate)]
+pub struct ReleaseStatusRequest {
+    #[validate(custom(function = "validate_k8s_dns_label"))]
+    namespace: String,
+    #[validate(custom(function = "validate_k8s_dns_label"))]
+    release_name: String,
+}
+
+impl ReleaseStatusRequest {
+    pub fn try_new(
+        namespace: String,
+        release_name: String,
+    ) -> Result<Self, SandcastleProjectError> {
+        let request = ReleaseStatusRequest {
+            namespace,
+            release_name,
+        };
+        request.validate().context(ValidationSnafu {
+            message: "Invalid release status request",
+        })?;
+        Ok(request)
+    }
+
+    pub fn namespace(&self) -> &str {
+        &self.namespace
+    }
+
+    pub fn release_name(&self) -> &str {
+        &self.release_name
+    }
+}
+
 pub trait Helm {
-    fn install_or_upgrade(
+    fn release_status(
         &self,
-        request: &InstallOrUpgradeRequest,
-    ) -> impl Future<Output = Result<InstallOrUpgradeResponse, SandcastleProjectError>> + Send;
-    fn uninstall(
+        request: &ReleaseStatusRequest,
+    ) -> impl Future<Output = Result<HelmReleaseStatus, SandcastleProjectError>> + Send;
+    fn install_or_upgrade_release(
         &self,
-        request: &UninstallRequest,
+        request: &InstallOrUpgradeReleaseRequest,
+    ) -> impl Future<Output = Result<InstallOrUpgradeReleaseResponse, SandcastleProjectError>> + Send;
+    fn uninstall_release(
+        &self,
+        request: &UninstallReleaseRequest,
     ) -> impl Future<Output = Result<(), SandcastleProjectError>> + Send;
 }
 
@@ -122,13 +210,13 @@ impl TryFrom<String> for HelmResult {
     }
 }
 
-impl TryInto<InstallOrUpgradeResponse> for HelmResult {
+impl TryInto<InstallOrUpgradeReleaseResponse> for HelmResult {
     type Error = SandcastleProjectError;
 
-    fn try_into(self) -> Result<InstallOrUpgradeResponse, Self::Error> {
+    fn try_into(self) -> Result<InstallOrUpgradeReleaseResponse, Self::Error> {
         let date =
             chrono::NaiveDateTime::parse_from_str(&self.last_deployed, "%a %b %d %H:%M:%S %Y")
-                .map_err(|e| {
+                .map_err(|_| {
                     let mut errors = ValidationErrors::new();
                     errors.add(
                         "last_deployed",
@@ -140,8 +228,8 @@ impl TryInto<InstallOrUpgradeResponse> for HelmResult {
                         backtrace: Backtrace::capture(),
                     }
                 })?;
-        Ok(InstallOrUpgradeResponse {
-            release_name: self.name,
+        Ok(InstallOrUpgradeReleaseResponse {
+            name: self.name,
             last_deployed: DateTime::from_naive_utc_and_offset(date, Utc),
             namespace: self.namespace,
             status: self.status,
@@ -385,10 +473,44 @@ impl HelmCli {
 
 impl Helm for HelmCli {
     #[tracing::instrument(skip(self))]
-    async fn install_or_upgrade(
+    async fn release_status(
         &self,
-        request: &InstallOrUpgradeRequest,
-    ) -> Result<InstallOrUpgradeResponse, SandcastleProjectError> {
+        request: &ReleaseStatusRequest,
+    ) -> Result<HelmReleaseStatus, SandcastleProjectError> {
+        tracing::debug!("getting helm chart status");
+        let output = Command::new(&self.helm_path)
+            .arg("get")
+            .arg("metadata")
+            .arg(request.release_name.clone())
+            .arg("--namespace")
+            .arg(request.namespace.clone())
+            .output()
+            .await
+            .whatever_context(
+                "Failed to start the command to run get helm chart status".to_string(),
+            )?;
+
+        if !output.status.success() {
+            let error = String::from_utf8_lossy(&output.stderr).to_string();
+            return Err(SandcastleProjectError::Service {
+                code: ServiceErrorCode::HelmReleaseStatusFailed,
+                message: "Failed to get helm chart status".to_string(),
+                reason: format!("Failed to get helm chart status: {}", error),
+                backtrace: Backtrace::capture(),
+            });
+        }
+
+        let stdout_str = String::from_utf8_lossy(&output.stdout).to_string();
+        let result = HelmReleaseStatus::try_from(stdout_str)?;
+
+        Ok(result)
+    }
+
+    #[tracing::instrument(skip(self))]
+    async fn install_or_upgrade_release(
+        &self,
+        request: &InstallOrUpgradeReleaseRequest,
+    ) -> Result<InstallOrUpgradeReleaseResponse, SandcastleProjectError> {
         tracing::debug!("installing or upgrading helm chart");
         let chart: String = if let Some(repository) = request.spec.repository() {
             self.download_chart(
@@ -445,7 +567,7 @@ impl Helm for HelmCli {
         let helm_result: HelmResult = serde_yaml::from_str(first_part).whatever_context(
             "Failed to parse helm result from stdout of install or upgrade helm chart".to_string(),
         )?;
-        let response: InstallOrUpgradeResponse = helm_result.try_into()?;
+        let response: InstallOrUpgradeReleaseResponse = helm_result.try_into()?;
 
         if let Err(e) = Self::cleanup_download_chart(&Path::new(&chart)).await {
             tracing::error!("Failed to cleanup downloaded chart: {}", e);
@@ -455,7 +577,10 @@ impl Helm for HelmCli {
     }
 
     #[tracing::instrument(skip(self))]
-    async fn uninstall(&self, request: &UninstallRequest) -> Result<(), SandcastleProjectError> {
+    async fn uninstall_release(
+        &self,
+        request: &UninstallReleaseRequest,
+    ) -> Result<(), SandcastleProjectError> {
         tracing::debug!("uninstalling helm chart");
 
         let mut command = Command::new(&self.helm_path);
@@ -763,5 +888,43 @@ HOOKS:
             .await
             .expect("Failed to cleanup downloaded chart");
         Ok(())
+    }
+
+    #[gtest]
+    #[test_log::test(tokio::test)]
+    pub async fn test_helm_release_status() -> Result<()> {
+        let response = r#"NAME: keycloak
+CHART: keycloak
+VERSION: 21.7.1
+APP_VERSION: 24.0.5
+ANNOTATIONS: category=DeveloperTools,images=- name: keycloak
+  image: docker.io/bitnami/keycloak:24.0.5-debian-12-r3
+- name: keycloak-config-cli
+  image: docker.io/bitnami/keycloak-config-cli:5.12.0-debian-12-r6
+,licenses=Apache-2.0
+DEPENDENCIES: common
+NAMESPACE: keycloak
+REVISION: 9
+STATUS: deployed
+DEPLOYED_AT: 2024-07-27T01:23:35+03:00"#;
+        let helm_release_status = HelmReleaseStatus::try_from(response.to_string());
+        verify_that!(
+            helm_release_status,
+            ok(matches_pattern!(HelmReleaseStatus {
+                name: eq("keycloak"),
+                chart: eq("keycloak"),
+                version: eq(&semver::Version::parse("21.7.1").unwrap()),
+                app_version: eq(&semver::Version::parse("24.0.5").unwrap()),
+                namespace: eq("keycloak"),
+                revision: eq(&9i64),
+                status: eq("deployed"),
+                deployed_at: eq(&chrono::DateTime::parse_from_str(
+                    "2024-07-27T01:23:35+03:00",
+                    "%Y-%m-%dT%H:%M:%S%z"
+                )
+                .unwrap()
+                .with_timezone(&Utc)),
+            }))
+        )
     }
 }

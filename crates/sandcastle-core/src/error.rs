@@ -11,6 +11,7 @@ pub enum ServiceErrorCode {
     HelmChartDownloadFailed,
     HelmInstallOrUpgradeFailed,
     HelmUninstallFailed,
+    HelmReleaseStatusFailed,
 }
 
 impl Display for ServiceErrorCode {
@@ -25,6 +26,7 @@ impl Display for ServiceErrorCode {
                 write!(f, "helm_install_or_upgrade_failed")
             }
             ServiceErrorCode::HelmUninstallFailed => write!(f, "helm_uninstall_failed"),
+            ServiceErrorCode::HelmReleaseStatusFailed => write!(f, "helm_release_status_failed"),
         }
     }
 }

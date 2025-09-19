@@ -9,5 +9,6 @@ path = "src/lib.rs"
 [dependencies]
 reqwest.workspace = true
 validator.workspace = true
+mockall.workspace = true
 
 [dev-dependencies]
