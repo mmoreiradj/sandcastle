@@ -17,14 +17,13 @@ tracing-subscriber.workspace = true
 tokio.workspace = true
 reqwest.workspace = true
 serde_yaml.workspace = true
-uuid = { version = "1.18.1", features = ["v4"] }
-chrono = "0.4.42"
-semver = { version = "1.0.27" }
-sha2 = "0.10.9"
+uuid.workspace = true
+chrono.workspace = true
+semver.workspace = true
+sha2.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
-test-log = "0.2.18"
-sandcastle-utils = { workspace = true, features = ["testing"] }
-mockito = "1.7.0"
-googletest = "0.14.2"
+test-log.workspace = true
+mockito.workspace = true
+googletest.workspace = true
