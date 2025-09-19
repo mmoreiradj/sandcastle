@@ -12,7 +12,6 @@ testing = []
 [dependencies]
 reqwest.workspace = true
 validator.workspace = true
-async-trait = "0.1.89"
 mockall = "0.13.1"
 
 [dev-dependencies]

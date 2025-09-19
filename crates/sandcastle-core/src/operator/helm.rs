@@ -1,5 +1,4 @@
 use k8s_openapi::chrono::{DateTime, Utc};
-use sandcastle_utils::http::{HttpSend, HttpSender};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -7,8 +6,7 @@ use snafu::{OptionExt, ResultExt};
 use std::backtrace::Backtrace;
 use std::collections::HashMap;
 use std::env::temp_dir;
-use std::fs::File as StdFile;
-use std::io::{BufReader, Read};
+use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
 use tokio::fs::File;
@@ -153,18 +151,16 @@ impl TryInto<InstallOrUpgradeResponse> for HelmResult {
 }
 
 #[derive(Clone, Debug)]
-pub struct HelmCli<S: HttpSend> {
+pub struct HelmCli {
     helm_path: PathBuf,
     http_client: reqwest::Client,
-    sender: S,
 }
 
-impl Default for HelmCli<HttpSender> {
+impl Default for HelmCli {
     fn default() -> Self {
         Self {
             helm_path: PathBuf::from("helm"),
             http_client: reqwest::Client::new(),
-            sender: HttpSender,
         }
     }
 }
@@ -202,12 +198,11 @@ struct RepositoryIndexEntry {
     pub digest: String,
 }
 
-impl<S: HttpSend> HelmCli<S> {
-    pub fn new(helm_path: PathBuf, http_client: reqwest::Client, sender: S) -> Self {
+impl HelmCli {
+    pub fn new(helm_path: PathBuf, http_client: reqwest::Client) -> Self {
         Self {
             helm_path,
             http_client,
-            sender,
         }
     }
 
@@ -226,8 +221,9 @@ impl<S: HttpSend> HelmCli<S> {
     ) -> Result<RepositoryIndexResponse, SandcastleProjectError> {
         let url = format!("{}/index.yaml", repository);
         let response = self
-            .sender
-            .send(self.http_client.get(url.clone()))
+            .http_client
+            .get(url.clone())
+            .send()
             .await
             .map_err(|e| SandcastleProjectError::Service {
                 code: ServiceErrorCode::HelmRepoIndexFailed,
@@ -333,8 +329,9 @@ impl<S: HttpSend> HelmCli<S> {
         ))?;
 
         let response = self
-            .sender
-            .send(self.http_client.get(url.clone()))
+            .http_client
+            .get(url.clone())
+            .send()
             .await
             .whatever_context(format!("Failed to download chart from {}", url))?;
 
@@ -386,7 +383,7 @@ impl<S: HttpSend> HelmCli<S> {
     }
 }
 
-impl<S: HttpSend> Helm for HelmCli<S> {
+impl Helm for HelmCli {
     #[tracing::instrument(skip(self))]
     async fn install_or_upgrade(
         &self,
@@ -485,7 +482,6 @@ impl<S: HttpSend> Helm for HelmCli<S> {
 #[cfg(test)]
 mod tests {
     use mockito::{Mock, ServerGuard};
-    use sandcastle_utils::http::{HttpSender, MockHttpSend};
 
     use super::*;
     use googletest::prelude::*;
@@ -588,7 +584,7 @@ generated: "2025-05-05T19:21:40.518077312-07:00"
         ];
 
         for (repository, expected) in cases {
-            let normalized = HelmCli::<HttpSender>::normalize_repository(repository);
+            let normalized = HelmCli::normalize_repository(repository);
             assert_eq!(
                 normalized, expected,
                 "Failed to normalize repository. Got: {}, expected: {}",
