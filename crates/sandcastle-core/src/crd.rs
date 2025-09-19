@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use kube::CustomResource;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -44,10 +42,18 @@ pub struct HelmChartResourceSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub repository: Option<String>,
     /// The version of the chart to deploy
-    pub version: String,
+    pub version: Option<String>,
     /// The overrides to pass to the chart, takes precedence over values
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub overrides: Option<HashMap<String, String>>,
+    pub set: Option<Vec<HelmChartResourceSet>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, JsonSchema)]
+pub struct HelmChartResourceSet {
+    /// The path to the value to override
+    pub path: String,
+    /// The value of the override
+    pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, JsonSchema)]
@@ -77,8 +83,8 @@ mod tests {
                     kind: SandcastleProjectResourceKind::HelmChart(HelmChartResourceSpec {
                         chart: "ingress-nginx".to_string(),
                         repository: Some("https://kubernetes.github.io/ingress-nginx".to_string()),
-                        version: "4.8.0".to_string(),
-                        overrides: None,
+                        version: Some("4.8.0".to_string()),
+                        set: None,
                     }),
                 },
                 SandcastleProjectResource {
@@ -86,8 +92,8 @@ mod tests {
                     kind: SandcastleProjectResourceKind::HelmChart(HelmChartResourceSpec {
                         chart: "ingress-nginx".to_string(),
                         repository: Some("https://kubernetes.github.io/ingress-nginx".to_string()),
-                        version: "4.8.0".to_string(),
-                        overrides: None,
+                        version: Some("4.8.0".to_string()),
+                        set: None,
                     }),
                 },
                 SandcastleProjectResource {
@@ -95,8 +101,11 @@ mod tests {
                     kind: SandcastleProjectResourceKind::HelmChart(HelmChartResourceSpec {
                         chart: "oci://my-registry.com/my-charts/my-app".to_string(),
                         repository: None,
-                        version: "4.8.0".to_string(),
-                        overrides: Some([("key".to_string(), "value".to_string())].into()),
+                        version: None,
+                        set: Some(vec![HelmChartResourceSet {
+                            path: "key".to_string(),
+                            value: "value".to_string(),
+                        }]),
                     }),
                 },
             ],

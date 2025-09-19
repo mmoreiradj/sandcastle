@@ -3,5 +3,16 @@ name = "sandcastle-utils"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
+[features]
+testing = []
+
 [dependencies]
+reqwest.workspace = true
 validator.workspace = true
+async-trait = "0.1.89"
+mockall = "0.13.1"
+
+[dev-dependencies]
