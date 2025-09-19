@@ -2,10 +2,13 @@ use k8s_openapi::chrono::{DateTime, Utc};
 use sandcastle_utils::http::{HttpSend, HttpSender};
 use semver::Version;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use snafu::{OptionExt, ResultExt};
 use std::backtrace::Backtrace;
 use std::collections::HashMap;
 use std::env::temp_dir;
+use std::fs::File as StdFile;
+use std::io::{BufReader, Read};
 use std::path::Path;
 use std::path::PathBuf;
 use tokio::fs::File;
@@ -345,17 +348,31 @@ impl<S: HttpSend> HelmCli<S> {
             .await
             .whatever_context(format!("Failed to create file for chart {}", chart))?;
 
-        file.write_all(
-            &response
-                .bytes()
-                .await
-                .whatever_context(format!("Failed to read response bytes from {}", url))?,
-        )
-        .await
-        .whatever_context(format!(
+        let bytes = response
+            .bytes()
+            .await
+            .whatever_context(format!("Failed to read response bytes from {}", url))?;
+
+        file.write_all(&bytes).await.whatever_context(format!(
             "Failed to write response bytes to file for chart {}",
             chart
         ))?;
+
+        let mut hasher = Sha256::new();
+        hasher.update(&bytes);
+        let actual_hash = format!("{:x}", hasher.finalize());
+
+        if actual_hash != entry.digest {
+            return Err(SandcastleProjectError::Service {
+                code: ServiceErrorCode::HelmChartDownloadFailed,
+                message: "Chart integrity check failed".to_string(),
+                reason: format!(
+                    "SHA256 hash mismatch for chart {} version {}. Expected: {}, Got: {}",
+                    chart, version, entry.digest, actual_hash
+                ),
+                backtrace: Backtrace::capture(),
+            });
+        }
 
         Ok(file_path)
     }
@@ -407,7 +424,9 @@ impl<S: HttpSend> Helm for HelmCli<S> {
             }
         }
 
-        let output = command.output().await.whatever_context("Failed to start the command to run install or upgrade helm chart".to_string())?;
+        let output = command.output().await.whatever_context(
+            "Failed to start the command to run install or upgrade helm chart".to_string(),
+        )?;
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
@@ -444,7 +463,9 @@ impl<S: HttpSend> Helm for HelmCli<S> {
             .arg("--namespace")
             .arg(request.namespace.clone());
 
-        let output = command.output().await.whatever_context("Failed to start the command to run uninstall helm chart".to_string())?;
+        let output = command.output().await.whatever_context(
+            "Failed to start the command to run uninstall helm chart".to_string(),
+        )?;
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
@@ -647,7 +668,6 @@ entries:
         let (server, index_mock, _) = mock_repo_server().await;
 
         let url = server.url();
-        println!("url: {}", url);
         let helm_cli = HelmCli::default();
         let index_response = helm_cli.repository_index(&url).await;
         index_mock.assert_async().await;
@@ -656,28 +676,16 @@ entries:
         verify_that!(index_response.api_version, eq("v1"))?;
         let entries = index_response
             .entries
-            .get("minio-operator")
-            .expect("minio-operator not found");
+            .get("classic-chart")
+            .expect("classic-chart not found");
         verify_that!(
             entries,
-            elements_are![
-                matches_pattern!(RepositoryIndexEntry {
-                    api_version: eq("v2"),
-                    urls: elements_are![eq(&format!(
-                        "{url}/helm-releases/minio-operator-4.3.7.tgz"
-                    ))],
-                    version: eq("4.3.7"),
-                    digest: eq("594f746a54d6ced86b0147135afed425c453e015a15228b634bd79add0d24982"),
-                }),
-                matches_pattern!(RepositoryIndexEntry {
-                    api_version: eq("v2"),
-                    urls: elements_are![eq(&format!(
-                        "{url}/helm-releases/minio-operator-4.3.6.tgz"
-                    ))],
-                    version: eq("4.3.6"),
-                    digest: eq("15bb40e086f5e562b7c588dac48a5399fadc1b9f6895f913bbd5a2993c683da7"),
-                })
-            ]
+            elements_are![matches_pattern!(RepositoryIndexEntry {
+                api_version: eq("v2"),
+                urls: elements_are![eq(&format!("{url}/helm-releases/classic-chart-0.1.0.tgz"))],
+                version: eq("0.1.0"),
+                digest: eq("22fc47d859a86b61e8803cddcc68f7dc8aea878030095dd0c3643b0373ace0c3"),
+            }),]
         )
     }
 

@@ -8,6 +8,7 @@ pub enum ServiceErrorCode {
     HelmRepoIndexFailed,
     HelmChartNotFound,
     HelmChartVersionNotFound,
+    HelmChartDownloadFailed,
     HelmInstallOrUpgradeFailed,
     HelmUninstallFailed,
 }
@@ -19,6 +20,7 @@ impl Display for ServiceErrorCode {
             ServiceErrorCode::HelmRepoIndexFailed => write!(f, "helm_repo_index_failed"),
             ServiceErrorCode::HelmChartNotFound => write!(f, "helm_chart_not_found"),
             ServiceErrorCode::HelmChartVersionNotFound => write!(f, "helm_chart_version_not_found"),
+            ServiceErrorCode::HelmChartDownloadFailed => write!(f, "helm_chart_download_failed"),
             ServiceErrorCode::HelmInstallOrUpgradeFailed => {
                 write!(f, "helm_install_or_upgrade_failed")
             }

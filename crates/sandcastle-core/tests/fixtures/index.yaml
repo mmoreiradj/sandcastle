@@ -5,7 +5,7 @@ entries:
       appVersion: v0.1.0
       created: "2025-05-05T19:21:40.589983611-07:00"
       description: A Helm chart for Classic Chart
-      digest: 594f746a54d6ced86b0147135afed425c453e015a15228b634bd79add0d24982
+      digest: 22fc47d859a86b61e8803cddcc68f7dc8aea878030095dd0c3643b0373ace0c3
       home: BASE_URL
       icon: BASE_URL/resources/img/logo/classic-chart.png
       keywords:
