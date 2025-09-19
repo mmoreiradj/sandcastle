@@ -374,7 +374,7 @@ impl HelmCli {
         Ok(file_path)
     }
 
-    async fn cleanup_download_chart(&self, file_path: &Path) -> Result<(), SandcastleProjectError> {
+    async fn cleanup_download_chart(file_path: &Path) -> Result<(), SandcastleProjectError> {
         std::fs::remove_file(file_path).whatever_context(format!(
             "Failed to remove file for chart {}",
             file_path.display()
@@ -412,7 +412,7 @@ impl Helm for HelmCli {
             .arg("--namespace")
             .arg(request.spec.namespace())
             .arg(request.spec.release_name())
-            .arg(chart);
+            .arg(&chart);
 
         if let Some(sets) = request.spec.set() {
             for set in sets {
@@ -446,6 +446,10 @@ impl Helm for HelmCli {
             "Failed to parse helm result from stdout of install or upgrade helm chart".to_string(),
         )?;
         let response: InstallOrUpgradeResponse = helm_result.try_into()?;
+
+        if let Err(e) = Self::cleanup_download_chart(&Path::new(&chart)).await {
+            tracing::error!("Failed to cleanup downloaded chart: {}", e);
+        };
 
         Ok(response)
     }
@@ -728,7 +732,11 @@ HOOKS:
                 .contains("classic-chart-0.1.0.tgz")))
         )?;
         let response = response.unwrap();
-        verify_that!(Path::new(&response).exists(), eq(true))
+        verify_that!(Path::new(&response).exists(), eq(true))?;
+        HelmCli::cleanup_download_chart(&Path::new(&response))
+            .await
+            .expect("Failed to cleanup downloaded chart");
+        Ok(())
     }
 
     #[gtest]
@@ -750,6 +758,10 @@ HOOKS:
                 .contains("classic-chart-0.1.0.tgz")))
         )?;
         let response = response.unwrap();
-        verify_that!(Path::new(&response).exists(), eq(true))
+        verify_that!(Path::new(&response).exists(), eq(true))?;
+        HelmCli::cleanup_download_chart(&Path::new(&response))
+            .await
+            .expect("Failed to cleanup downloaded chart");
+        Ok(())
     }
 }
