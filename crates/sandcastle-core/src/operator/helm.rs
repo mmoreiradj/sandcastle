@@ -15,8 +15,8 @@ use validator::{Validate, ValidationError, ValidationErrors};
 
 use crate::error::ServiceErrorCode;
 use crate::{
-    domain::HelmChartResourceSpec,
-    error::{SandcastleProjectError, ValidationSnafu},
+    crd::HelmChartResourceSpec,
+    error::{SandcastleError, ValidationSnafu},
 };
 use sandcastle_utils::validation::validate_k8s_dns_label;
 
@@ -37,7 +37,7 @@ pub struct Auth {
 }
 
 impl Auth {
-    pub fn try_new(username: String, password: String) -> Result<Self, SandcastleProjectError> {
+    pub fn try_new(username: String, password: String) -> Result<Self, SandcastleError> {
         let auth = Auth { username, password };
         auth.validate().context(ValidationSnafu {
             message: "Invalid auth",
@@ -48,10 +48,32 @@ impl Auth {
 
 #[derive(Clone, Debug, Validate)]
 pub struct InstallOrUpgradeReleaseRequest {
+    #[validate(custom(function = "validate_k8s_dns_label"))]
+    release_name: String,
     #[validate(nested)]
     spec: HelmChartResourceSpec,
     #[validate(nested)]
     auth: Option<Auth>,
+}
+
+impl InstallOrUpgradeReleaseRequest {
+    pub fn try_new(
+        release_name: String,
+        spec: HelmChartResourceSpec,
+        auth: Option<Auth>,
+    ) -> Result<Self, SandcastleError> {
+        let request = InstallOrUpgradeReleaseRequest {
+            release_name,
+            spec,
+            auth,
+        };
+
+        request.validate().context(ValidationSnafu {
+            message: "Invalid install or upgrade release request",
+        })?;
+
+        Ok(request)
+    }
 }
 
 #[derive(Clone, Debug, Validate)]
@@ -63,10 +85,7 @@ pub struct UninstallReleaseRequest {
 }
 
 impl UninstallReleaseRequest {
-    pub fn try_new(
-        namespace: String,
-        release_name: String,
-    ) -> Result<Self, SandcastleProjectError> {
+    pub fn try_new(namespace: String, release_name: String) -> Result<Self, SandcastleError> {
         let request = UninstallReleaseRequest {
             namespace,
             release_name,
@@ -102,7 +121,7 @@ pub struct HelmReleaseStatus {
 }
 
 impl TryFrom<String> for HelmReleaseStatus {
-    type Error = SandcastleProjectError;
+    type Error = SandcastleError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let lines: Vec<&str> = value.lines().collect();
@@ -149,10 +168,7 @@ pub struct ReleaseStatusRequest {
 }
 
 impl ReleaseStatusRequest {
-    pub fn try_new(
-        namespace: String,
-        release_name: String,
-    ) -> Result<Self, SandcastleProjectError> {
+    pub fn try_new(namespace: String, release_name: String) -> Result<Self, SandcastleError> {
         let request = ReleaseStatusRequest {
             namespace,
             release_name,
@@ -176,15 +192,15 @@ pub trait Helm {
     fn release_status(
         &self,
         request: &ReleaseStatusRequest,
-    ) -> impl Future<Output = Result<HelmReleaseStatus, SandcastleProjectError>> + Send;
+    ) -> impl Future<Output = Result<HelmReleaseStatus, SandcastleError>> + Send;
     fn install_or_upgrade_release(
         &self,
         request: &InstallOrUpgradeReleaseRequest,
-    ) -> impl Future<Output = Result<InstallOrUpgradeReleaseResponse, SandcastleProjectError>> + Send;
+    ) -> impl Future<Output = Result<InstallOrUpgradeReleaseResponse, SandcastleError>> + Send;
     fn uninstall_release(
         &self,
         request: &UninstallReleaseRequest,
-    ) -> impl Future<Output = Result<(), SandcastleProjectError>> + Send;
+    ) -> impl Future<Output = Result<(), SandcastleError>> + Send;
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -202,7 +218,7 @@ struct HelmResult {
 }
 
 impl TryFrom<String> for HelmResult {
-    type Error = SandcastleProjectError;
+    type Error = SandcastleError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let helm_result: HelmResult = serde_yaml::from_str(&value).unwrap();
@@ -211,7 +227,7 @@ impl TryFrom<String> for HelmResult {
 }
 
 impl TryInto<InstallOrUpgradeReleaseResponse> for HelmResult {
-    type Error = SandcastleProjectError;
+    type Error = SandcastleError;
 
     fn try_into(self) -> Result<InstallOrUpgradeReleaseResponse, Self::Error> {
         let date =
@@ -222,7 +238,7 @@ impl TryInto<InstallOrUpgradeReleaseResponse> for HelmResult {
                         "last_deployed",
                         ValidationError::new("invalid_last_deployed_date"),
                     );
-                    SandcastleProjectError::Validation {
+                    SandcastleError::Validation {
                         message: "Invalid last deployed date".to_string(),
                         source: errors,
                         backtrace: Backtrace::capture(),
@@ -262,7 +278,7 @@ struct RepositoryIndexResponse {
 }
 
 impl TryFrom<String> for RepositoryIndexResponse {
-    type Error = SandcastleProjectError;
+    type Error = SandcastleError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let response: RepositoryIndexResponse = serde_yaml::from_str(&value)
@@ -306,14 +322,14 @@ impl HelmCli {
     async fn repository_index(
         &self,
         repository: &str,
-    ) -> Result<RepositoryIndexResponse, SandcastleProjectError> {
+    ) -> Result<RepositoryIndexResponse, SandcastleError> {
         let url = format!("{}/index.yaml", repository);
         let response = self
             .http_client
             .get(url.clone())
             .send()
             .await
-            .map_err(|e| SandcastleProjectError::Service {
+            .map_err(|e| SandcastleError::Service {
                 code: ServiceErrorCode::HelmRepoIndexFailed,
                 message: "Failed to get repository index".to_string(),
                 reason: format!(
@@ -324,7 +340,7 @@ impl HelmCli {
             })?;
 
         if !response.status().is_success() {
-            return Err(SandcastleProjectError::Service {
+            return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmRepoIndexFailed,
                 message: "Failed to get repository index".to_string(),
                 reason: format!(
@@ -348,9 +364,7 @@ impl HelmCli {
 
     /// When the helm cli tries to find the latest version of a chart, it will
     /// find the highest semver version that is not prerelease
-    fn find_latest_version(
-        entries: &[RepositoryIndexEntry],
-    ) -> Result<&str, SandcastleProjectError> {
+    fn find_latest_version(entries: &[RepositoryIndexEntry]) -> Result<&str, SandcastleError> {
         entries
             .iter()
             .filter_map(|entry| {
@@ -360,7 +374,7 @@ impl HelmCli {
             })
             .max_by_key(|(_, version)| version.clone())
             .map(|(entry, _)| entry.version.as_str())
-            .ok_or(SandcastleProjectError::Service {
+            .ok_or(SandcastleError::Service {
                 code: ServiceErrorCode::HelmChartVersionNotFound,
                 message: "Could not determine latest chart version".to_string(),
                 reason: "No chart version found in repository".to_string(),
@@ -374,17 +388,14 @@ impl HelmCli {
         chart: &str,
         version: Option<&str>,
         download_dir: &Path,
-    ) -> Result<PathBuf, SandcastleProjectError> {
+    ) -> Result<PathBuf, SandcastleError> {
         let index = self.repository_index(repository).await?;
-        let entries = index
-            .entries
-            .get(chart)
-            .ok_or(SandcastleProjectError::Service {
-                code: ServiceErrorCode::HelmChartNotFound,
-                message: "Chart not found in repository".to_string(),
-                reason: format!("Chart {} not found in repository {}", chart, repository),
-                backtrace: Backtrace::capture(),
-            })?;
+        let entries = index.entries.get(chart).ok_or(SandcastleError::Service {
+            code: ServiceErrorCode::HelmChartNotFound,
+            message: "Chart not found in repository".to_string(),
+            reason: format!("Chart {} not found in repository {}", chart, repository),
+            backtrace: Backtrace::capture(),
+        })?;
         let version = match version {
             Some(v) => v,
             None => Self::find_latest_version(entries)?,
@@ -392,7 +403,7 @@ impl HelmCli {
         let entry = index
             .entries
             .get(chart)
-            .ok_or(SandcastleProjectError::Service {
+            .ok_or(SandcastleError::Service {
                 code: ServiceErrorCode::HelmChartNotFound,
                 message: "Chart not found in repository".to_string(),
                 reason: format!("Chart {} not found in repository {}", chart, repository),
@@ -401,7 +412,7 @@ impl HelmCli {
             .iter()
             // will fetch latest version if version is None
             .find(|entry| version == "latest" || entry.version == version)
-            .ok_or(SandcastleProjectError::Service {
+            .ok_or(SandcastleError::Service {
                 code: ServiceErrorCode::HelmChartVersionNotFound,
                 message: "Chart version not found in repository".to_string(),
                 reason: format!(
@@ -448,7 +459,7 @@ impl HelmCli {
         let actual_hash = format!("{:x}", hasher.finalize());
 
         if actual_hash != entry.digest {
-            return Err(SandcastleProjectError::Service {
+            return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmChartDownloadFailed,
                 message: "Chart integrity check failed".to_string(),
                 reason: format!(
@@ -462,7 +473,7 @@ impl HelmCli {
         Ok(file_path)
     }
 
-    async fn cleanup_download_chart(file_path: &Path) -> Result<(), SandcastleProjectError> {
+    async fn cleanup_download_chart(file_path: &Path) -> Result<(), SandcastleError> {
         std::fs::remove_file(file_path).whatever_context(format!(
             "Failed to remove file for chart {}",
             file_path.display()
@@ -476,7 +487,7 @@ impl Helm for HelmCli {
     async fn release_status(
         &self,
         request: &ReleaseStatusRequest,
-    ) -> Result<HelmReleaseStatus, SandcastleProjectError> {
+    ) -> Result<HelmReleaseStatus, SandcastleError> {
         tracing::debug!("getting helm chart status");
         let output = Command::new(&self.helm_path)
             .arg("get")
@@ -492,7 +503,7 @@ impl Helm for HelmCli {
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
-            return Err(SandcastleProjectError::Service {
+            return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmReleaseStatusFailed,
                 message: "Failed to get helm chart status".to_string(),
                 reason: format!("Failed to get helm chart status: {}", error),
@@ -510,20 +521,20 @@ impl Helm for HelmCli {
     async fn install_or_upgrade_release(
         &self,
         request: &InstallOrUpgradeReleaseRequest,
-    ) -> Result<InstallOrUpgradeReleaseResponse, SandcastleProjectError> {
+    ) -> Result<InstallOrUpgradeReleaseResponse, SandcastleError> {
         tracing::debug!("installing or upgrading helm chart");
-        let chart: String = if let Some(repository) = request.spec.repository() {
+        let chart: String = if let Some(repository) = &request.spec.repository {
             self.download_chart(
                 repository,
-                request.spec.chart(),
-                request.spec.version(),
+                &request.spec.chart,
+                request.spec.version.as_deref(),
                 &temp_dir(),
             )
             .await?
             .display()
             .to_string()
         } else {
-            request.spec.chart().to_string()
+            request.spec.chart.clone()
         };
 
         let mut command = Command::new(&self.helm_path);
@@ -532,15 +543,15 @@ impl Helm for HelmCli {
             .arg("--install")
             .arg("--create-namespace")
             .arg("--namespace")
-            .arg(request.spec.namespace())
-            .arg(request.spec.release_name())
+            .arg(&request.spec.namespace)
+            .arg(&request.release_name)
             .arg(&chart);
 
-        if let Some(sets) = request.spec.set() {
+        if let Some(sets) = &request.spec.set {
             for set in sets {
                 command
                     .arg("--set")
-                    .arg(format!("{}={}", set.path(), set.value()));
+                    .arg(format!("{}={}", set.path, set.value));
             }
         }
 
@@ -550,7 +561,7 @@ impl Helm for HelmCli {
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
-            return Err(SandcastleProjectError::Service {
+            return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmInstallOrUpgradeFailed,
                 message: "Failed to install or upgrade helm chart".to_string(),
                 reason: format!("Failed to install or upgrade helm chart: {}", error),
@@ -580,7 +591,7 @@ impl Helm for HelmCli {
     async fn uninstall_release(
         &self,
         request: &UninstallReleaseRequest,
-    ) -> Result<(), SandcastleProjectError> {
+    ) -> Result<(), SandcastleError> {
         tracing::debug!("uninstalling helm chart");
 
         let mut command = Command::new(&self.helm_path);
@@ -596,7 +607,7 @@ impl Helm for HelmCli {
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
-            return Err(SandcastleProjectError::Service {
+            return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmUninstallFailed,
                 message: "Failed to uninstall helm chart".to_string(),
                 reason: format!("Failed to uninstall helm chart: {}", error),

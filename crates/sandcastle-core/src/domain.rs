@@ -6,7 +6,7 @@ use validator::{Validate, ValidationError, ValidationErrors};
 
 use crate::{
     crd::SandcastleProjectSpec,
-    error::{SandcastleProjectError, ValidationSnafu},
+    error::{SandcastleError, ValidationSnafu},
 };
 
 #[derive(Clone, Debug, Validate)]
@@ -21,7 +21,7 @@ impl SandcastleProject {
     pub fn try_new(
         resources: Vec<SandcastleProjectResource>,
         destination: SandcastleProjectDestination,
-    ) -> Result<Self, SandcastleProjectError> {
+    ) -> Result<Self, SandcastleError> {
         let project = SandcastleProject {
             resources,
             destination,
@@ -42,7 +42,7 @@ impl SandcastleProject {
 }
 
 impl TryFrom<SandcastleProjectSpec> for SandcastleProject {
-    type Error = SandcastleProjectError;
+    type Error = SandcastleError;
 
     fn try_from(spec: SandcastleProjectSpec) -> Result<Self, Self::Error> {
         let resources = spec
@@ -87,7 +87,7 @@ impl SandcastleProjectResource {
     pub fn try_new(
         name: String,
         kind: SandcastleProjectResourceKind,
-    ) -> Result<Self, SandcastleProjectError> {
+    ) -> Result<Self, SandcastleError> {
         let resource = SandcastleProjectResource { name, kind };
         resource.validate().context(ValidationSnafu {
             message: "Invalid sandcastle project resource",
@@ -141,7 +141,7 @@ pub struct HelmChartResourceSet {
 }
 
 impl HelmChartResourceSet {
-    pub fn try_new(path: String, value: String) -> Result<Self, SandcastleProjectError> {
+    pub fn try_new(path: String, value: String) -> Result<Self, SandcastleError> {
         let set = HelmChartResourceSet { path, value };
         set.validate().context(ValidationSnafu {
             message: "Invalid helm chart resource set",
@@ -166,7 +166,7 @@ impl HelmChartResourceSpec {
         repository: Option<String>,
         version: Option<String>,
         set: Option<Vec<crate::crd::HelmChartResourceSet>>,
-    ) -> Result<Self, SandcastleProjectError> {
+    ) -> Result<Self, SandcastleError> {
         let set = if let Some(crd_set) = set {
             let domain_set = crd_set
                 .into_iter()
@@ -188,11 +188,11 @@ impl HelmChartResourceSpec {
         helm_chart.validate().context(ValidationSnafu {
             message: "Invalid helm chart specification",
         })?;
-        if repository.is_none() && !chart.starts_with("oci://") {
+        if repository.is_none() && !chart.starts_with(" ") {
             let mut errors = ValidationErrors::new();
             errors.add("repository", ValidationError::new("repository_required"));
             errors.add("chart", ValidationError::new("missing_oci_prefix"));
-            return Err(SandcastleProjectError::Validation {
+            return Err(SandcastleError::Validation {
                 message: "Repository is required for non-OCI charts".to_string(),
                 source: errors,
                 backtrace: Backtrace::capture(),
@@ -235,7 +235,7 @@ pub struct SandcastleProjectDestination {
 }
 
 impl SandcastleProjectDestination {
-    pub fn try_new(namespace: String, server: String) -> Result<Self, SandcastleProjectError> {
+    pub fn try_new(namespace: String, server: String) -> Result<Self, SandcastleError> {
         let destination = SandcastleProjectDestination { namespace, server };
         destination.validate().context(ValidationSnafu {
             message: "Invalid destination",
@@ -550,7 +550,7 @@ mod tests {
         );
         let err = helm_spec.err().unwrap();
         match err {
-            SandcastleProjectError::Validation { source, .. } => {
+            SandcastleError::Validation { source, .. } => {
                 let errors = source.errors();
                 assert!(errors.contains_key("repository"));
                 assert!(errors.contains_key("chart"));

@@ -33,7 +33,7 @@ impl Display for ServiceErrorCode {
 
 #[derive(Debug, snafu::Snafu)]
 #[snafu(visibility(pub))]
-pub enum SandcastleProjectError {
+pub enum SandcastleError {
     #[snafu(display("{}: {}", message, source))]
     Validation {
         message: String,

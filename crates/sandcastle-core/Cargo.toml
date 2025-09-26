@@ -21,6 +21,9 @@ uuid.workspace = true
 chrono.workspace = true
 semver.workspace = true
 sha2.workspace = true
+prometheus-client = "0.23.1"
+opentelemetry = { version = "0.30.0", features = ["trace"] }
+sandcastle-telemetry = { workspace = true }
 
 [dev-dependencies]
 insta.workspace = true

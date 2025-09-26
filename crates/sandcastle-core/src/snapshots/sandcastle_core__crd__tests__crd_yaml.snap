@@ -15,20 +15,26 @@ spec:
       chart: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
       version: 4.8.0
+      namespace: default
   - name: database
     kind: HelmChart
     spec:
       chart: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
       version: 4.8.0
+      set:
+      - path: key
+        value: value
+      namespace: default
   - name: app
     kind: HelmChart
     spec:
       chart: oci://my-registry.com/my-charts/my-app
-      version: null
       set:
       - path: key
         value: value
+      namespace: default
+      create_namespace: true
   destination:
     namespace: default
     server: https://kubernetes.example.com
