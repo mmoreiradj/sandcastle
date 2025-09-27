@@ -1,9 +1,9 @@
 use kube::CustomResource;
+use sandcastle_utils::serde::option_bool_true;
+use sandcastle_utils::validation::{validate_k8s_dns_label, validate_k8s_dns_subdomain};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use validator::{Validate, ValidationError};
-use sandcastle_utils::validation::{validate_k8s_dns_label, validate_k8s_dns_subdomain};
-use sandcastle_utils::serde::option_bool_true;
 
 #[derive(CustomResource, Debug, Serialize, Deserialize, Clone, JsonSchema, Validate)]
 #[kube(
@@ -47,7 +47,10 @@ impl Validate for SandcastleProjectResourceKind {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, JsonSchema, Validate)]
-#[validate(schema(function = "validate_helm_chart_resource_spec", skip_on_field_errors = true))]
+#[validate(schema(
+    function = "validate_helm_chart_resource_spec",
+    skip_on_field_errors = true
+))]
 /// Represents a Helm chart resource
 pub struct HelmChartResourceSpec {
     /// The chart to deploy
@@ -77,11 +80,13 @@ fn validate_helm_chart_resource_spec(spec: &HelmChartResourceSpec) -> Result<(),
     spec.validate_oci_requirement()
 }
 
-
 impl HelmChartResourceSpec {
     fn validate_oci_requirement(&self) -> Result<(), ValidationError> {
         if self.repository.is_none() && !self.chart.starts_with("oci://") {
-            return Err(ValidationError::new("missing_oci_prefix").with_message("Chart is expected to be prefixed with oci:// when repository is not provided".into()));
+            return Err(ValidationError::new("missing_oci_prefix").with_message(
+                "Chart is expected to be prefixed with oci:// when repository is not provided"
+                    .into(),
+            ));
         }
         Ok(())
     }
@@ -275,16 +280,19 @@ mod tests {
             set: None,
             create_namespace: None,
         };
-        
+
         let result = helm_spec.validate();
         assert!(
             result.is_err(),
             "Expected error for helm chart spec without repository or oci:// prefix. Got ok"
         );
-        
+
         let err = result.err().unwrap();
         let errors = err.field_errors();
-        assert!(errors.contains_key("__all__"), "Should contain validation error for missing OCI prefix");
+        assert!(
+            errors.contains_key("__all__"),
+            "Should contain validation error for missing OCI prefix"
+        );
     }
 
     #[test]
@@ -298,10 +306,7 @@ mod tests {
             ),
         ];
         for (namespace, server) in cases {
-            let destination = SandcastleProjectDestination {
-                namespace,
-                server,
-            };
+            let destination = SandcastleProjectDestination { namespace, server };
             assert!(
                 destination.validate().is_ok(),
                 "Failed to validate project destination. Got err: {:?}",

@@ -192,7 +192,7 @@ pub trait Helm {
     fn release_status(
         &self,
         request: &ReleaseStatusRequest,
-    ) -> impl Future<Output = Result<HelmReleaseStatus, SandcastleError>> + Send;
+    ) -> impl Future<Output = Result<Option<HelmReleaseStatus>, SandcastleError>> + Send;
     fn install_or_upgrade_release(
         &self,
         request: &InstallOrUpgradeReleaseRequest,
@@ -487,7 +487,7 @@ impl Helm for HelmCli {
     async fn release_status(
         &self,
         request: &ReleaseStatusRequest,
-    ) -> Result<HelmReleaseStatus, SandcastleError> {
+    ) -> Result<Option<HelmReleaseStatus>, SandcastleError> {
         tracing::debug!("getting helm chart status");
         let output = Command::new(&self.helm_path)
             .arg("get")
@@ -503,6 +503,9 @@ impl Helm for HelmCli {
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).to_string();
+            if error.contains("Error: release: not found") {
+                return Ok(None);
+            }
             return Err(SandcastleError::Service {
                 code: ServiceErrorCode::HelmReleaseStatusFailed,
                 message: "Failed to get helm chart status".to_string(),
@@ -514,7 +517,7 @@ impl Helm for HelmCli {
         let stdout_str = String::from_utf8_lossy(&output.stdout).to_string();
         let result = HelmReleaseStatus::try_from(stdout_str)?;
 
-        Ok(result)
+        Ok(Some(result))
     }
 
     #[tracing::instrument(skip(self))]
@@ -580,7 +583,7 @@ impl Helm for HelmCli {
         )?;
         let response: InstallOrUpgradeReleaseResponse = helm_result.try_into()?;
 
-        if let Err(e) = Self::cleanup_download_chart(&Path::new(&chart)).await {
+        if let Err(e) = Self::cleanup_download_chart(Path::new(&chart)).await {
             tracing::error!("Failed to cleanup downloaded chart: {}", e);
         };
 

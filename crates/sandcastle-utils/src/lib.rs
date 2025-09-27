@@ -1,2 +1,2 @@
-pub mod validation;
 pub mod serde;
+pub mod validation;

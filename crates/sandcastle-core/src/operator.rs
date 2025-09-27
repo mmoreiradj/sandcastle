@@ -1,18 +1,27 @@
-use std::sync::Arc;
-
-use crate::{crd::SandcastleProject, error::SandcastleError, operator::metrics::Metrics};
+use crate::{
+    crd::SandcastleProject,
+    error::SandcastleError,
+    operator::{
+        helm::{Helm, HelmCli},
+        metrics::Metrics,
+    },
+};
 use chrono::{DateTime, Utc};
+use futures::StreamExt;
 use kube::{
     Api, Client, ResourceExt,
+    api::ListParams,
     runtime::{
+        Controller,
         controller::Action,
         events::{Recorder, Reporter},
         finalizer,
     },
 };
 use serde::Serialize;
+use std::{sync::Arc, time::Duration};
 use tokio::sync::RwLock;
-use tracing::{Span, instrument};
+use tracing::{Span, instrument, warn};
 mod helm;
 mod metrics;
 mod reconcile;
@@ -56,12 +65,13 @@ impl AppState {
     }
 
     /// Create a controller context that can update the state.
-    pub async fn controller_context(&self, client: Client) -> Arc<Context> {
+    pub async fn controller_context(&self, client: Client) -> Arc<Context<HelmCli>> {
         Arc::new(Context {
             client: client.clone(),
             recorder: self.diagnostics.read().await.recorder(client),
             metrics: self.metrics.clone(),
             diagnostics: self.diagnostics.clone(),
+            helm: HelmCli::default(),
         })
     }
 }
@@ -70,20 +80,21 @@ impl AppState {
 ///
 /// This is passed to all the components of the operator.
 #[derive(Clone)]
-pub struct Context {
+pub struct Context<HELM: Helm> {
     pub client: Client,
     pub recorder: Recorder,
     pub diagnostics: Arc<RwLock<Diagnostics>>,
     pub metrics: Arc<Metrics>,
+    pub helm: HELM,
 }
 
 const SANDCASTLE_ENVIRONMENT_FINALIZER: &str = "environment.sandcastle.dev";
 
 #[instrument(skip(environment, context), fields(trace_id))]
-pub async fn reconcile(
+pub async fn reconcile<HELM: Helm>(
     environment: Arc<SandcastleProject>,
-    context: Arc<Context>,
-) -> Result<Action, kube::runtime::finalizer::Error<SandcastleError>> {
+    context: Arc<Context<HELM>>,
+) -> Result<Action, SandcastleError> {
     let trace_id = sandcastle_telemetry::get_trace_id();
     if trace_id != opentelemetry::trace::TraceId::INVALID {
         Span::current().record("trace_id", tracing::field::display(trace_id));
@@ -99,7 +110,7 @@ pub async fn reconcile(
         environment.name_any(),
         ns
     );
-    finalizer(
+    Ok(finalizer(
         &environments,
         SANDCASTLE_ENVIRONMENT_FINALIZER,
         environment,
@@ -111,6 +122,42 @@ pub async fn reconcile(
         },
     )
     .await
+    .unwrap())
 }
 
-pub fn start_operator() {}
+fn error_policy<HELM: Helm>(
+    environment: Arc<SandcastleProject>,
+    error: &SandcastleError,
+    context: Arc<Context<HELM>>,
+) -> Action {
+    let name = environment.name_any();
+    let namespace = environment.namespace().unwrap();
+    warn!("reconcile failed for environment \"{namespace}/{name}\": {error:?}");
+    context.metrics.reconcile.set_failure(&*environment, error);
+    Action::requeue(Duration::from_secs(5 * 60))
+}
+
+pub async fn start_operator(
+    client: Client,
+    watcher_config: kube::runtime::watcher::Config,
+    state: AppState,
+) {
+    let environments = Api::<SandcastleProject>::all(client.clone());
+
+    if let Err(e) = environments.list(&ListParams::default().limit(1)).await {
+        tracing::error!(
+            "failed to list environments: {e:?}, check if the crd is properly installed and roles are properly configured"
+        );
+        return;
+    }
+    Controller::new(environments, watcher_config.clone())
+        .shutdown_on_signal()
+        .run(
+            reconcile::<HelmCli>,
+            error_policy,
+            state.controller_context(client).await,
+        )
+        .filter_map(|x| async move { std::result::Result::ok(x) })
+        .for_each(|_| async {})
+        .await;
+}

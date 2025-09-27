@@ -1,3 +1,4 @@
+use kube::ResourceExt;
 use opentelemetry::trace::TraceId;
 use prometheus_client::{
     encoding::EncodeLabelSet,
@@ -7,8 +8,22 @@ use prometheus_client::{
 use std::sync::Arc;
 use tokio::time::Instant;
 
+use crate::{crd::SandcastleProject, error::SandcastleError};
+
 pub trait MetricLabel {
     fn metric_label(&self) -> String;
+}
+
+impl MetricLabel for SandcastleProject {
+    fn metric_label(&self) -> String {
+        self.name_any()
+    }
+}
+
+impl MetricLabel for SandcastleError {
+    fn metric_label(&self) -> String {
+        self.to_string()
+    }
 }
 
 #[derive(Clone)]
