@@ -1,0 +1,9 @@
+[package]
+name = "sandcastle-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+sandcastle-core = { workspace = true }
+clap = { version = "4.5.48", features = ["derive"] }

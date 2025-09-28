@@ -14,7 +14,7 @@ sandcastle-utils = { workspace = true }
 snafu.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 reqwest.workspace = true
 serde_yaml.workspace = true
 uuid.workspace = true
@@ -25,6 +25,14 @@ prometheus-client = "0.23.1"
 opentelemetry = { version = "0.30.0", features = ["trace"] }
 sandcastle-telemetry = { workspace = true }
 futures = "0.3.31"
+octocrab = "0.45.0"
+axum = "0.8.4"
+axum-extra = { version = "0.10.1", features = ["typed-header", "typed-routing"] }
+headers = "0.4.1"
+axum-macros = "0.5.0"
+init-tracing-opentelemetry = { version = "0.31.0", features = ["tracing_subscriber_ext"] }
+axum-tracing-opentelemetry = "0.30.1"
+sandcastle-external-crds = { workspace = true }
 
 [dev-dependencies]
 insta.workspace = true

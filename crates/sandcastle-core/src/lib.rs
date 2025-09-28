@@ -1,6 +1,18 @@
+use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
+
 use crate::error::SandcastleError;
 
-pub mod crd;
 pub mod error;
-pub mod operator;
-pub(crate) type Result<T, E = SandcastleError> = std::result::Result<T, E>;
+pub mod domain;
+pub mod webhook;
+
+pub async fn start() {
+    let _guard = init_tracing_opentelemetry::TracingConfig::development()
+        .init_subscriber()
+        .unwrap();
+    let router = webhook::router()
+        .layer(OtelInResponseLayer)
+        .layer(OtelAxumLayer::default());
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    axum::serve(listener, router).await.unwrap();
+}
