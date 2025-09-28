@@ -1,29 +1,25 @@
-use tracing::instrument;
+mod environment;
+mod vcs;
+mod gitops;
 
-use crate::{
-    domain::{
-        environment::{
-            models::{
-                CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction,
-                ReconcileContext,
-            },
-            ports::Reconcile,
-        },
-        vcs::ports::VCService,
-    },
-    error::SandcastleError,
-};
+use enum_dispatch::enum_dispatch;
 
-impl<VCS: VCService> Reconcile<VCS> for CreateOrUpdateArgocdApplicationAction {
-    #[instrument(skip(self, context))]
-    async fn reconcile(&self, context: ReconcileContext<VCS>) -> Result<(), SandcastleError> {
-        Ok(())
-    }
+pub use environment::*;
+pub use vcs::*;
+pub use gitops::*;
+
+use crate::domain::environment::ports::*;
+use crate::domain::environment::models::*;
+use crate::error::SandcastleError;
+
+#[enum_dispatch(VCSService)]
+#[derive(Clone)]
+pub enum VCS {
+  GitHub,
 }
 
-impl<VCS: VCService> Reconcile<VCS> for DeleteArgocdApplicationAction {
-    #[instrument(skip(self, context))]
-    async fn reconcile(&self, context: ReconcileContext<VCS>) -> Result<(), SandcastleError> {
-        Ok(())
-    }
+#[enum_dispatch(GitOpsPlatformService)]
+#[derive(Clone)]
+pub enum GitOpsPlatform {
+  ArgoCD,
 }

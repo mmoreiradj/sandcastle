@@ -1,26 +1,31 @@
 use std::backtrace::Backtrace;
 
+use async_trait::async_trait;
 use octocrab::Octocrab;
 use tracing::instrument;
 
-use crate::{domain::vcs::ports::VCService, error::{SandcastleError, ServiceErrorCode}};
+use crate::{
+    domain::{environment::models::DownloadFileRequest, environment::ports::VCSService},
+    error::{SandcastleError, ServiceErrorCode},
+};
 
 #[derive(Debug, Clone)]
-pub struct GitHubVCS {
+pub struct GitHub {
     client: Octocrab,
 }
 
-impl From<Octocrab> for GitHubVCS {
+impl From<Octocrab> for GitHub {
     fn from(client: Octocrab) -> Self {
         Self { client }
     }
 }
 
-impl VCService for GitHubVCS {
+#[async_trait]
+impl VCSService for GitHub {
     #[instrument(skip(self))]
     async fn download_file(
         &self,
-        request: super::ports::DownloadFileRequest,
+        request: DownloadFileRequest,
     ) -> Result<Vec<u8>, SandcastleError> {
         let file = self
             .client
