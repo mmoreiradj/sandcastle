@@ -1,6 +1,5 @@
-use sandcastle_external_crds::argocd::application::Application;
 
-use crate::{domain::environment::{ports::{GitOpsPlatformService, Reconcile, VCSService}, services::{GitOpsPlatform, VCS}}, error::SandcastleError};
+use crate::{domain::environment::{ports::Reconcile, services::{GitOpsPlatform, VCS}}, error::SandcastleError};
 
 #[derive(Clone)]
 pub struct ReconcileContext {

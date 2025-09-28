@@ -4,7 +4,6 @@ mod gitops;
 
 use enum_dispatch::enum_dispatch;
 
-pub use environment::*;
 pub use vcs::*;
 pub use gitops::*;
 

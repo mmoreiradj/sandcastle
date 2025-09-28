@@ -2,16 +2,13 @@ use async_trait::async_trait;
 use tracing::instrument;
 
 use crate::{
-    domain::{
-        environment::{
+    domain::environment::{
             models::{
                 CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction,
                 ReconcileContext,
             },
-            ports::{GitOpsPlatformService, Reconcile},
+            ports::Reconcile,
         },
-        environment::ports::VCSService,
-    },
     error::SandcastleError,
 };
 

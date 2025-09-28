@@ -1,6 +1,5 @@
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 
-use crate::error::SandcastleError;
 
 pub mod error;
 pub mod domain;
