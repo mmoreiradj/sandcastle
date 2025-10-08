@@ -1527,6 +1527,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48e7bb0b6a46502cc20e4575b6ff401af45cfea150b34ba272a3410b78aa014e"
 dependencies = [
  "k8s-openapi",
+ "kube-client",
  "kube-core",
  "kube-derive",
  "kube-runtime",
@@ -1548,12 +1549,14 @@ dependencies = [
  "http-body",
  "http-body-util",
  "hyper",
+ "hyper-rustls",
  "hyper-timeout",
  "hyper-util",
  "jsonpath-rust",
  "k8s-openapi",
  "kube-core",
  "pem",
+ "rustls",
  "secrecy",
  "serde",
  "serde_json",

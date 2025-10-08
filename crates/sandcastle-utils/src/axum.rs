@@ -9,6 +9,12 @@ macro_rules! declare_header {
     ( $name:expr => $struct:ident : $type:ty ) => {
         pub struct $struct(pub $type);
 
+        impl $struct {
+            pub fn into_inner(self) -> $type {
+                self.0
+            }
+        }
+
         impl Header for $struct {
             fn name() -> &'static HeaderName {
                 static NAME: HeaderName = HeaderName::from_static($name);
@@ -43,6 +49,12 @@ macro_rules! declare_header {
     // Serde-based version for types that implement Serialize + Deserialize but not FromStr + Display
     ( $name:expr => $struct:ident : serde $type:ty ) => {
         pub struct $struct(pub $type);
+
+        impl $struct {
+            pub fn into_inner(self) -> $type {
+                self.0
+            }
+        }
 
         impl Header for $struct {
             fn name() -> &'static HeaderName {
