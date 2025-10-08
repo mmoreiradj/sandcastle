@@ -1,5 +1,11 @@
-
-use crate::{domain::environment::{ports::Reconcile, services::{GitOpsPlatform, VCS}}, error::SandcastleError};
+use crate::{
+    domain::environment::{
+        models::config::{BuiltinConfigKey, ConfigPath, SandcastleConfiguration},
+        ports::Reconcile,
+        services::{GitOpsPlatform, VCS},
+    },
+    error::SandcastleError,
+};
 
 #[derive(Clone)]
 pub struct ReconcileContext {
@@ -11,8 +17,29 @@ pub struct ReconcileContext {
     pub vcs_service: VCS,
     /// The GitOps platform service
     pub gitops_platform_service: GitOpsPlatform,
+    /// Sandcastle configuration
+    pub config: SandcastleConfiguration,
 }
 
+impl ReconcileContext {
+    pub fn get_config_value(&self, path: &str) -> Option<String> {
+        let config_path = ConfigPath::parse(path)?;
+
+        match config_path {
+            ConfigPath::Builtin(key) => self.get_builtin_config_value(&key),
+            ConfigPath::Custom(parts) => self.config.get_custom_value(&parts),
+        }
+    }
+
+    fn get_builtin_config_value(&self, key: &BuiltinConfigKey) -> Option<String> {
+        match key {
+            BuiltinConfigKey::EnvironmentName => Some(self.vcs.repository.name.clone()),
+            BuiltinConfigKey::RepoURL => Some(self.vcs.repository.url.clone()),
+            BuiltinConfigKey::TargetRevision => Some(self.vcs.pull_request.last_commit_sha.clone()),
+            BuiltinConfigKey::LastCommitSHA => Some(self.vcs.pull_request.last_commit_sha.clone()),
+        }
+    }
+}
 
 #[derive(Debug, Clone)]
 pub struct VcsContext {
@@ -37,6 +64,7 @@ pub struct RepositoryContext {
 pub struct PullRequestContext {
     pub number: u64,
     pub title: String,
+    pub last_commit_sha: String,
 }
 
 #[derive(Debug, Clone)]
@@ -47,13 +75,14 @@ pub struct CommentContext {
 /// Action to create or update a GitOps Application
 #[derive(Debug, Clone)]
 pub struct CreateOrUpdateArgocdApplicationAction {
+    /// The GitOps File
     pub application: String,
 }
 
 /// Action to delete an Argocd Application
 #[derive(Debug, Clone)]
 pub struct DeleteArgocdApplicationAction {
-    /// The GitOps Application to delete
+    /// The GitOps File
     pub application: String,
 }
 
@@ -66,7 +95,9 @@ pub enum ReconcileActions {
 impl ReconcileActions {
     pub async fn reconcile(&self, context: ReconcileContext) -> Result<(), SandcastleError> {
         match self {
-            ReconcileActions::CreateOrUpdateArgocdApplication(action) => action.reconcile(context).await,
+            ReconcileActions::CreateOrUpdateArgocdApplication(action) => {
+                action.reconcile(context).await
+            }
             ReconcileActions::DeleteArgocdApplication(action) => action.reconcile(context).await,
         }
     }

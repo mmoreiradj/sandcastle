@@ -1,24 +1,24 @@
 mod environment;
-mod vcs;
 mod gitops;
+mod vcs;
 
 use enum_dispatch::enum_dispatch;
 
-pub use vcs::*;
 pub use gitops::*;
+pub use vcs::*;
 
-use crate::domain::environment::ports::*;
 use crate::domain::environment::models::*;
+use crate::domain::environment::ports::*;
 use crate::error::SandcastleError;
 
 #[enum_dispatch(VCSService)]
 #[derive(Clone)]
 pub enum VCS {
-  GitHub,
+    GitHub,
 }
 
 #[enum_dispatch(GitOpsPlatformService)]
 #[derive(Clone)]
 pub enum GitOpsPlatform {
-  ArgoCD,
+    ArgoCD,
 }

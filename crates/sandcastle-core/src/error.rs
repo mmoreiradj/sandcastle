@@ -13,6 +13,8 @@ pub enum ServiceErrorCode {
     HelmUninstallFailed,
     HelmReleaseStatusFailed,
     VCSFileDownloadFailed,
+    InvalidConfiguration,
+    SecretParsingFailed,
 }
 
 impl Display for ServiceErrorCode {
@@ -29,6 +31,8 @@ impl Display for ServiceErrorCode {
             ServiceErrorCode::HelmUninstallFailed => write!(f, "helm_uninstall_failed"),
             ServiceErrorCode::HelmReleaseStatusFailed => write!(f, "helm_release_status_failed"),
             ServiceErrorCode::VCSFileDownloadFailed => write!(f, "vcs_file_download_failed"),
+            ServiceErrorCode::InvalidConfiguration => write!(f, "invalid_configuration"),
+            ServiceErrorCode::SecretParsingFailed => write!(f, "secret_parsing_failed"),
         }
     }
 }
@@ -36,6 +40,12 @@ impl Display for ServiceErrorCode {
 #[derive(Debug, snafu::Snafu)]
 #[snafu(visibility(pub))]
 pub enum SandcastleError {
+    #[snafu(display("{}: {}", message, source))]
+    KubeClientError {
+        message: String,
+        source: kube::Error,
+        backtrace: Backtrace,
+    },
     #[snafu(display("{}: {}", message, source))]
     Validation {
         message: String,
@@ -54,6 +64,12 @@ pub enum SandcastleError {
         message: String,
         #[snafu(source(from(Box<dyn std::error::Error + Send + Sync>, Some)))]
         source: Option<Box<dyn std::error::Error + Send + Sync>>,
+        backtrace: Backtrace,
+    },
+    #[snafu(display("Finalizer error: {source}"))]
+    Finalizer {
+        #[snafu(source(from(kube::runtime::finalizer::Error<SandcastleError>, Box::new)))]
+        source: Box<kube::runtime::finalizer::Error<SandcastleError>>,
         backtrace: Backtrace,
     },
 }

@@ -1,6 +1,7 @@
+mod config;
 mod environment;
-mod vcs;
 mod gitops;
+mod vcs;
 
 pub use environment::*;
 pub use vcs::*;

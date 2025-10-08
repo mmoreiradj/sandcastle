@@ -3,12 +3,11 @@ use tracing::instrument;
 
 use crate::{
     domain::environment::{
-            models::{
-                CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction,
-                ReconcileContext,
-            },
-            ports::Reconcile,
+        models::{
+            CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction, ReconcileContext,
         },
+        ports::Reconcile,
+    },
     error::SandcastleError,
 };
 
