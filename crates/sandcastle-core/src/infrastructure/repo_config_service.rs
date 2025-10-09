@@ -1,6 +1,5 @@
 use std::{collections::BTreeMap, sync::Arc};
 
-use futures::TryStreamExt;
 use k8s_openapi::api::core::v1::Secret;
 
 use crate::{
@@ -23,8 +22,8 @@ impl From<GithubAppSecretData> for RepositoryConfiguration {
         Self {
             repository_url: secret.url,
             authentication: Authentication::GitHubApp(GitHubAppAuthentication {
-                app_id: secret.app_id.to_string(),
-                installation_id: secret.app_installation_id.to_string(),
+                app_id: secret.app_id,
+                installation_id: secret.app_installation_id,
                 private_key: secret.private_key,
             }),
         }

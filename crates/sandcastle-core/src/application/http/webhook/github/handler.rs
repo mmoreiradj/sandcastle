@@ -6,14 +6,15 @@ use axum_extra::{
     routing::TypedPath,
 };
 use axum_macros::FromRequestParts;
-use octocrab::models::webhook_events::WebhookEventType;
+use octocrab::models::webhook_events::{WebhookEvent, WebhookEventPayload, WebhookEventType};
 use sandcastle_utils::declare_header;
 use serde::Deserialize;
 use serde_json::Value;
 use tracing::info;
 
+
 #[derive(TypedPath, Deserialize)]
-#[typed_path("/v1/github/webhook")]
+#[typed_path("/api/v1/github/webhook")]
 pub struct HandleWebhookRoute;
 
 declare_header!("x-github-delivery" => GithubDelivery);
@@ -67,13 +68,18 @@ pub async fn handle_webhook(
         serde_json::to_string_pretty(&payload).unwrap()
     );
 
-    let event = headers.event.into_inner();
-    match event {
-        WebhookEventType::IssueComment => {
-            tracing::info!("received issue comment event");
+    let event_header = headers.event.into_inner();
+    let event_header_str = serde_json::to_string(&event_header).unwrap();
+    let webhook_event = WebhookEvent::try_from_header_and_body(&event_header_str, &payload.to_string()).unwrap();
+    let event_payload = event_header.parse_specific_payload(payload).unwrap();
+    match event_payload {
+        WebhookEventPayload::IssueComment(payload) => {
+            tracing::info!("repository: {:?}", webhook_event.repository);
+            tracing::info!("sender: {:?}", webhook_event.sender);
+            tracing::info!("installation: {:?}", webhook_event.installation);
         }
         _ => {
-            info!("received unhandled event {:?}", event);
+            info!("received unhandled event {:?}", event_payload);
         }
-    };
+    }
 }

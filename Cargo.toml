@@ -38,3 +38,4 @@ googletest = "0.14.2"
 mockall = "0.13.1"
 sandcastle-core = { path = "crates/sandcastle-core" }
 sandcastle-external-crds = { path = "crates/sandcastle-external-crds" }
+jsonwebtoken = { version = "9" }

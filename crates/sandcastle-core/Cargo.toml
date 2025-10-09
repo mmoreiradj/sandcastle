@@ -35,6 +35,7 @@ axum-tracing-opentelemetry = "0.30.1"
 sandcastle-external-crds = { workspace = true }
 async-trait = "0.1.89"
 enum_dispatch = "0.3.13"
+jsonwebtoken.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
