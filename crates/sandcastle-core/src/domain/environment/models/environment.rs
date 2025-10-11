@@ -29,6 +29,7 @@ impl ReconcileContext {
     pub async fn from_github_event(id: String, event: WebhookEvent, payload: WebhookEventPayload, state: ApplicationState) -> Result<Option<Self>> {
         match payload {
             WebhookEventPayload::IssueComment(payload) => {
+                // determine wether this is a comment we are interested in
                 let comment_body = if let Some(body) = payload.comment.body {
                     body
                 } else {
@@ -43,6 +44,8 @@ impl ReconcileContext {
                     None => return Ok(None),
                 };
                 let octocrab = Octocrab::try_from(&repository_configuration)?;
+
+                // Fetch config from repository
                 let vcs_service = VCS::GitHub(GitHub::from(octocrab));
                 let last_commit_sha = vcs_service.fetch_pr_last_commit_sha(FetchPRLastCommitSHARequest {
                     repository_id: (*repository.id),
@@ -50,12 +53,13 @@ impl ReconcileContext {
                 }).await?;
                 let refs_url = repository.git_refs_url.clone().unwrap();
                 let config_url = refs_url.to_string().replace("{/sha}", &last_commit_sha);
-                let configuration = vcs_service.download_file(DownloadFileRequest {
+                let configuration_file_content = vcs_service.download_file(DownloadFileRequest {
                     repository_id: (*repository.id),
                     path: config_url,
                     r#ref: last_commit_sha.clone(),
                     content_type: "application/yaml".to_string(),
                 }).await?;
+                let config = SandcastleConfiguration::from_string(&configuration_file_content)?;
 
                 let repository_full_name = repository.full_name.clone().unwrap();
                 let (repository_owner, repository_name) = repository_full_name.split_once('/').unwrap();
@@ -86,7 +90,7 @@ impl ReconcileContext {
         }
     }
 
-    pub fn get_config_value(&self, path: &str) -> Option<String> {
+    fn get_config_value(&self, path: &str) -> Option<String> {
         let config_path = ConfigPath::parse(path)?;
 
         match config_path {

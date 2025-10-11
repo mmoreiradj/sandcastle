@@ -1,0 +1,39 @@
+---
+custom:
+  baseDomain: "sandcastle.dev"
+  whatever:
+    key: "value"
+global:
+  images:
+    frontend:
+      # Image hint to find the images in:
+      # - github checks
+      # - container registry
+      hint: "ghcr.io/mmoreiradj/sandcastle-monorepo-test/frontend"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-{{ .Sandcastle.EnvironmentName }}
+  namespace: argocd
+spec:
+  project: default
+  source:
+    path: "charts/frontend" 
+    repoURL: "{{ .Sandcastle.RepoURL }}"
+    targetRevision: "{{ .Sandcastle.TargetRevision }}"
+    helm:
+      valuesObject:
+        ingress:
+          enabled: true
+          className: "traefik"
+          hosts:
+            - host: "frontend-{{ .Sandcastle.EnvironmentName }}.{{ .Sandcastle.Custom.baseDomain }}"
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+        image:
+          tag: "{{ .Sandcastle.LastCommitSHA }}"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: "{{ .Sandcastle.EnvironmentName }}"

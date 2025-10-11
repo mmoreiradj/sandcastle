@@ -60,7 +60,30 @@ pub struct SandcastleConfiguration {
 }
 
 impl SandcastleConfiguration {
-    pub fn from_yaml(yaml: &str) -> Result<Self, SandcastleError> {
+    pub fn from_string(string: &str) -> Result<Self, SandcastleError> {
+        let parts = string
+            .trim()
+            .split("---")
+            .filter_map(|s| if !s.is_empty() { Some(s.trim()) } else { None })
+            .collect::<Vec<&str>>();
+
+        match parts.first() {
+            Some(part) => {
+                let config = Self::from_yaml(part)?;
+                Ok(config)
+            }
+            None => {
+                return Err(SandcastleError::Service {
+                    code: ServiceErrorCode::InvalidConfiguration,
+                    message: "No configuration found in file".to_string(),
+                    reason: string.to_string(),
+                    backtrace: Backtrace::capture(),
+                });
+            }
+        }
+    }
+
+    fn from_yaml(yaml: &str) -> Result<Self, SandcastleError> {
         let config: SandcastleConfiguration =
             serde_yaml::from_str(yaml).map_err(|e| SandcastleError::Service {
                 code: ServiceErrorCode::InvalidConfiguration,
@@ -112,5 +135,15 @@ mod tests {
 
         let value = config.get_custom_value(&["whatever".to_string(), "key".to_string()]);
         assert_eq!(value, Some("value".to_string()));
+    }
+
+    #[test]
+    fn test_from_string() {
+        let application_yaml = include_str!("../../../../tests/fixtures/example_application_1.yaml");
+        let config = SandcastleConfiguration::from_string(application_yaml);
+        assert!(config.is_ok());
+        let config = config.unwrap();
+        assert_eq!(config.get_custom_value(&["baseDomain".to_string()]), Some("sandcastle.dev".to_string()));
+        assert_eq!(config.get_custom_value(&["whatever".to_string(), "key".to_string()]), Some("value".to_string()));
     }
 }
