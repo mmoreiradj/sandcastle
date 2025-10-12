@@ -1,6 +1,14 @@
-use octocrab::{models::{webhook_events::{WebhookEvent, WebhookEventPayload}, Repository}, Octocrab};
-use serde_yaml::Value;
-use crate::{application::ApplicationState, domain::environment::{models::{DownloadFileRequest, FetchPRLastCommitSHARequest}, services::GitHub}, Result};
+use std::{backtrace::Backtrace, str::FromStr};
+
+use crate::{
+    Result,
+    application::ApplicationState,
+    domain::environment::{
+        models::{DownloadFileRequest, FetchPRLastCommitSHARequest},
+        services::GitHub,
+    },
+    error::ServiceErrorCode,
+};
 use crate::{
     domain::environment::{
         models::config::{BuiltinConfigKey, ConfigPath, SandcastleConfiguration},
@@ -10,6 +18,15 @@ use crate::{
     domain::repositories::ports::RepositoryConfigurationService,
     error::SandcastleError,
 };
+use octocrab::{
+    Octocrab,
+    models::{
+        Repository,
+        webhook_events::{WebhookEvent, WebhookEventPayload},
+    },
+};
+use regex::Regex;
+use serde_yaml::Value;
 
 #[derive(Clone)]
 pub struct ReconcileContext {
@@ -26,7 +43,36 @@ pub struct ReconcileContext {
 }
 
 impl ReconcileContext {
-    pub async fn from_github_event(id: String, event: WebhookEvent, payload: WebhookEventPayload, state: ApplicationState) -> Result<Option<Self>> {
+    pub fn template(&self, template: &str) -> Result<String, SandcastleError> {
+        let mut result = template.to_string();
+        let r = Regex::new(r#"\{\{ (.*?) \}\}"#).unwrap();
+        let replacements: Vec<(String, String)> = r
+            .captures_iter(&result)
+            .map(|capture| -> Result<(String, String), SandcastleError> {
+                let full_match = capture.get(0).unwrap().as_str().to_string();
+                let path = capture.get(1).unwrap().as_str().trim();
+                let value = self.get_config_value(path).ok_or_else(|| SandcastleError::Service {
+                        code: ServiceErrorCode::InvalidConfiguration,
+                        message: format!("Value not found for path: {}", path),
+                        reason: path.to_string(),
+                        backtrace: Backtrace::capture(),
+                    })?;
+                Ok((full_match, value))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        for (pattern, replacement) in replacements {
+            result = result.replace(&pattern, &replacement);
+        }
+        Ok(result)
+    }
+
+    pub async fn from_github_event(
+        id: String,
+        event: WebhookEvent,
+        payload: WebhookEventPayload,
+        state: ApplicationState,
+    ) -> Result<Option<Self>> {
         match payload {
             WebhookEventPayload::IssueComment(payload) => {
                 // determine wether this is a comment we are interested in
@@ -39,7 +85,11 @@ impl ReconcileContext {
 
                 // this is always Some
                 let repository = event.repository.unwrap();
-                let repository_configuration = match state.repository_configuration_service.get_repository_configuration(repository.url.as_ref()).await? {
+                let repository_configuration = match state
+                    .repository_configuration_service
+                    .get_repository_configuration(repository.url.as_ref())
+                    .await?
+                {
                     Some(repository_configuration) => repository_configuration,
                     None => return Ok(None),
                 };
@@ -47,29 +97,28 @@ impl ReconcileContext {
 
                 // Fetch config from repository
                 let vcs_service = VCS::GitHub(GitHub::from(octocrab));
-                let last_commit_sha = vcs_service.fetch_pr_last_commit_sha(FetchPRLastCommitSHARequest {
-                    repository_id: (*repository.id),
-                    pr_number: payload.issue.number,
-                }).await?;
+                let last_commit_sha = vcs_service
+                    .fetch_pr_last_commit_sha(FetchPRLastCommitSHARequest {
+                        repository_id: (*repository.id),
+                        pr_number: payload.issue.number,
+                    })
+                    .await?;
                 let refs_url = repository.git_refs_url.clone().unwrap();
                 let config_url = refs_url.to_string().replace("{/sha}", &last_commit_sha);
-                let configuration_file_content = vcs_service.download_file(DownloadFileRequest {
-                    repository_id: (*repository.id),
-                    path: config_url,
-                    r#ref: last_commit_sha.clone(),
-                    content_type: "application/yaml".to_string(),
-                }).await?;
+                let configuration_file_content = vcs_service
+                    .download_file(DownloadFileRequest {
+                        repository_id: (*repository.id),
+                        path: config_url,
+                        r#ref: last_commit_sha.clone(),
+                        content_type: "application/yaml".to_string(),
+                    })
+                    .await?;
                 let config = SandcastleConfiguration::from_string(&configuration_file_content)?;
-
-                let repository_full_name = repository.full_name.clone().unwrap();
-                let (repository_owner, repository_name) = repository_full_name.split_once('/').unwrap();
 
                 Ok(Some(Self {
                     id,
                     vcs: VcsContext {
-                        comment: CommentContext {
-                            body: comment_body,
-                        },
+                        comment: CommentContext { body: comment_body },
                         repository: RepositoryContext::from(&repository),
                         pull_request: PullRequestContext {
                             number: payload.issue.number,
@@ -77,29 +126,29 @@ impl ReconcileContext {
                             last_commit_sha,
                         },
                     },
-                    vcs_service: VCS::GitHub(crate::domain::environment::services::GitHub::from(octocrab::Octocrab::default())),
-                    gitops_platform_service: GitOpsPlatform::ArgoCD(crate::domain::environment::services::ArgoCD),
-                    config: SandcastleConfiguration {
-                        custom: Value::Null,
-                    },
+                    vcs_service: VCS::GitHub(crate::domain::environment::services::GitHub::from(
+                        octocrab::Octocrab::default(),
+                    )),
+                    gitops_platform_service: GitOpsPlatform::ArgoCD(
+                        crate::domain::environment::services::ArgoCD,
+                    ),
+                    config,
                 }))
             }
-            _ => {
-                Ok(None)
-            }
+            _ => Ok(None),
         }
     }
 
     fn get_config_value(&self, path: &str) -> Option<String> {
-        let config_path = ConfigPath::parse(path)?;
-
-        match config_path {
-            ConfigPath::Builtin(key) => self.get_builtin_config_value(&key),
-            ConfigPath::Custom(parts) => self.config.get_custom_value(&parts),
+        if path.starts_with(".Sandcastle.") {
+            self.get_builtin_config_value(path)
+        } else {
+            self.config.get_custom_value(path)
         }
     }
 
-    fn get_builtin_config_value(&self, key: &BuiltinConfigKey) -> Option<String> {
+    fn get_builtin_config_value(&self, key: &str) -> Option<String> {
+        let key = BuiltinConfigKey::from_key(key)?;
         match key {
             BuiltinConfigKey::EnvironmentName => Some(self.vcs.repository.name.clone()),
             BuiltinConfigKey::RepoURL => Some(self.vcs.repository.url.clone()),
@@ -143,7 +192,6 @@ pub struct PullRequestContext {
     pub last_commit_sha: String,
 }
 
-
 #[derive(Debug, Clone)]
 pub struct CommentContext {
     pub body: String,
@@ -177,5 +225,47 @@ impl ReconcileActions {
             }
             ReconcileActions::DeleteArgocdApplication(action) => action.reconcile(context).await,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::domain::environment::services::ArgoCD;
+
+    use super::*;
+
+    async fn test_context() -> ReconcileContext {
+        let context = ReconcileContext {
+            id: "1".to_string(),
+            vcs: VcsContext {
+                repository: RepositoryContext {
+                    name: "test".to_string(),
+                    private: false,
+                    url: "https://github.com/test/test".to_string(),
+                },
+                pull_request: PullRequestContext {
+                    number: 1,
+                    title: "test".to_string(),
+                    last_commit_sha: "test".to_string(),
+                },
+                comment: CommentContext {
+                    body: "test".to_string(),
+                },
+            },
+            vcs_service: VCS::GitHub(GitHub::from(Octocrab::default())),
+            gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
+            config: SandcastleConfiguration {
+                custom: Value::Null,
+            },
+        };
+        context
+    }
+
+    #[tokio::test]
+    async fn test_template() {
+        let template = "{{ .Sandcastle.EnvironmentName }}";
+        let context = test_context().await;
+        let result = context.template(template).unwrap();
+        assert_eq!(result, "test");
     }
 }

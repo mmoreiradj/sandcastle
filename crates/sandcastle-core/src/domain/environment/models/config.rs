@@ -1,5 +1,6 @@
-use std::backtrace::Backtrace;
+use std::{backtrace::Backtrace, ops::Deref, str::FromStr, sync::OnceLock};
 
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
@@ -16,41 +17,49 @@ pub enum BuiltinConfigKey {
 impl BuiltinConfigKey {
     pub fn from_key(key: &str) -> Option<Self> {
         match key {
-            "EnvironmentName" => Some(BuiltinConfigKey::EnvironmentName),
-            "RepoURL" => Some(BuiltinConfigKey::RepoURL),
-            "TargetRevision" => Some(BuiltinConfigKey::TargetRevision),
-            "LastCommitSHA" => Some(BuiltinConfigKey::LastCommitSHA),
+            ".Sandcastle.EnvironmentName" => Some(BuiltinConfigKey::EnvironmentName),
+            ".Sandcastle.RepoURL" => Some(BuiltinConfigKey::RepoURL),
+            ".Sandcastle.TargetRevision" => Some(BuiltinConfigKey::TargetRevision),
+            ".Sandcastle.LastCommitSHA" => Some(BuiltinConfigKey::LastCommitSHA),
             _ => None,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum ConfigPath {
-    Builtin(BuiltinConfigKey),
-    Custom(Vec<String>),
-}
+pub struct ConfigPath(String);
 
-impl ConfigPath {
-    pub fn parse(path: &str) -> Option<Self> {
-        let parts: Vec<&str> = path.split('.').filter(|s| !s.is_empty()).collect();
+impl Deref for ConfigPath {
+    type Target = String;
 
-        if parts.first() != Some(&"Sandcastle") {
-            return None;
-        }
-
-        match parts.get(1) {
-            Some(&"Custom") if parts.len() > 2 => {
-                let custom_parts = parts[2..].iter().map(|s| s.to_string()).collect();
-                Some(ConfigPath::Custom(custom_parts))
-            }
-            Some(key) if parts.len() == 2 => {
-                BuiltinConfigKey::from_key(key).map(ConfigPath::Builtin)
-            }
-            _ => None,
-        }
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
+
+static VALIDATION_REGEX: OnceLock<Regex> = OnceLock::new();
+
+fn get_regex() -> &'static Regex {
+    VALIDATION_REGEX.get_or_init(|| Regex::new(r#"^\.(?:Sandcastle|Custom)(?:\.[A-Za-z0-9]+)+$"#).expect("Failed to compile regex"))
+}
+
+impl FromStr for ConfigPath {
+    type Err = SandcastleError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if !get_regex().is_match(s) {
+            return Err(SandcastleError::Service {
+                code: ServiceErrorCode::InvalidConfiguration,
+                message: "Invalid config path, must match .<Sandcastle|Custom>.<key>. Ex: .Sandcastle.EnvironmentName or .Custom.baseDomain".to_string(),
+                reason: s.to_string(),
+                backtrace: Backtrace::capture(),
+            });
+        }
+
+        Ok(ConfigPath(s.to_string()))
+    }
+}
+
 
 /// Represents the sandcastle configuration from the application file
 /// found in the repository.
@@ -58,6 +67,8 @@ impl ConfigPath {
 pub struct SandcastleConfiguration {
     pub custom: SandcastleCustomValues,
 }
+
+pub type SandcastleCustomValues = Value;
 
 impl SandcastleConfiguration {
     pub fn from_string(string: &str) -> Result<Self, SandcastleError> {
@@ -94,7 +105,8 @@ impl SandcastleConfiguration {
         Ok(config)
     }
 
-    pub fn get_custom_value(&self, path_parts: &[String]) -> Option<String> {
+    pub fn get_custom_value(&self, path: &str) -> Option<String> {
+        let path_parts = path.trim_start_matches(".Custom.").split(".").map(|s| s.to_string()).collect::<Vec<String>>();
         let mut current = &self.custom;
 
         for part in path_parts {
@@ -105,7 +117,6 @@ impl SandcastleConfiguration {
     }
 }
 
-pub type SandcastleCustomValues = Value;
 
 #[cfg(test)]
 mod tests {
@@ -120,20 +131,16 @@ mod tests {
             key: value
         "#;
         let config = SandcastleConfiguration::from_yaml(custom).unwrap();
-        let value = config.get_custom_value(&["baseDomain".to_string()]);
+        let value = config.get_custom_value(".Custom.baseDomain");
         assert_eq!(value, Some("sandcastle.dev".to_string()));
 
-        let value = config.get_custom_value(&["baseDomain".to_string(), "subDomain".to_string()]);
+        let value = config.get_custom_value(".Custom.baseDomain.subDomain");
         assert_eq!(value, None);
 
-        let value = config.get_custom_value(&[
-            "baseDomain".to_string(),
-            "subDomain".to_string(),
-            "subDomain".to_string(),
-        ]);
+        let value = config.get_custom_value(".Custom.baseDomain.subDomain.subDomain");
         assert_eq!(value, None);
 
-        let value = config.get_custom_value(&["whatever".to_string(), "key".to_string()]);
+        let value = config.get_custom_value(".Custom.whatever.key");
         assert_eq!(value, Some("value".to_string()));
     }
 
@@ -143,7 +150,7 @@ mod tests {
         let config = SandcastleConfiguration::from_string(application_yaml);
         assert!(config.is_ok());
         let config = config.unwrap();
-        assert_eq!(config.get_custom_value(&["baseDomain".to_string()]), Some("sandcastle.dev".to_string()));
-        assert_eq!(config.get_custom_value(&["whatever".to_string(), "key".to_string()]), Some("value".to_string()));
+        assert_eq!(config.get_custom_value(".Custom.baseDomain"), Some("sandcastle.dev".to_string()));
+        assert_eq!(config.get_custom_value(".Custom.whatever.key"), Some("value".to_string()));
     }
 }

@@ -36,6 +36,7 @@ sandcastle-external-crds = { workspace = true }
 async-trait = "0.1.89"
 enum_dispatch = "0.3.13"
 jsonwebtoken.workspace = true
+regex = "1.12.1"
 
 [dev-dependencies]
 insta.workspace = true
