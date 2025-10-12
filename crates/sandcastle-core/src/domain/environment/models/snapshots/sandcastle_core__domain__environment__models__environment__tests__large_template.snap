@@ -1,4 +1,8 @@
 ---
+source: crates/sandcastle-core/src/domain/environment/models/environment.rs
+expression: result
+---
+---
 custom:
   baseDomain: "sandcastle.dev"
   whatever:
@@ -14,26 +18,26 @@ global:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: frontend-{{ .Sandcastle.EnvironmentName }}
+  name: frontend-test
   namespace: argocd
 spec:
   project: default
   source:
     path: "charts/frontend" 
-    repoURL: "{{ .Sandcastle.RepoURL }}"
-    targetRevision: "{{ .Sandcastle.TargetRevision }}"
+    repoURL: "https://github.com/test/test"
+    targetRevision: "test"
     helm:
       valuesObject:
         ingress:
           enabled: true
           className: "traefik"
           hosts:
-            - host: "frontend-{{ .Sandcastle.EnvironmentName }}.{{ .Custom.baseDomain }}"
+            - host: "frontend-test.sandcastle.dev"
               paths:
                 - path: /
                   pathType: ImplementationSpecific
         image:
-          tag: "{{ .Sandcastle.LastCommitSHA }}"
+          tag: "test"
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: "{{ .Sandcastle.EnvironmentName }}"
+    namespace: "test"

@@ -237,6 +237,7 @@ mod tests {
     use super::*;
 
     async fn test_context() -> ReconcileContext {
+        let config = SandcastleConfiguration::from_string(include_str!("../../../../tests/fixtures/example_application_1.yaml")).unwrap();
         let context = ReconcileContext {
             id: "1".to_string(),
             vcs: VcsContext {
@@ -256,18 +257,24 @@ mod tests {
             },
             vcs_service: VCS::GitHub(GitHub::from(Octocrab::default())),
             gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
-            config: SandcastleConfiguration {
-                custom: Value::Null,
-            },
+            config: config,
         };
         context
     }
 
     #[tokio::test]
-    async fn test_template() {
+    async fn test_small_template() {
         let template = "{{ .Sandcastle.EnvironmentName }}";
         let context = test_context().await;
         let result = context.template(template).unwrap();
         assert_eq!(result, "test");
+    }
+
+    #[tokio::test]
+    async fn test_large_template() {
+        let template = include_str!("../../../../tests/fixtures/example_application_1.yaml");
+        let context = test_context().await;
+        let result = context.template(template).unwrap();
+        insta::assert_snapshot!(result);
     }
 }
