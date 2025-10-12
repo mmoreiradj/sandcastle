@@ -51,12 +51,14 @@ impl ReconcileContext {
             .map(|capture| -> Result<(String, String), SandcastleError> {
                 let full_match = capture.get(0).unwrap().as_str().to_string();
                 let path = capture.get(1).unwrap().as_str().trim();
-                let value = self.get_config_value(path).ok_or_else(|| SandcastleError::Service {
-                        code: ServiceErrorCode::InvalidConfiguration,
-                        message: format!("Value not found for path: {}", path),
-                        reason: path.to_string(),
-                        backtrace: Backtrace::capture(),
-                    })?;
+                let value =
+                    self.get_config_value(path)
+                        .ok_or_else(|| SandcastleError::Service {
+                            code: ServiceErrorCode::InvalidConfiguration,
+                            message: format!("Value not found for path: {}", path),
+                            reason: path.to_string(),
+                            backtrace: Backtrace::capture(),
+                        })?;
                 Ok((full_match, value))
             })
             .collect::<Result<Vec<_>, _>>()?;

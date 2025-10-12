@@ -2,7 +2,9 @@ use async_trait::async_trait;
 use enum_dispatch::enum_dispatch;
 
 use crate::{
-    domain::environment::models::{DownloadFileRequest, FetchPRLastCommitSHARequest, ReconcileContext},
+    domain::environment::models::{
+        DownloadFileRequest, FetchPRLastCommitSHARequest, ReconcileContext,
+    },
     error::SandcastleError,
 };
 
@@ -26,7 +28,9 @@ pub trait GitOpsPlatformService: Clone + Send + Sync {
 #[async_trait]
 #[enum_dispatch]
 pub trait VCSService: Clone + Send + Sync {
-    async fn download_file(&self, request: DownloadFileRequest)
-    -> Result<String, SandcastleError>;
-    async fn fetch_pr_last_commit_sha(&self, request: FetchPRLastCommitSHARequest) -> Result<String, SandcastleError>;
+    async fn download_file(&self, request: DownloadFileRequest) -> Result<String, SandcastleError>;
+    async fn fetch_pr_last_commit_sha(
+        &self,
+        request: FetchPRLastCommitSHARequest,
+    ) -> Result<String, SandcastleError>;
 }

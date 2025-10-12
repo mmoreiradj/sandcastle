@@ -5,7 +5,10 @@ use octocrab::Octocrab;
 use tracing::instrument;
 
 use crate::{
-    domain::environment::{models::{DownloadFileRequest, FetchPRLastCommitSHARequest}, ports::VCSService},
+    domain::environment::{
+        models::{DownloadFileRequest, FetchPRLastCommitSHARequest},
+        ports::VCSService,
+    },
     error::{SandcastleError, ServiceErrorCode},
 };
 
@@ -23,10 +26,7 @@ impl From<Octocrab> for GitHub {
 #[async_trait]
 impl VCSService for GitHub {
     #[instrument(skip(self))]
-    async fn download_file(
-        &self,
-        request: DownloadFileRequest,
-    ) -> Result<String, SandcastleError> {
+    async fn download_file(&self, request: DownloadFileRequest) -> Result<String, SandcastleError> {
         tracing::info!("Downloading file from GitHub");
         let mut file = self
             .client
@@ -70,17 +70,17 @@ impl VCSService for GitHub {
         request: FetchPRLastCommitSHARequest,
     ) -> Result<String, SandcastleError> {
         tracing::info!("Fetching last commit SHA from GitHub");
-        let repository =
-            self.client
-                .repos_by_id(request.repository_id)
-                .get()
-                .await
-                .map_err(|e| SandcastleError::Service {
-                    code: ServiceErrorCode::VCSFetchPRLastCommitSHARequest,
-                    message: e.to_string(),
-                    reason: request.repository_id.to_string(),
-                    backtrace: Backtrace::capture(),
-                })?;
+        let repository = self
+            .client
+            .repos_by_id(request.repository_id)
+            .get()
+            .await
+            .map_err(|e| SandcastleError::Service {
+                code: ServiceErrorCode::VCSFetchPRLastCommitSHARequest,
+                message: e.to_string(),
+                reason: request.repository_id.to_string(),
+                backtrace: Backtrace::capture(),
+            })?;
         let pr = self
             .client
             .pulls(repository.owner.unwrap().login, repository.name)

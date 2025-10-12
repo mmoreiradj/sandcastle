@@ -40,7 +40,10 @@ impl Deref for ConfigPath {
 static VALIDATION_REGEX: OnceLock<Regex> = OnceLock::new();
 
 fn get_regex() -> &'static Regex {
-    VALIDATION_REGEX.get_or_init(|| Regex::new(r#"^\.(?:Sandcastle|Custom)(?:\.[A-Za-z0-9]+)+$"#).expect("Failed to compile regex"))
+    VALIDATION_REGEX.get_or_init(|| {
+        Regex::new(r#"^\.(?:Sandcastle|Custom)(?:\.[A-Za-z0-9]+)+$"#)
+            .expect("Failed to compile regex")
+    })
 }
 
 impl FromStr for ConfigPath {
@@ -59,7 +62,6 @@ impl FromStr for ConfigPath {
         Ok(ConfigPath(s.to_string()))
     }
 }
-
 
 /// Represents the sandcastle configuration from the application file
 /// found in the repository.
@@ -106,7 +108,11 @@ impl SandcastleConfiguration {
     }
 
     pub fn get_custom_value(&self, path: &str) -> Option<String> {
-        let path_parts = path.trim_start_matches(".Custom.").split(".").map(|s| s.to_string()).collect::<Vec<String>>();
+        let path_parts = path
+            .trim_start_matches(".Custom.")
+            .split(".")
+            .map(|s| s.to_string())
+            .collect::<Vec<String>>();
         let mut current = &self.custom;
 
         for part in path_parts {
@@ -116,7 +122,6 @@ impl SandcastleConfiguration {
         current.as_str().map(|s| s.to_string())
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -146,11 +151,18 @@ mod tests {
 
     #[test]
     fn test_from_string() {
-        let application_yaml = include_str!("../../../../tests/fixtures/example_application_1.yaml");
+        let application_yaml =
+            include_str!("../../../../tests/fixtures/example_application_1.yaml");
         let config = SandcastleConfiguration::from_string(application_yaml);
         assert!(config.is_ok());
         let config = config.unwrap();
-        assert_eq!(config.get_custom_value(".Custom.baseDomain"), Some("sandcastle.dev".to_string()));
-        assert_eq!(config.get_custom_value(".Custom.whatever.key"), Some("value".to_string()));
+        assert_eq!(
+            config.get_custom_value(".Custom.baseDomain"),
+            Some("sandcastle.dev".to_string())
+        );
+        assert_eq!(
+            config.get_custom_value(".Custom.whatever.key"),
+            Some("value".to_string())
+        );
     }
 }

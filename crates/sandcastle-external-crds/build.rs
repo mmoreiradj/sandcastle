@@ -27,8 +27,8 @@ fn main() {
     for (url, filename) in crds {
         println!("cargo:rerun-if-changed=build.rs");
 
-        let response =
-            reqwest::blocking::get(url).unwrap_or_else(|_| panic!("Failed to download CRD from {}", url));
+        let response = reqwest::blocking::get(url)
+            .unwrap_or_else(|_| panic!("Failed to download CRD from {}", url));
 
         let yaml_content = response.text().expect("Failed to read response text");
 

@@ -9,8 +9,6 @@ pub enum SandcastleCli {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = SandcastleCli::parse();
     match cli {
-        SandcastleCli::Serve => {
-            sandcastle_core::application::start().await
-        }
+        SandcastleCli::Serve => sandcastle_core::application::start().await,
     }
 }

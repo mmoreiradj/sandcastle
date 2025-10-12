@@ -4,43 +4,80 @@
 
 #[allow(unused_imports)]
 mod prelude {
+    pub use k8s_openapi::apimachinery::pkg::apis::meta::v1::Condition;
+    pub use k8s_openapi::apimachinery::pkg::util::intstr::IntOrString;
     pub use kube::CustomResource;
     pub use schemars::JsonSchema;
-    pub use serde::{Serialize, Deserialize};
+    pub use serde::{Deserialize, Serialize};
     pub use std::collections::BTreeMap;
-    pub use k8s_openapi::apimachinery::pkg::util::intstr::IntOrString;
-    pub use k8s_openapi::apimachinery::pkg::apis::meta::v1::Condition;
 }
 use self::prelude::*;
 
 #[derive(CustomResource, Serialize, Deserialize, Clone, Debug, JsonSchema)]
-#[kube(group = "argoproj.io", version = "v1alpha1", kind = "ApplicationSet", plural = "applicationsets")]
+#[kube(
+    group = "argoproj.io",
+    version = "v1alpha1",
+    kind = "ApplicationSet",
+    plural = "applicationsets"
+)]
 #[kube(namespaced)]
 #[kube(status = "ApplicationSetStatus")]
 pub struct ApplicationSetSpec {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "applyNestedSelectors")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "applyNestedSelectors"
+    )]
     pub apply_nested_selectors: Option<bool>,
     pub generators: Vec<ApplicationSetGenerators>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "goTemplate")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "goTemplate"
+    )]
     pub go_template: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "goTemplateOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "goTemplateOptions"
+    )]
     pub go_template_options: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreApplicationDifferences")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreApplicationDifferences"
+    )]
     pub ignore_application_differences: Option<Vec<ApplicationSetIgnoreApplicationDifferences>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "preservedFields")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "preservedFields"
+    )]
     pub preserved_fields: Option<ApplicationSetPreservedFields>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub strategy: Option<ApplicationSetStrategy>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetSyncPolicy>,
     pub template: ApplicationSetTemplate,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "templatePatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "templatePatch"
+    )]
     pub template_patch: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGenerators {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clusterDecisionResource")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "clusterDecisionResource"
+    )]
     pub cluster_decision_resource: Option<ApplicationSetGeneratorsClusterDecisionResource>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub clusters: Option<ApplicationSetGeneratorsClusters>,
@@ -54,9 +91,17 @@ pub struct ApplicationSetGenerators {
     pub merge: Option<ApplicationSetGeneratorsMerge>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plugin: Option<ApplicationSetGeneratorsPlugin>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequest")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequest"
+    )]
     pub pull_request: Option<ApplicationSetGeneratorsPullRequest>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "scmProvider")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "scmProvider"
+    )]
     pub scm_provider: Option<ApplicationSetGeneratorsScmProvider>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selector: Option<ApplicationSetGeneratorsSelector>,
@@ -66,11 +111,19 @@ pub struct ApplicationSetGenerators {
 pub struct ApplicationSetGeneratorsClusterDecisionResource {
     #[serde(rename = "configMapRef")]
     pub config_map_ref: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<ApplicationSetGeneratorsClusterDecisionResourceLabelSelector>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplate>,
@@ -80,9 +133,18 @@ pub struct ApplicationSetGeneratorsClusterDecisionResource {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceLabelSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
-    pub match_expressions: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
+    pub match_expressions:
+        Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -117,20 +179,38 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpec {
     pub destination: ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicy>,
 }
 
@@ -148,12 +228,24 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecDestinatio
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -172,11 +264,13 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSource {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -187,7 +281,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -198,7 +296,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDire
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -214,7 +313,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDire
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -231,33 +331,73 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceDire
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -273,7 +413,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -283,40 +427,92 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -330,18 +526,28 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKust
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -360,11 +566,14 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceKust
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -388,11 +597,14 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcePlug
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -422,11 +634,13 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -437,7 +651,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -448,7 +666,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDir
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -464,7 +683,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDir
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -481,33 +701,73 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesDir
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -523,7 +783,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -533,40 +797,92 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -580,18 +896,29 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKus
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -610,11 +937,14 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesKus
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -649,7 +979,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicy
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -660,7 +994,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicy
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -670,7 +1005,8 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicy
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -681,7 +1017,11 @@ pub struct ApplicationSetGeneratorsClusterDecisionResourceTemplateSpecSyncPolicy
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -699,9 +1039,17 @@ pub struct ApplicationSetGeneratorsClusters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
     pub match_expressions: Option<Vec<ApplicationSetGeneratorsClustersSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -736,20 +1084,37 @@ pub struct ApplicationSetGeneratorsClustersTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpec {
     pub destination: ApplicationSetGeneratorsClustersTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsClustersTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsClustersTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsClustersTemplateSpecSyncPolicy>,
 }
 
@@ -767,12 +1132,24 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsClustersTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -806,7 +1183,11 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -825,7 +1206,8 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -850,33 +1232,70 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceDirectoryJsonnetTla
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -892,7 +1311,11 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceHelmFileParameters 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -902,33 +1325,81 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -954,13 +1425,21 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1056,7 +1535,11 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -1075,7 +1558,8 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1100,33 +1584,70 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetTl
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -1142,7 +1663,11 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmFileParameters
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1152,33 +1677,81 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -1204,13 +1777,21 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1233,7 +1814,8 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsClustersTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -1258,17 +1840,30 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -1300,7 +1895,11 @@ pub struct ApplicationSetGeneratorsClustersTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -1310,11 +1909,19 @@ pub struct ApplicationSetGeneratorsGit {
     pub directories: Option<Vec<ApplicationSetGeneratorsGitDirectories>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub files: Option<Vec<ApplicationSetGeneratorsGitFiles>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathParamPrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathParamPrefix"
+    )]
     pub path_param_prefix: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     pub revision: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1360,20 +1967,36 @@ pub struct ApplicationSetGeneratorsGitTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpec {
     pub destination: ApplicationSetGeneratorsGitTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
     pub ignore_differences: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsGitTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsGitTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsGitTemplateSpecSyncPolicy>,
 }
 
@@ -1391,12 +2014,24 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsGitTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1430,7 +2065,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -1474,33 +2113,70 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourceDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -1516,7 +2192,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1526,33 +2206,81 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -1578,13 +2306,21 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1680,7 +2416,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -1699,7 +2439,8 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1724,33 +2465,70 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsGitTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -1766,7 +2544,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1776,33 +2558,81 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -1828,13 +2658,21 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1882,17 +2720,30 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsGitTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsGitTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsGitTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsGitTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -1924,7 +2775,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -1932,7 +2787,11 @@ pub struct ApplicationSetGeneratorsGitTemplateSpecSyncPolicyRetryBackoff {
 pub struct ApplicationSetGeneratorsList {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub elements: Option<Vec<serde_json::Value>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "elementsYaml")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "elementsYaml"
+    )]
     pub elements_yaml: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsListTemplate>,
@@ -1961,20 +2820,36 @@ pub struct ApplicationSetGeneratorsListTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpec {
     pub destination: ApplicationSetGeneratorsListTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
     pub ignore_differences: Option<Vec<ApplicationSetGeneratorsListTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsListTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsListTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsListTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsListTemplateSpecSyncPolicy>,
 }
 
@@ -1992,12 +2867,24 @@ pub struct ApplicationSetGeneratorsListTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsListTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2031,7 +2918,11 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -2050,7 +2941,8 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2075,33 +2967,70 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourceDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -2117,7 +3046,11 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2127,33 +3060,81 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -2179,13 +3160,21 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2281,7 +3270,11 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -2300,7 +3293,8 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2325,33 +3319,70 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsListTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -2367,7 +3398,11 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2377,33 +3412,81 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -2429,13 +3512,21 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2483,17 +3574,30 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsListTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsListTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsListTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsListTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -2525,7 +3629,11 @@ pub struct ApplicationSetGeneratorsListTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -2538,8 +3646,13 @@ pub struct ApplicationSetGeneratorsMatrix {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGenerators {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clusterDecisionResource")]
-    pub cluster_decision_resource: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResource>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "clusterDecisionResource"
+    )]
+    pub cluster_decision_resource:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResource>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub clusters: Option<ApplicationSetGeneratorsMatrixGeneratorsClusters>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2552,9 +3665,17 @@ pub struct ApplicationSetGeneratorsMatrixGenerators {
     pub merge: Option<serde_json::Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plugin: Option<ApplicationSetGeneratorsMatrixGeneratorsPlugin>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequest")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequest"
+    )]
     pub pull_request: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequest>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "scmProvider")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "scmProvider"
+    )]
     pub scm_provider: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProvider>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selector: Option<ApplicationSetGeneratorsMatrixGeneratorsSelector>,
@@ -2564,11 +3685,20 @@ pub struct ApplicationSetGeneratorsMatrixGenerators {
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResource {
     #[serde(rename = "configMapRef")]
     pub config_map_ref: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
-    pub label_selector: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceLabelSelector>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
+    pub label_selector:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceLabelSelector>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplate>,
@@ -2585,7 +3715,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceLabelS
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions
+{
     pub key: String,
     pub operator: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2643,15 +3774,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2670,22 +3814,34 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory>,
+    pub directory: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelm>,
+    pub helm: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelm,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize>,
+    pub kustomize: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePlugin>,
+    pub plugin: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePlugin,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -2712,7 +3868,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -2720,7 +3877,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -2762,7 +3920,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2770,8 +3929,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2832,14 +3996,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2850,7 +4023,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas
+{
     pub count: IntOrString,
     pub name: String,
 }
@@ -2866,13 +4040,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv
+{
     pub name: String,
     pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2894,7 +4070,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource
+{
     pub path: String,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
@@ -2903,13 +4080,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo
+{
     #[serde(rename = "targetBranch")]
     pub target_branch: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource
+{
     pub path: String,
     #[serde(rename = "targetBranch")]
     pub target_branch: String,
@@ -2920,22 +4099,34 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory>,
+    pub directory: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm>,
+    pub helm: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize>,
+    pub kustomize: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPlugin>,
+    pub plugin: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPlugin,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -2962,7 +4153,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -2970,7 +4162,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -3012,7 +4205,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3020,8 +4214,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3082,14 +4281,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3100,7 +4308,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas
+{
     pub count: IntOrString,
     pub name: String,
 }
@@ -3116,13 +4325,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv
+{
     pub name: String,
     pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3146,8 +4357,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyAutomated
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -3158,7 +4374,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3174,12 +4391,17 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTempla
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -3197,9 +4419,18 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClusters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
-    pub match_expressions: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
+    pub match_expressions:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersSelectorMatchExpressions>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -3234,20 +4465,38 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicy>,
 }
 
@@ -3265,12 +4514,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecDestinati
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3289,11 +4550,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSource {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3304,7 +4567,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -3315,7 +4582,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDir
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -3331,7 +4599,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDir
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -3348,33 +4617,73 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceDir
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -3390,7 +4699,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3400,40 +4713,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -3447,18 +4812,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKus
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3477,11 +4853,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceKus
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -3505,11 +4884,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcePlu
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -3539,11 +4921,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3554,7 +4938,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -3565,7 +4953,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -3581,7 +4970,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDi
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -3598,33 +4988,73 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesDi
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -3640,7 +5070,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHe
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3650,40 +5084,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesHe
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -3697,18 +5183,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKu
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3727,11 +5224,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesKu
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -3766,7 +5266,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolic
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -3777,7 +5281,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolic
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3787,7 +5292,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolic
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -3798,7 +5304,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsClustersTemplateSpecSyncPolic
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -3808,11 +5318,19 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGit {
     pub directories: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitDirectories>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub files: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitFiles>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathParamPrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathParamPrefix"
+    )]
     pub path_param_prefix: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     pub revision: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3858,20 +5376,38 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicy>,
 }
 
@@ -3889,12 +5425,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3928,7 +5476,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -3939,7 +5491,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirector
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -3947,11 +5500,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirector
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -3972,33 +5529,72 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceDirector
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -4014,7 +5610,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmFile
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4024,40 +5624,90 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHelmPara
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -4071,18 +5721,27 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomiz
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4105,7 +5764,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4131,9 +5791,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydrator
     #[serde(rename = "drySource")]
     pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4178,7 +5840,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -4189,7 +5855,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirecto
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -4197,11 +5864,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirecto
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4222,33 +5893,72 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesDirecto
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -4264,7 +5974,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmFil
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4274,40 +5988,91 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesHelmPar
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -4321,18 +6086,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4355,7 +6130,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesPlugin 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4379,18 +6155,33 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSourcesPluginP
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub automated: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    pub automated:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyAutomated>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -4401,7 +6192,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyAuto
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4411,7 +6203,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyMana
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -4422,7 +6215,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetr
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -4430,7 +6227,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsGitTemplateSpecSyncPolicyRetr
 pub struct ApplicationSetGeneratorsMatrixGeneratorsList {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub elements: Option<Vec<serde_json::Value>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "elementsYaml")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "elementsYaml"
+    )]
     pub elements_yaml: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplate>,
@@ -4459,20 +6260,38 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicy>,
 }
 
@@ -4490,12 +6309,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4529,7 +6360,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -4540,7 +6375,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirecto
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -4548,11 +6384,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirecto
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4573,33 +6413,72 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceDirecto
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -4615,7 +6494,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmFil
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4625,40 +6508,91 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHelmPar
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -4672,18 +6606,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4706,7 +6650,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcePlugin 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4732,9 +6677,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydrato
     #[serde(rename = "drySource")]
     pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4779,7 +6726,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -4790,7 +6741,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirect
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -4798,11 +6750,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirect
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4823,33 +6779,72 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesDirect
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -4865,7 +6860,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmFi
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4875,40 +6874,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesHelmPa
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -4922,18 +6973,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustom
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4956,7 +7017,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesPlugin
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -4980,18 +7043,33 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSourcesPlugin
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub automated: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    pub automated:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyAutomated>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -5002,7 +7080,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyAut
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5012,7 +7091,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyMan
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -5023,7 +7103,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsListTemplateSpecSyncPolicyRet
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -5033,7 +7117,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPlugin {
     pub config_map_ref: ApplicationSetGeneratorsMatrixGeneratorsPluginConfigMapRef,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub input: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginInput>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplate>,
@@ -5075,20 +7163,38 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicy>,
 }
 
@@ -5106,12 +7212,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecDestination
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5130,11 +7248,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSource {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5145,7 +7265,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -5156,7 +7280,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirec
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -5164,11 +7289,17 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirec
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<
+            ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars,
+        >,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5189,33 +7320,72 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceDirec
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -5231,7 +7401,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmF
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5241,40 +7415,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHelmP
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -5288,18 +7514,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKusto
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5322,7 +7558,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcePlugi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5346,11 +7584,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcePlugi
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5380,11 +7621,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5395,7 +7638,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -5406,7 +7653,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDire
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -5422,7 +7670,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDire
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -5439,33 +7688,73 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesDire
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -5481,7 +7770,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5491,40 +7784,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -5538,18 +7883,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKust
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5568,11 +7923,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesKust
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5607,7 +7965,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicy 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -5618,7 +7980,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyA
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5628,7 +7991,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyM
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -5639,7 +8003,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPluginTemplateSpecSyncPolicyR
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -5649,8 +8017,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequest {
     pub azuredevops: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestAzuredevops>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
-    pub bitbucket_server: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServer>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
+    pub bitbucket_server:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServer>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestFilters>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5659,7 +8032,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequest {
     pub github: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplate>,
@@ -5693,8 +8070,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucket {
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
     pub basic_auth: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBearerToken>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBearerToken>,
     pub owner: String,
     pub repo: String,
 }
@@ -5702,7 +8084,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucket {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -5730,9 +8113,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketBearerTok
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServer {
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
-    pub basic_auth: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBearerToken>,
+    pub basic_auth:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBasicAuth>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerCaRef>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5744,7 +8133,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServer {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -5758,7 +8148,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBas
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBearerToken {
     #[serde(rename = "tokenRef")]
-    pub token_ref: ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBearerTokenTokenRef,
+    pub token_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerBearerTokenTokenRef,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5777,9 +8168,17 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestBitbucketServerCaR
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetBranchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetBranchMatch"
+    )]
     pub target_branch_match: Option<String>,
 }
 
@@ -5807,7 +8206,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestGiteaTokenRef {
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestGithub {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
@@ -5835,7 +8238,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestGitlab {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequestState")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequestState"
+    )]
     pub pull_request_state: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
     pub token_ref: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestGitlabTokenRef>,
@@ -5878,21 +8285,42 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecIgnoreDifferences>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
-    pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicy>,
+    pub sources:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSources>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
+    pub sync_policy:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicy>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -5909,12 +8337,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecDestin
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5933,11 +8373,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5948,7 +8390,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -5959,7 +8405,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -5975,7 +8423,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -5983,7 +8432,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -5992,33 +8442,75 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<
+            ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelmFileParameters,
+        >,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -6034,7 +8526,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6044,40 +8540,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -6091,18 +8639,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6121,11 +8680,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6149,11 +8711,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorHydrateTo,
+    >,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6183,22 +8749,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPlugin>,
+    pub plugin:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPlugin>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -6209,7 +8782,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -6225,7 +8800,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -6233,7 +8809,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -6275,7 +8852,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6284,7 +8862,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6294,40 +8876,94 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<
+            ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas,
+        >,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -6345,14 +8981,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6371,11 +9016,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPluginEnv>>,
+    pub env: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPluginEnv>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6410,7 +9059,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPo
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -6421,7 +9074,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPo
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6431,7 +9085,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPo
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPolicyRetryBackoff,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -6442,21 +9098,42 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsPullRequestTemplateSpecSyncPo
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProvider {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "awsCodeCommit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "awsCodeCommit"
+    )]
     pub aws_code_commit: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderAwsCodeCommit>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "azureDevOps")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "azureDevOps"
+    )]
     pub azure_dev_ops: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderAzureDevOps>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
-    pub bitbucket_server: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServer>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "cloneProtocol")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
+    pub bitbucket_server:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServer>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "cloneProtocol"
+    )]
     pub clone_protocol: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderFilters>>,
@@ -6466,7 +9143,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProvider {
     pub github: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplate>,
@@ -6476,14 +9157,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProvider {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderAwsCodeCommit {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tagFilters")]
-    pub tag_filters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderAwsCodeCommitTagFilters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tagFilters"
+    )]
+    pub tag_filters:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderAwsCodeCommitTagFilters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6496,8 +9186,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderAwsCodeCommitTagFi
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderAzureDevOps {
     #[serde(rename = "accessTokenRef")]
-    pub access_token_ref: ApplicationSetGeneratorsMatrixGeneratorsScmProviderAzureDevOpsAccessTokenRef,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    pub access_token_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderAzureDevOpsAccessTokenRef,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
@@ -6515,10 +9210,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderAzureDevOpsAccessT
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucket {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(rename = "appPasswordRef")]
-    pub app_password_ref: ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketAppPasswordRef,
+    pub app_password_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketAppPasswordRef,
     pub owner: String,
     pub user: String,
 }
@@ -6532,13 +9232,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketAppPasswo
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServer {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
-    pub basic_auth: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBearerToken>,
+    pub basic_auth:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBasicAuth>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerCaRef>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6549,7 +9259,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServer {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -6563,7 +9274,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBas
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBearerToken {
     #[serde(rename = "tokenRef")]
-    pub token_ref: ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBearerTokenTokenRef,
+    pub token_ref:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerBearerTokenTokenRef,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6582,21 +9294,45 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderBitbucketServerCaR
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelMatch"
+    )]
     pub label_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsDoNotExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsDoNotExist"
+    )]
     pub paths_do_not_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsExist"
+    )]
     pub paths_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "repositoryMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "repositoryMatch"
+    )]
     pub repository_match: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderGitea {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6615,11 +9351,19 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderGiteaTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderGithub {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     pub organization: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
@@ -6635,16 +9379,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderGithubTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderGitlab {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderGitlabCaRef>,
     pub group: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSharedProjects")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSharedProjects"
+    )]
     pub include_shared_projects: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSubgroups")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSubgroups"
+    )]
     pub include_subgroups: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub insecure: Option<bool>,
@@ -6691,21 +9447,42 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecIgnoreDifferences>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub sources: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
-    pub sync_policy: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicy>,
+    pub sources:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSources>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
+    pub sync_policy:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicy>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6722,12 +9499,24 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecDestin
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6746,11 +9535,13 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6761,7 +9552,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -6772,7 +9567,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -6788,7 +9585,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -6796,7 +9594,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -6805,33 +9604,75 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<
+            ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelmFileParameters,
+        >,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -6847,7 +9688,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6857,40 +9702,92 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -6904,18 +9801,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -6934,11 +9842,14 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6962,11 +9873,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorHydrateTo,
+    >,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -6996,22 +9911,29 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPlugin>,
+    pub plugin:
+        Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPlugin>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -7022,7 +9944,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -7038,7 +9962,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -7046,7 +9971,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -7088,7 +10014,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7097,7 +10024,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7107,40 +10038,94 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<
+            ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas,
+        >,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -7158,14 +10143,23 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7184,11 +10178,15 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSource
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPluginEnv>>,
+    pub env: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPluginEnv>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -7223,7 +10221,11 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPo
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -7234,7 +10236,8 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPo
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7244,7 +10247,9 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPo
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff: Option<
+        ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPolicyRetryBackoff,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -7255,15 +10260,28 @@ pub struct ApplicationSetGeneratorsMatrixGeneratorsScmProviderTemplateSpecSyncPo
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixGeneratorsSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
-    pub match_expressions: Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
+    pub match_expressions:
+        Option<Vec<ApplicationSetGeneratorsMatrixGeneratorsSelectorMatchExpressions>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -7298,20 +10316,37 @@ pub struct ApplicationSetGeneratorsMatrixTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpec {
     pub destination: ApplicationSetGeneratorsMatrixTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMatrixTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsMatrixTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicy>,
 }
 
@@ -7329,12 +10364,24 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7368,7 +10415,11 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -7387,7 +10438,8 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7412,33 +10464,70 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceDirectoryJsonnetTlas 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -7454,7 +10543,11 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7464,33 +10557,81 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -7516,13 +10657,21 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7618,7 +10767,11 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -7637,7 +10790,8 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7662,33 +10816,70 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesDirectoryJsonnetTlas
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -7704,7 +10895,11 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7714,33 +10909,81 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -7766,13 +11009,21 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7820,17 +11071,30 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -7862,7 +11126,11 @@ pub struct ApplicationSetGeneratorsMatrixTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -7877,8 +11145,13 @@ pub struct ApplicationSetGeneratorsMerge {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGenerators {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clusterDecisionResource")]
-    pub cluster_decision_resource: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResource>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "clusterDecisionResource"
+    )]
+    pub cluster_decision_resource:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResource>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub clusters: Option<ApplicationSetGeneratorsMergeGeneratorsClusters>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7891,9 +11164,17 @@ pub struct ApplicationSetGeneratorsMergeGenerators {
     pub merge: Option<serde_json::Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plugin: Option<ApplicationSetGeneratorsMergeGeneratorsPlugin>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequest")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequest"
+    )]
     pub pull_request: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequest>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "scmProvider")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "scmProvider"
+    )]
     pub scm_provider: Option<ApplicationSetGeneratorsMergeGeneratorsScmProvider>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selector: Option<ApplicationSetGeneratorsMergeGeneratorsSelector>,
@@ -7903,11 +11184,20 @@ pub struct ApplicationSetGeneratorsMergeGenerators {
 pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResource {
     #[serde(rename = "configMapRef")]
     pub config_map_ref: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
-    pub label_selector: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceLabelSelector>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
+    pub label_selector:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceLabelSelector>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplate>,
@@ -7924,7 +11214,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceLabelSe
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceLabelSelectorMatchExpressions
+{
     pub key: String,
     pub operator: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7982,15 +11273,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecIgnoreDifferences
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8009,22 +11313,34 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory>,
+    pub directory: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectory,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelm>,
+    pub helm: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelm,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize>,
+    pub kustomize: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomize,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePlugin>,
+    pub plugin: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePlugin,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -8051,7 +11367,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8059,7 +11376,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8101,7 +11419,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8109,8 +11428,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHelmParameters
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8171,14 +11495,23 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8189,7 +11522,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceKustomizeReplicas
+{
     pub count: IntOrString,
     pub name: String,
 }
@@ -8205,13 +11539,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePluginEnv
+{
     pub name: String,
     pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcePluginParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8233,7 +11569,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorDrySource
+{
     pub path: String,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
@@ -8242,13 +11579,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorHydrateTo
+{
     #[serde(rename = "targetBranch")]
     pub target_branch: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourceHydratorSyncSource
+{
     pub path: String,
     #[serde(rename = "targetBranch")]
     pub target_branch: String,
@@ -8259,22 +11598,34 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory>,
+    pub directory: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectory,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm>,
+    pub helm: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelm,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize>,
+    pub kustomize: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomize,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub plugin: Option<ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPlugin>,
+    pub plugin: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPlugin,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "ref")]
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -8301,7 +11652,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8309,7 +11661,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8351,7 +11704,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmFileParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8359,8 +11713,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesHelmParameters
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8421,14 +11780,23 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8439,7 +11807,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesKustomizeReplicas
+{
     pub count: IntOrString,
     pub name: String,
 }
@@ -8455,13 +11824,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginEnv
+{
     pub name: String,
     pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSourcesPluginParameters
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8485,8 +11856,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyAutomated
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -8497,7 +11873,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8513,12 +11890,17 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplat
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClusterDecisionResourceTemplateSpecSyncPolicyRetryBackoff
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -8536,9 +11918,18 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClusters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
-    pub match_expressions: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
+    pub match_expressions:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersSelectorMatchExpressions>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -8573,20 +11964,38 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicy>,
 }
 
@@ -8604,12 +12013,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecDestinatio
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8628,11 +12049,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSource {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8643,7 +12066,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -8654,7 +12081,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDire
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -8670,7 +12098,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDire
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8687,33 +12116,73 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceDire
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -8729,7 +12198,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8739,40 +12212,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHelm
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -8786,18 +12311,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKust
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8816,11 +12351,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceKust
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -8844,11 +12382,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcePlug
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -8878,11 +12419,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -8893,7 +12436,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -8904,7 +12451,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDir
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -8920,7 +12468,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDir
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -8937,33 +12486,73 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesDir
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -8979,7 +12568,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -8989,40 +12582,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesHel
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -9036,18 +12681,29 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKus
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9066,11 +12722,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesKus
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9105,7 +12764,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicy
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -9116,7 +12779,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicy
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -9126,7 +12790,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicy
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -9137,7 +12802,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsClustersTemplateSpecSyncPolicy
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -9147,11 +12816,19 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGit {
     pub directories: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitDirectories>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub files: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitFiles>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathParamPrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathParamPrefix"
+    )]
     pub path_param_prefix: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     pub revision: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -9197,20 +12874,38 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicy>,
 }
 
@@ -9228,12 +12923,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9267,7 +12974,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -9278,7 +12989,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectory
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -9286,11 +12998,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectory
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9311,33 +13027,71 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectory
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -9353,7 +13107,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmFileP
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9363,40 +13121,90 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHelmParam
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -9410,18 +13218,27 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomize
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9444,7 +13261,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9470,7 +13288,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydrator 
     #[serde(rename = "drySource")]
     pub dry_source: ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
     pub sync_source: ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourceHydratorSyncSource,
 }
@@ -9517,7 +13336,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -9528,7 +13351,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirector
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -9536,11 +13360,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirector
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9561,33 +13389,72 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesDirector
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -9603,7 +13470,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmFile
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9613,40 +13484,90 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesHelmPara
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -9660,18 +13581,27 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomiz
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9694,7 +13624,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9718,18 +13649,33 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSourcesPluginPa
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub automated: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    pub automated:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyAutomated>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata: Option<
+        ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -9740,7 +13686,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyAutom
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -9750,7 +13697,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyManag
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -9761,7 +13709,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetry
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -9769,7 +13721,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsGitTemplateSpecSyncPolicyRetry
 pub struct ApplicationSetGeneratorsMergeGeneratorsList {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub elements: Option<Vec<serde_json::Value>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "elementsYaml")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "elementsYaml"
+    )]
     pub elements_yaml: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplate>,
@@ -9798,20 +13754,38 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicy>,
 }
 
@@ -9829,12 +13803,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9868,7 +13854,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -9879,7 +13869,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirector
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -9887,11 +13878,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirector
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -9912,33 +13907,72 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceDirector
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -9954,7 +13988,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmFile
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -9964,40 +14002,90 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHelmPara
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -10011,18 +14099,27 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomiz
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10045,7 +14142,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10071,9 +14169,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydrator
     #[serde(rename = "drySource")]
     pub dry_source: ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10118,7 +14218,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -10129,7 +14233,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirecto
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -10137,11 +14242,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirecto
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10162,33 +14271,72 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesDirecto
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -10204,7 +14352,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmFil
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10214,40 +14366,91 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesHelmPar
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -10261,18 +14464,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10295,7 +14508,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesPlugin 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10319,18 +14533,33 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSourcesPluginP
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub automated: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    pub automated:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyAutomated>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata: Option<
+        ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -10341,7 +14570,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyAuto
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -10351,7 +14581,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyMana
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -10362,7 +14593,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsListTemplateSpecSyncPolicyRetr
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -10372,7 +14607,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPlugin {
     pub config_map_ref: ApplicationSetGeneratorsMergeGeneratorsPluginConfigMapRef,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub input: Option<ApplicationSetGeneratorsMergeGeneratorsPluginInput>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplate>,
@@ -10414,20 +14653,38 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicy>,
 }
 
@@ -10445,12 +14702,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecDestination 
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10484,7 +14753,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -10495,7 +14768,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirect
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -10503,11 +14777,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirect
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10528,33 +14806,72 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceDirect
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -10570,7 +14887,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmFi
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10580,40 +14901,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHelmPa
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -10627,18 +15000,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustom
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10661,7 +15044,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcePlugin
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10685,11 +15070,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcePlugin
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorHydrateTo>,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10719,11 +15107,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -10734,7 +15124,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -10745,7 +15139,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirec
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -10753,11 +15148,17 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirec
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<
+        Vec<
+            ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars,
+        >,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetTlas>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10778,33 +15179,72 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesDirec
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -10820,7 +15260,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmF
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10830,40 +15274,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesHelmP
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -10877,18 +15373,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKusto
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -10911,7 +15417,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesPlugi
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -10935,18 +15443,33 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSourcesPlugi
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub automated: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    pub automated:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyAutomated>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -10957,7 +15480,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyAu
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -10967,7 +15491,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyMa
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyRetryBackoff>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -10978,7 +15503,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPluginTemplateSpecSyncPolicyRe
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -10988,7 +15517,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequest {
     pub azuredevops: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestAzuredevops>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
     pub bitbucket_server: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServer>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestFilters>>,
@@ -10998,7 +15531,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequest {
     pub github: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplate>,
@@ -11032,8 +15569,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucket {
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
     pub basic_auth: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBearerToken>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBearerToken>,
     pub owner: String,
     pub repo: String,
 }
@@ -11041,7 +15583,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucket {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -11069,9 +15612,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketBearerToke
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServer {
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
-    pub basic_auth: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBearerToken>,
+    pub basic_auth:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasicAuth>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerCaRef>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11083,7 +15632,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServer {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -11097,7 +15647,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBasi
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBearerToken {
     #[serde(rename = "tokenRef")]
-    pub token_ref: ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBearerTokenTokenRef,
+    pub token_ref:
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerBearerTokenTokenRef,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11116,9 +15667,17 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestBitbucketServerCaRe
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetBranchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetBranchMatch"
+    )]
     pub target_branch_match: Option<String>,
 }
 
@@ -11146,7 +15705,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestGiteaTokenRef {
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestGithub {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
@@ -11174,7 +15737,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestGitlab {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequestState")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequestState"
+    )]
     pub pull_request_state: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
     pub token_ref: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestGitlabTokenRef>,
@@ -11217,21 +15784,41 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecIgnoreDifferences>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
-    pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicy>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
+    pub sync_policy:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicy>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11248,12 +15835,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecDestina
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -11272,11 +15871,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSource 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11287,7 +15888,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSource 
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -11298,7 +15903,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceD
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -11314,7 +15921,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceD
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -11322,7 +15930,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceD
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -11331,33 +15940,73 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceD
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -11373,7 +16022,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceH
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -11383,40 +16036,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceH
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -11430,18 +16135,29 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceK
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -11460,11 +16176,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceK
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11488,11 +16207,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceP
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorHydrateTo,
+    >,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11522,11 +16245,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11537,7 +16262,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -11548,7 +16277,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -11564,7 +16295,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -11572,7 +16304,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -11581,33 +16314,75 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<
+            ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters,
+        >,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -11623,7 +16398,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -11633,40 +16412,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -11680,18 +16511,29 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -11710,11 +16552,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSources
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11749,7 +16594,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPol
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -11760,7 +16609,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPol
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11770,7 +16620,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPol
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff: Option<
+        ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPolicyRetryBackoff,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -11781,21 +16633,41 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsPullRequestTemplateSpecSyncPol
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProvider {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "awsCodeCommit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "awsCodeCommit"
+    )]
     pub aws_code_commit: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderAwsCodeCommit>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "azureDevOps")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "azureDevOps"
+    )]
     pub azure_dev_ops: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderAzureDevOps>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
     pub bitbucket_server: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServer>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "cloneProtocol")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "cloneProtocol"
+    )]
     pub clone_protocol: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderFilters>>,
@@ -11805,7 +16677,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProvider {
     pub github: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplate>,
@@ -11815,14 +16691,23 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProvider {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderAwsCodeCommit {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tagFilters")]
-    pub tag_filters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderAwsCodeCommitTagFilters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tagFilters"
+    )]
+    pub tag_filters:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderAwsCodeCommitTagFilters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11835,8 +16720,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderAwsCodeCommitTagFil
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderAzureDevOps {
     #[serde(rename = "accessTokenRef")]
-    pub access_token_ref: ApplicationSetGeneratorsMergeGeneratorsScmProviderAzureDevOpsAccessTokenRef,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    pub access_token_ref:
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderAzureDevOpsAccessTokenRef,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
@@ -11854,7 +16744,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderAzureDevOpsAccessTo
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucket {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(rename = "appPasswordRef")]
     pub app_password_ref: ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketAppPasswordRef,
@@ -11871,13 +16765,23 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketAppPasswor
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServer {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
-    pub basic_auth: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
-    pub bearer_token: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBearerToken>,
+    pub basic_auth:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasicAuth>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
+    pub bearer_token:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerCaRef>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11888,7 +16792,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServer {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasicAuth {
     #[serde(rename = "passwordRef")]
-    pub password_ref: ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasicAuthPasswordRef,
+    pub password_ref:
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasicAuthPasswordRef,
     pub username: String,
 }
 
@@ -11902,7 +16807,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBasi
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBearerToken {
     #[serde(rename = "tokenRef")]
-    pub token_ref: ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBearerTokenTokenRef,
+    pub token_ref:
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerBearerTokenTokenRef,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -11921,21 +16827,45 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderBitbucketServerCaRe
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelMatch"
+    )]
     pub label_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsDoNotExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsDoNotExist"
+    )]
     pub paths_do_not_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsExist"
+    )]
     pub paths_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "repositoryMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "repositoryMatch"
+    )]
     pub repository_match: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderGitea {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -11954,11 +16884,19 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderGiteaTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderGithub {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     pub organization: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
@@ -11974,16 +16912,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderGithubTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderGitlab {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderGitlabCaRef>,
     pub group: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSharedProjects")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSharedProjects"
+    )]
     pub include_shared_projects: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSubgroups")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSubgroups"
+    )]
     pub include_subgroups: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub insecure: Option<bool>,
@@ -12030,21 +16980,41 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecIgnoreDifferences>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
-    pub source_hydrator: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydrator>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
+    pub source_hydrator:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
-    pub sync_policy: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicy>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
+    pub sync_policy:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicy>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -12061,12 +17031,24 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecDestina
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12085,11 +17067,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSource 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -12100,7 +17084,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSource 
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -12111,7 +17099,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceD
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -12127,7 +17117,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceD
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -12135,7 +17126,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceD
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -12144,33 +17136,73 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceD
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelmFileParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -12186,7 +17218,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceH
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12196,40 +17232,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceH
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -12243,18 +17331,29 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceK
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12273,11 +17372,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceK
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcePluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcePluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcePluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcePluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -12301,11 +17403,15 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceP
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydrator {
     #[serde(rename = "drySource")]
-    pub dry_source: ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorDrySource,
+    pub dry_source:
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorDrySource,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorHydrateTo>,
+    pub hydrate_to: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorHydrateTo,
+    >,
     #[serde(rename = "syncSource")]
-    pub sync_source: ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorSyncSource,
+    pub sync_source:
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourceHydratorSyncSource,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -12335,11 +17441,13 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub chart: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub directory: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectory>,
+    pub directory:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectory>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub helm: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelm>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kustomize: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomize>,
+    pub kustomize:
+        Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -12350,7 +17458,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -12361,7 +17473,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub include: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub jsonnet: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnet>,
+    pub jsonnet: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnet,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recurse: Option<bool>,
 }
@@ -12377,7 +17491,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars {
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -12385,7 +17500,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas {
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<bool>,
     pub name: String,
@@ -12394,33 +17510,75 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters: Option<
+        Vec<
+            ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters,
+        >,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelmParameters>,
+    >,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -12436,7 +17594,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12446,40 +17608,92 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>>,
+    pub patches: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas>,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -12493,18 +17707,29 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget
+{
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12523,11 +17748,14 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSources
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub env: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesPluginEnv>>,
+    pub env:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesPluginEnv>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesPluginParameters>>,
+    pub parameters: Option<
+        Vec<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSourcesPluginParameters>,
+    >,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -12562,7 +17790,11 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPol
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -12573,7 +17805,8 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPol
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
-pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata {
+pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata
+{
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub annotations: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -12583,7 +17816,9 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPol
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyRetry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub backoff: Option<ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyRetryBackoff>,
+    pub backoff: Option<
+        ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPolicyRetryBackoff,
+    >,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }
@@ -12594,15 +17829,28 @@ pub struct ApplicationSetGeneratorsMergeGeneratorsScmProviderTemplateSpecSyncPol
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeGeneratorsSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
-    pub match_expressions: Option<Vec<ApplicationSetGeneratorsMergeGeneratorsSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
+    pub match_expressions:
+        Option<Vec<ApplicationSetGeneratorsMergeGeneratorsSelectorMatchExpressions>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -12637,20 +17885,36 @@ pub struct ApplicationSetGeneratorsMergeTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpec {
     pub destination: ApplicationSetGeneratorsMergeTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
     pub ignore_differences: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsMergeTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsMergeTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsMergeTemplateSpecSyncPolicy>,
 }
 
@@ -12668,12 +17932,24 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsMergeTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12707,7 +17983,11 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -12726,7 +18006,8 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -12751,33 +18032,70 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -12793,7 +18111,11 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12803,33 +18125,81 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -12855,13 +18225,21 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -12957,7 +18335,11 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -12976,7 +18358,8 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -13001,33 +18384,70 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesDirectoryJsonnetTlas 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -13043,7 +18463,11 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13053,33 +18477,81 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -13105,13 +18577,21 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13159,17 +18639,30 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -13201,7 +18694,11 @@ pub struct ApplicationSetGeneratorsMergeTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -13211,7 +18708,11 @@ pub struct ApplicationSetGeneratorsPlugin {
     pub config_map_ref: ApplicationSetGeneratorsPluginConfigMapRef,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub input: Option<ApplicationSetGeneratorsPluginInput>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsPluginTemplate>,
@@ -13253,20 +18754,37 @@ pub struct ApplicationSetGeneratorsPluginTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpec {
     pub destination: ApplicationSetGeneratorsPluginTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsPluginTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsPluginTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsPluginTemplateSpecSyncPolicy>,
 }
 
@@ -13284,12 +18802,24 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsPluginTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13323,7 +18853,11 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -13342,7 +18876,8 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -13367,33 +18902,70 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceDirectoryJsonnetTlas 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -13409,7 +18981,11 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13419,33 +18995,81 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -13471,13 +19095,21 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13573,7 +19205,11 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -13592,7 +19228,8 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -13617,33 +19254,70 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesDirectoryJsonnetTlas
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -13659,7 +19333,11 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13669,33 +19347,81 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -13721,13 +19447,21 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -13775,17 +19509,30 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -13817,7 +19564,11 @@ pub struct ApplicationSetGeneratorsPluginTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
@@ -13827,7 +19578,11 @@ pub struct ApplicationSetGeneratorsPullRequest {
     pub azuredevops: Option<ApplicationSetGeneratorsPullRequestAzuredevops>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsPullRequestBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
     pub bitbucket_server: Option<ApplicationSetGeneratorsPullRequestBitbucketServer>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsPullRequestFilters>>,
@@ -13837,7 +19592,11 @@ pub struct ApplicationSetGeneratorsPullRequest {
     pub github: Option<ApplicationSetGeneratorsPullRequestGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsPullRequestGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsPullRequestTemplate>,
@@ -13871,7 +19630,11 @@ pub struct ApplicationSetGeneratorsPullRequestBitbucket {
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
     pub basic_auth: Option<ApplicationSetGeneratorsPullRequestBitbucketBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
     pub bearer_token: Option<ApplicationSetGeneratorsPullRequestBitbucketBearerToken>,
     pub owner: String,
     pub repo: String,
@@ -13909,7 +19672,11 @@ pub struct ApplicationSetGeneratorsPullRequestBitbucketServer {
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
     pub basic_auth: Option<ApplicationSetGeneratorsPullRequestBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
     pub bearer_token: Option<ApplicationSetGeneratorsPullRequestBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsPullRequestBitbucketServerCaRef>,
@@ -13955,9 +19722,17 @@ pub struct ApplicationSetGeneratorsPullRequestBitbucketServerCaRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetBranchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetBranchMatch"
+    )]
     pub target_branch_match: Option<String>,
 }
 
@@ -13985,7 +19760,11 @@ pub struct ApplicationSetGeneratorsPullRequestGiteaTokenRef {
 pub struct ApplicationSetGeneratorsPullRequestGithub {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
@@ -14013,7 +19792,11 @@ pub struct ApplicationSetGeneratorsPullRequestGitlab {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pullRequestState")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pullRequestState"
+    )]
     pub pull_request_state: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
     pub token_ref: Option<ApplicationSetGeneratorsPullRequestGitlabTokenRef>,
@@ -14056,20 +19839,37 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpec {
     pub destination: ApplicationSetGeneratorsPullRequestTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicy>,
 }
 
@@ -14087,12 +19887,24 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14126,7 +19938,11 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -14145,11 +19961,13 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnetTlas>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -14170,33 +19988,71 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceDirectoryJsonnet
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -14212,7 +20068,11 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmFileParamete
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14222,40 +20082,89 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub patches: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -14274,13 +20183,21 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomizePatches
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14303,7 +20220,8 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -14376,7 +20294,11 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -14395,11 +20317,13 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonnetTlas>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -14420,33 +20344,71 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesDirectoryJsonne
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -14462,7 +20424,11 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmFileParamet
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14472,40 +20438,90 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesHelmParameters 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -14519,18 +20535,27 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatche
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14553,7 +20578,8 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsPullRequestTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -14578,17 +20604,30 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSourcesPluginParameter
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -14620,21 +20659,41 @@ pub struct ApplicationSetGeneratorsPullRequestTemplateSpecSyncPolicyRetryBackoff
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProvider {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "awsCodeCommit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "awsCodeCommit"
+    )]
     pub aws_code_commit: Option<ApplicationSetGeneratorsScmProviderAwsCodeCommit>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "azureDevOps")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "azureDevOps"
+    )]
     pub azure_dev_ops: Option<ApplicationSetGeneratorsScmProviderAzureDevOps>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bitbucket: Option<ApplicationSetGeneratorsScmProviderBitbucket>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bitbucketServer")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bitbucketServer"
+    )]
     pub bitbucket_server: Option<ApplicationSetGeneratorsScmProviderBitbucketServer>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "cloneProtocol")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "cloneProtocol"
+    )]
     pub clone_protocol: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<ApplicationSetGeneratorsScmProviderFilters>>,
@@ -14644,7 +20703,11 @@ pub struct ApplicationSetGeneratorsScmProvider {
     pub github: Option<ApplicationSetGeneratorsScmProviderGithub>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gitlab: Option<ApplicationSetGeneratorsScmProviderGitlab>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requeueAfterSeconds")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requeueAfterSeconds"
+    )]
     pub requeue_after_seconds: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<ApplicationSetGeneratorsScmProviderTemplate>,
@@ -14654,13 +20717,21 @@ pub struct ApplicationSetGeneratorsScmProvider {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderAwsCodeCommit {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "tagFilters")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "tagFilters"
+    )]
     pub tag_filters: Option<Vec<ApplicationSetGeneratorsScmProviderAwsCodeCommitTagFilters>>,
 }
 
@@ -14675,7 +20746,11 @@ pub struct ApplicationSetGeneratorsScmProviderAwsCodeCommitTagFilters {
 pub struct ApplicationSetGeneratorsScmProviderAzureDevOps {
     #[serde(rename = "accessTokenRef")]
     pub access_token_ref: ApplicationSetGeneratorsScmProviderAzureDevOpsAccessTokenRef,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
@@ -14693,7 +20768,11 @@ pub struct ApplicationSetGeneratorsScmProviderAzureDevOpsAccessTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderBitbucket {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(rename = "appPasswordRef")]
     pub app_password_ref: ApplicationSetGeneratorsScmProviderBitbucketAppPasswordRef,
@@ -14710,12 +20789,20 @@ pub struct ApplicationSetGeneratorsScmProviderBitbucketAppPasswordRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderBitbucketServer {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "basicAuth")]
     pub basic_auth: Option<ApplicationSetGeneratorsScmProviderBitbucketServerBasicAuth>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "bearerToken")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "bearerToken"
+    )]
     pub bearer_token: Option<ApplicationSetGeneratorsScmProviderBitbucketServerBearerToken>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsScmProviderBitbucketServerCaRef>,
@@ -14760,21 +20847,45 @@ pub struct ApplicationSetGeneratorsScmProviderBitbucketServerCaRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderFilters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "branchMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "branchMatch"
+    )]
     pub branch_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelMatch"
+    )]
     pub label_match: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsDoNotExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsDoNotExist"
+    )]
     pub paths_do_not_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "pathsExist")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "pathsExist"
+    )]
     pub paths_exist: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "repositoryMatch")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "repositoryMatch"
+    )]
     pub repository_match: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderGitea {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     pub api: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -14793,11 +20904,19 @@ pub struct ApplicationSetGeneratorsScmProviderGiteaTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderGithub {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "appSecretName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "appSecretName"
+    )]
     pub app_secret_name: Option<String>,
     pub organization: String,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "tokenRef")]
@@ -14813,16 +20932,28 @@ pub struct ApplicationSetGeneratorsScmProviderGithubTokenRef {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderGitlab {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allBranches")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allBranches"
+    )]
     pub all_branches: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub api: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "caRef")]
     pub ca_ref: Option<ApplicationSetGeneratorsScmProviderGitlabCaRef>,
     pub group: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSharedProjects")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSharedProjects"
+    )]
     pub include_shared_projects: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "includeSubgroups")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "includeSubgroups"
+    )]
     pub include_subgroups: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub insecure: Option<bool>,
@@ -14869,20 +21000,37 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpec {
     pub destination: ApplicationSetGeneratorsScmProviderTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
-    pub ignore_differences: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecIgnoreDifferences>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
+    pub ignore_differences:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicy>,
 }
 
@@ -14900,12 +21048,24 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecDestination {
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -14939,7 +21099,11 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -14958,11 +21122,13 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas>>,
+    pub tlas:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnetTlas>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -14983,33 +21149,71 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceDirectoryJsonnet
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -15025,7 +21229,11 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmFileParamete
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15035,40 +21243,89 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub patches: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -15087,13 +21344,21 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomizePatches
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15116,7 +21381,8 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcePlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcePluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcePluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -15189,7 +21455,11 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -15208,11 +21478,13 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectory {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnet {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetExtVars>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub tlas: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas>>,
+    pub tlas:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonnetTlas>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -15233,33 +21505,71 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesDirectoryJsonne
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
-    pub file_parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
+    pub file_parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmFileParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmParameters>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -15275,7 +21585,11 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmFileParamet
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15285,40 +21599,90 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesHelmParameters 
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub patches: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>>,
+    pub patches:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatches>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub replicas: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas>>,
+    pub replicas:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizeReplicas>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
@@ -15332,18 +21696,27 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatche
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget>,
+    pub target:
+        Option<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15366,7 +21739,8 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesPluginParameters>>,
+    pub parameters:
+        Option<Vec<ApplicationSetGeneratorsScmProviderTemplateSpecSourcesPluginParameters>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
@@ -15391,17 +21765,30 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSourcesPluginParameter
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -15433,15 +21820,27 @@ pub struct ApplicationSetGeneratorsScmProviderTemplateSpecSyncPolicyRetryBackoff
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetGeneratorsSelector {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
     pub match_expressions: Option<Vec<ApplicationSetGeneratorsSelectorMatchExpressions>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchLabels"
+    )]
     pub match_labels: Option<BTreeMap<String, String>>,
 }
 
@@ -15455,9 +21854,17 @@ pub struct ApplicationSetGeneratorsSelectorMatchExpressions {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetIgnoreApplicationDifferences {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15473,7 +21880,11 @@ pub struct ApplicationSetPreservedFields {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetStrategy {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "rollingSync")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "rollingSync"
+    )]
     pub rolling_sync: Option<ApplicationSetStrategyRollingSync>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "type")]
     pub r#type: Option<String>,
@@ -15487,7 +21898,11 @@ pub struct ApplicationSetStrategyRollingSync {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetStrategyRollingSyncSteps {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "matchExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "matchExpressions"
+    )]
     pub match_expressions: Option<Vec<ApplicationSetStrategyRollingSyncStepsMatchExpressions>>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxUpdate")]
     pub max_update: Option<IntOrString>,
@@ -15505,9 +21920,17 @@ pub struct ApplicationSetStrategyRollingSyncStepsMatchExpressions {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetSyncPolicy {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "applicationsSync")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "applicationsSync"
+    )]
     pub applications_sync: Option<ApplicationSetSyncPolicyApplicationsSync>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "preserveResourcesOnDeletion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "preserveResourcesOnDeletion"
+    )]
     pub preserve_resources_on_deletion: Option<bool>,
 }
 
@@ -15546,20 +21969,36 @@ pub struct ApplicationSetTemplateMetadata {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpec {
     pub destination: ApplicationSetTemplateSpecDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreDifferences"
+    )]
     pub ignore_differences: Option<Vec<ApplicationSetTemplateSpecIgnoreDifferences>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationSetTemplateSpecInfo>>,
     pub project: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "revisionHistoryLimit"
+    )]
     pub revision_history_limit: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSetTemplateSpecSource>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "sourceHydrator"
+    )]
     pub source_hydrator: Option<ApplicationSetTemplateSpecSourceHydrator>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSetTemplateSpecSources>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncPolicy"
+    )]
     pub sync_policy: Option<ApplicationSetTemplateSpecSyncPolicy>,
 }
 
@@ -15577,12 +22016,24 @@ pub struct ApplicationSetTemplateSpecDestination {
 pub struct ApplicationSetTemplateSpecIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jqPathExpressions"
+    )]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "jsonPointers"
+    )]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedFieldsManagers"
+    )]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15616,7 +22067,11 @@ pub struct ApplicationSetTemplateSpecSource {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -15660,33 +22115,69 @@ pub struct ApplicationSetTemplateSpecSourceDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourceHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
     pub file_parameters: Option<Vec<ApplicationSetTemplateSpecSourceHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetTemplateSpecSourceHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -15702,7 +22193,11 @@ pub struct ApplicationSetTemplateSpecSourceHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourceHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15712,33 +22207,81 @@ pub struct ApplicationSetTemplateSpecSourceHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourceKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -15764,13 +22307,21 @@ pub struct ApplicationSetTemplateSpecSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourceKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15866,7 +22417,11 @@ pub struct ApplicationSetTemplateSpecSources {
     pub r#ref: Option<String>,
     #[serde(rename = "repoURL")]
     pub repo_url: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "targetRevision"
+    )]
     pub target_revision: Option<String>,
 }
 
@@ -15910,33 +22465,69 @@ pub struct ApplicationSetTemplateSpecSourcesDirectoryJsonnetTlas {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourcesHelm {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fileParameters"
+    )]
     pub file_parameters: Option<Vec<ApplicationSetTemplateSpecSourcesHelmFileParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingValueFiles"
+    )]
     pub ignore_missing_value_files: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSetTemplateSpecSourcesHelmParameters>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "passCredentials"
+    )]
     pub pass_credentials: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "releaseName"
+    )]
     pub release_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "skipSchemaValidation"
+    )]
     pub skip_schema_validation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valueFiles"
+    )]
     pub value_files: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "valuesObject"
+    )]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -15952,7 +22543,11 @@ pub struct ApplicationSetTemplateSpecSourcesHelmFileParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourcesHelmParameters {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceString"
+    )]
     pub force_string: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15962,33 +22557,81 @@ pub struct ApplicationSetTemplateSpecSourcesHelmParameters {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourcesKustomize {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "apiVersions"
+    )]
     pub api_versions: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotations"
+    )]
     pub common_annotations: Option<BTreeMap<String, String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonAnnotationsEnvsubst"
+    )]
     pub common_annotations_envsubst: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "commonLabels"
+    )]
     pub common_labels: Option<BTreeMap<String, String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonAnnotations"
+    )]
     pub force_common_annotations: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "forceCommonLabels"
+    )]
     pub force_common_labels: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "ignoreMissingComponents"
+    )]
     pub ignore_missing_components: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "kubeVersion"
+    )]
     pub kube_version: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelIncludeTemplates"
+    )]
     pub label_include_templates: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelWithoutSelector"
+    )]
     pub label_without_selector: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "namePrefix"
+    )]
     pub name_prefix: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "nameSuffix"
+    )]
     pub name_suffix: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
@@ -16014,13 +22657,21 @@ pub struct ApplicationSetTemplateSpecSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSourcesKustomizePatchesTarget {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "annotationSelector"
+    )]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "labelSelector"
+    )]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -16068,17 +22719,30 @@ pub struct ApplicationSetTemplateSpecSourcesPluginParameters {
 pub struct ApplicationSetTemplateSpecSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSetTemplateSpecSyncPolicyAutomated>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
-    pub managed_namespace_metadata: Option<ApplicationSetTemplateSpecSyncPolicyManagedNamespaceMetadata>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "managedNamespaceMetadata"
+    )]
+    pub managed_namespace_metadata:
+        Option<ApplicationSetTemplateSpecSyncPolicyManagedNamespaceMetadata>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSetTemplateSpecSyncPolicyRetry>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "syncOptions"
+    )]
     pub sync_options: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetTemplateSpecSyncPolicyAutomated {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowEmpty"
+    )]
     pub allow_empty: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
@@ -16110,13 +22774,21 @@ pub struct ApplicationSetTemplateSpecSyncPolicyRetryBackoff {
     pub duration: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "maxDuration"
+    )]
     pub max_duration: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetStatus {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "applicationStatus")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "applicationStatus"
+    )]
     pub application_status: Option<Vec<ApplicationSetStatusApplicationStatus>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub conditions: Option<Vec<Condition>>,
@@ -16127,7 +22799,11 @@ pub struct ApplicationSetStatus {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetStatusApplicationStatus {
     pub application: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastTransitionTime")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "lastTransitionTime"
+    )]
     pub last_transition_time: Option<String>,
     pub message: String,
     pub status: String,
@@ -16150,9 +22826,17 @@ pub struct ApplicationSetStatusResources {
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requiresDeletionConfirmation")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requiresDeletionConfirmation"
+    )]
     pub requires_deletion_confirmation: Option<bool>,
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requiresPruning")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "requiresPruning"
+    )]
     pub requires_pruning: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
@@ -16164,11 +22848,14 @@ pub struct ApplicationSetStatusResources {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSetStatusResourcesHealth {
-    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastTransitionTime")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "lastTransitionTime"
+    )]
     pub last_transition_time: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
-

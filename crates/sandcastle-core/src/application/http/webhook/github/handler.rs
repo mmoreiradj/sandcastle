@@ -12,7 +12,6 @@ use serde::Deserialize;
 use serde_json::Value;
 use tracing::info;
 
-
 #[derive(TypedPath, Deserialize)]
 #[typed_path("/api/v1/github/webhook")]
 pub struct HandleWebhookRoute;
@@ -70,7 +69,8 @@ pub async fn handle_webhook(
 
     let event_header = headers.event.into_inner();
     let event_header_str = serde_json::to_string(&event_header).unwrap();
-    let webhook_event = WebhookEvent::try_from_header_and_body(&event_header_str, &payload.to_string()).unwrap();
+    let webhook_event =
+        WebhookEvent::try_from_header_and_body(&event_header_str, &payload.to_string()).unwrap();
     let event_payload = event_header.parse_specific_payload(payload).unwrap();
     match event_payload {
         WebhookEventPayload::IssueComment(payload) => {

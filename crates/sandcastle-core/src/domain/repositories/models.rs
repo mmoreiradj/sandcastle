@@ -31,12 +31,14 @@ impl TryFrom<&RepositoryConfiguration> for Octocrab {
                         reason: auth.app_id.to_string(),
                         backtrace: Backtrace::capture(),
                     })?;
-                let octocrab = octocrab.installation(auth.installation_id.into()).map_err(|e| SandcastleError::Service {
-                    code: ServiceErrorCode::GitHubAppAuthentication,
-                    message: e.to_string(),
-                    reason: auth.app_id.to_string(),
-                    backtrace: Backtrace::capture(),
-                })?;
+                let octocrab = octocrab
+                    .installation(auth.installation_id.into())
+                    .map_err(|e| SandcastleError::Service {
+                        code: ServiceErrorCode::GitHubAppAuthentication,
+                        message: e.to_string(),
+                        reason: auth.app_id.to_string(),
+                        backtrace: Backtrace::capture(),
+                    })?;
                 Ok(octocrab)
             }
         }

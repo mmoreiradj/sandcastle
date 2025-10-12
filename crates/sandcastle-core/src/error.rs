@@ -35,7 +35,9 @@ impl Display for ServiceErrorCode {
             ServiceErrorCode::HelmReleaseStatusFailed => write!(f, "helm_release_status_failed"),
             ServiceErrorCode::VCSFileDownloadFailed => write!(f, "vcs_file_download_failed"),
             ServiceErrorCode::VCSFileNotFound => write!(f, "vcs_file_not_found"),
-            ServiceErrorCode::VCSFetchPRLastCommitSHARequest => write!(f, "vcs_fetch_pr_last_commit_sha_request"),
+            ServiceErrorCode::VCSFetchPRLastCommitSHARequest => {
+                write!(f, "vcs_fetch_pr_last_commit_sha_request")
+            }
             ServiceErrorCode::InvalidConfiguration => write!(f, "invalid_configuration"),
             ServiceErrorCode::SecretParsingFailed => write!(f, "secret_parsing_failed"),
             ServiceErrorCode::GitHubAppAuthentication => write!(f, "github_app_authentication"),
