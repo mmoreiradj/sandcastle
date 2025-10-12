@@ -1,32 +1,23 @@
-use std::{backtrace::Backtrace, str::FromStr};
+use std::backtrace::Backtrace;
 
 use crate::{
     Result,
-    application::ApplicationState,
-    domain::environment::{
-        models::{DownloadFileRequest, FetchPRLastCommitSHARequest},
-        services::GitHub,
-    },
+    domain::environment::models::{DownloadFileRequest, FetchPRLastCommitSHARequest},
     error::ServiceErrorCode,
 };
 use crate::{
     domain::environment::{
-        models::config::{BuiltinConfigKey, ConfigPath, SandcastleConfiguration},
+        models::config::{BuiltinConfigKey, SandcastleConfiguration},
         ports::{Reconcile, VCSService},
         services::{GitOpsPlatform, VCS},
     },
-    domain::repositories::ports::RepositoryConfigurationService,
     error::SandcastleError,
 };
-use octocrab::{
-    Octocrab,
-    models::{
+use octocrab::models::{
         Repository,
         webhook_events::{WebhookEvent, WebhookEventPayload},
-    },
-};
+    };
 use regex::Regex;
-use serde_yaml::Value;
 
 #[derive(Clone)]
 pub struct ReconcileContext {
@@ -73,7 +64,7 @@ impl ReconcileContext {
         id: String,
         event: WebhookEvent,
         payload: WebhookEventPayload,
-        state: ApplicationState,
+        vcs_service: VCS,
     ) -> Result<Option<Self>> {
         match payload {
             WebhookEventPayload::IssueComment(payload) => {
@@ -87,18 +78,7 @@ impl ReconcileContext {
 
                 // this is always Some
                 let repository = event.repository.unwrap();
-                let repository_configuration = match state
-                    .repository_configuration_service
-                    .get_repository_configuration(repository.url.as_ref())
-                    .await?
-                {
-                    Some(repository_configuration) => repository_configuration,
-                    None => return Ok(None),
-                };
-                let octocrab = Octocrab::try_from(&repository_configuration)?;
 
-                // Fetch config from repository
-                let vcs_service = VCS::GitHub(GitHub::from(octocrab));
                 let last_commit_sha = vcs_service
                     .fetch_pr_last_commit_sha(FetchPRLastCommitSHARequest {
                         repository_id: (*repository.id),
@@ -128,9 +108,7 @@ impl ReconcileContext {
                             last_commit_sha,
                         },
                     },
-                    vcs_service: VCS::GitHub(crate::domain::environment::services::GitHub::from(
-                        octocrab::Octocrab::default(),
-                    )),
+                    vcs_service,
                     gitops_platform_service: GitOpsPlatform::ArgoCD(
                         crate::domain::environment::services::ArgoCD,
                     ),
@@ -182,7 +160,8 @@ impl From<&Repository> for RepositoryContext {
         Self {
             name: value.name.clone(),
             private: value.private.unwrap_or(false),
-            url: value.url.to_string(),
+            // this is always Some
+            url: value.html_url.as_ref().unwrap().to_string(),
         }
     }
 }
@@ -232,30 +211,44 @@ impl ReconcileActions {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::environment::services::ArgoCD;
+    use googletest::prelude::*;
+    use http::{Request, Response};
+    use kube::{Client, client::Body};
+    use octocrab::models::webhook_events::WebhookEventType;
+
+    use crate::domain::{
+        environment::{ports::MockVCSService, services::ArgoCD},
+        repositories::{
+            ports::MockRepositoryConfigurationService, services::RepositoryConfigurations,
+        },
+    };
+    use googletest::Result;
 
     use super::*;
 
     async fn test_context() -> ReconcileContext {
-        let config = SandcastleConfiguration::from_string(include_str!("../../../../tests/fixtures/example_application_1.yaml")).unwrap();
+        let config = SandcastleConfiguration::from_string(include_str!(
+            "../../../../tests/fixtures/example_application_1.yaml"
+        ))
+        .unwrap();
         let context = ReconcileContext {
             id: "1".to_string(),
             vcs: VcsContext {
                 repository: RepositoryContext {
-                    name: "test".to_string(),
+                    name: "sandcastle-monorepo-test".to_string(),
                     private: false,
-                    url: "https://github.com/test/test".to_string(),
+                    url: "https://github.com/mmoreiradj/sandcastle-monorepo-test".to_string(),
                 },
                 pull_request: PullRequestContext {
                     number: 1,
-                    title: "test".to_string(),
-                    last_commit_sha: "test".to_string(),
+                    title: "feat: make unreasonable promises".to_string(),
+                    last_commit_sha: "1234567890".to_string(),
                 },
                 comment: CommentContext {
-                    body: "test".to_string(),
+                    body: "sandcastle deploy".to_string(),
                 },
             },
-            vcs_service: VCS::GitHub(GitHub::from(Octocrab::default())),
+            vcs_service: VCS::MockVCS(MockVCSService::new()),
             gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
             config: config,
         };
@@ -276,5 +269,61 @@ mod tests {
         let context = test_context().await;
         let result = context.template(template).unwrap();
         insta::assert_snapshot!(result);
+    }
+
+    #[tokio::test]
+    #[gtest]
+    async fn test_from_github_event_issue_comment() -> Result<()> {
+        let comment_payload_str =
+            include_str!("../../../../tests/fixtures/github/issue_comment_webhook_event.json");
+        let comment_payload =
+            serde_json::from_str::<serde_json::Value>(comment_payload_str).unwrap();
+        let event =
+            WebhookEvent::try_from_header_and_body("issue_comment", comment_payload_str).unwrap();
+        let webhook_event_type = WebhookEventType::IssueComment;
+        let payload = webhook_event_type
+            .parse_specific_payload(comment_payload)
+            .unwrap();
+
+        let mut mock_vcs_service = MockVCSService::new();
+        mock_vcs_service
+            .expect_fetch_pr_last_commit_sha()
+            .returning(move |_| Ok("1234567890".to_string()));
+        mock_vcs_service.expect_download_file().returning(move |_| {
+            let template = include_str!("../../../../tests/fixtures/example_application_1.yaml");
+            Ok(template.to_string())
+        });
+        let context = ReconcileContext::from_github_event(
+            "1".to_string(),
+            event,
+            payload,
+            VCS::MockVCS(mock_vcs_service),
+        )
+        .await
+        .unwrap()
+        .unwrap();
+        expect_that!(
+            context.vcs.repository,
+            matches_pattern!(RepositoryContext {
+                name: eq("sandcastle-monorepo-test"),
+                private: eq(&true),
+                url: eq("https://github.com/mmoreiradj/sandcastle-monorepo-test"),
+            })
+        );
+        expect_that!(
+            context.vcs.pull_request,
+            matches_pattern!(PullRequestContext {
+                number: eq(&1),
+                title: eq("feat: make unreasonable promises"),
+                last_commit_sha: eq("1234567890"),
+            })
+        );
+        expect_that!(
+            context.vcs.comment,
+            matches_pattern!(CommentContext {
+                body: eq("sandcastle deploy"),
+            })
+        );
+        Ok(())
     }
 }

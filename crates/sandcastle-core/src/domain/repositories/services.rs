@@ -9,10 +9,15 @@ use crate::domain::repositories::{
     models::RepositoryConfiguration, ports::RepositoryConfigurationService,
 };
 
+#[cfg(test)]
+use crate::domain::repositories::ports::MockRepositoryConfigurationService;
+
 #[enum_dispatch(RepositoryConfigurationService)]
 #[derive(Clone)]
 pub enum RepositoryConfigurations {
     DefaultRepositoryConfigurationService,
+    #[cfg(test)]
+    MockRepositoryConfigurationService,
 }
 
 #[derive(Clone)]

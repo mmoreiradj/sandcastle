@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use enum_dispatch::enum_dispatch;
+use mockall::mock;
 
 use crate::{
     domain::environment::models::{
@@ -33,4 +34,20 @@ pub trait VCSService: Clone + Send + Sync {
         &self,
         request: FetchPRLastCommitSHARequest,
     ) -> Result<String, SandcastleError>;
+}
+
+mock!{
+    pub VCSService {}
+
+    #[async_trait]
+    impl VCSService for VCSService {
+        async fn download_file(&self, request: DownloadFileRequest) -> Result<String, SandcastleError>;
+        async fn fetch_pr_last_commit_sha(&self, request: FetchPRLastCommitSHARequest) -> Result<String, SandcastleError>;
+    }
+
+    impl Clone for VCSService {
+        fn clone(&self) -> Self {
+            self.clone()
+        }
+    }
 }

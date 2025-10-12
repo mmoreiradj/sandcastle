@@ -1,20 +1,40 @@
 mod environment;
 mod gitops;
-mod vcs;
+mod github;
 
 use enum_dispatch::enum_dispatch;
 
 pub use gitops::*;
-pub use vcs::*;
+use octocrab::Octocrab;
+pub use github::*;
 
 use crate::domain::environment::models::*;
 use crate::domain::environment::ports::*;
+use crate::domain::repositories::models::Authentication;
+use crate::domain::repositories::models::RepositoryConfiguration;
 use crate::error::SandcastleError;
+#[cfg(test)]
+use crate::domain::environment::ports::MockVCSService as MockVCS;
 
 #[enum_dispatch(VCSService)]
 #[derive(Clone)]
 pub enum VCS {
     GitHub,
+    #[cfg(test)]
+    MockVCS,
+}
+
+impl TryFrom<RepositoryConfiguration> for VCS {
+    type Error = SandcastleError;
+
+    fn try_from(value: RepositoryConfiguration) -> Result<Self, Self::Error> {
+        match &value.authentication {
+            Authentication::GitHubApp(_) => {
+                let octocrab = Octocrab::try_from(&value)?;
+                Ok(VCS::GitHub(GitHub::from(octocrab)))
+            }
+        }
+    }
 }
 
 #[enum_dispatch(GitOpsPlatformService)]

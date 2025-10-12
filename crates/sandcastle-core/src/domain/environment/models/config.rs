@@ -86,12 +86,12 @@ impl SandcastleConfiguration {
                 Ok(config)
             }
             None => {
-                return Err(SandcastleError::Service {
+                Err(SandcastleError::Service {
                     code: ServiceErrorCode::InvalidConfiguration,
                     message: "No configuration found in file".to_string(),
                     reason: string.to_string(),
                     backtrace: Backtrace::capture(),
-                });
+                })
             }
         }
     }
