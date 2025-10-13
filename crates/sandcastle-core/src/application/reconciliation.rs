@@ -28,7 +28,7 @@ impl ReconciliationService {
     }
 
     fn determine_action(context: &ReconcileContext) -> Result<ReconcileActions, SandcastleError> {
-        let templated_application = context.template(&context.config.application)?;
+        let templated_application = context.template(&context.config.template)?;
 
         match &context.trigger {
             ReconcileTrigger::CommentCommand(Command::Deploy) => {

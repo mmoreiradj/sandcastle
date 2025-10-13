@@ -225,6 +225,7 @@ impl ReconcileContext {
             BuiltinConfigKey::RepoURL => Some(self.vcs.repository.url.clone()),
             BuiltinConfigKey::TargetRevision => Some(self.vcs.pull_request.last_commit_sha.clone()),
             BuiltinConfigKey::LastCommitSHA => Some(self.vcs.pull_request.last_commit_sha.clone()),
+            BuiltinConfigKey::PRNumber => Some(self.vcs.pull_request.number.to_string()),
         }
     }
 }
@@ -347,7 +348,7 @@ mod tests {
         let template = "{{ .Sandcastle.EnvironmentName }}";
         let context = test_context().await;
         let result = context.template(template).unwrap();
-        assert_eq!(result, "test");
+        assert_eq!(result, "sandcastle-monorepo-test");
     }
 
     #[tokio::test]

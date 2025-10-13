@@ -12,6 +12,7 @@ pub enum BuiltinConfigKey {
     RepoURL,
     TargetRevision,
     LastCommitSHA,
+    PRNumber,
 }
 
 impl BuiltinConfigKey {
@@ -21,6 +22,7 @@ impl BuiltinConfigKey {
             ".Sandcastle.RepoURL" => Some(BuiltinConfigKey::RepoURL),
             ".Sandcastle.TargetRevision" => Some(BuiltinConfigKey::TargetRevision),
             ".Sandcastle.LastCommitSHA" => Some(BuiltinConfigKey::LastCommitSHA),
+            ".Sandcastle.PRNumber" => Some(BuiltinConfigKey::PRNumber),
             _ => None,
         }
     }
@@ -68,23 +70,29 @@ impl FromStr for ConfigPath {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SandcastleConfiguration {
     pub custom: SandcastleCustomValues,
-    pub application: String,
+    pub template: String,
 }
 
 pub type SandcastleCustomValues = Value;
 
 impl SandcastleConfiguration {
     pub fn from_string(string: &str) -> Result<Self, SandcastleError> {
-        let parts = string
-            .trim()
-            .split("---")
-            .filter_map(|s| if !s.is_empty() { Some(s.trim()) } else { None })
-            .collect::<Vec<&str>>();
-
-        match parts.first() {
-            Some(part) => {
-                let config = Self::from_yaml(part)?;
-                Ok(config)
+        match string.trim().trim_start_matches("---").split_once("---") {
+            Some((config, template)) => {
+                let custom_config = serde_yaml::from_str::<Value>(config)
+                    .map_err(|e| SandcastleError::Service {
+                        code: ServiceErrorCode::InvalidConfiguration,
+                        message: e.to_string(),
+                        reason: config.to_string(),
+                        backtrace: Backtrace::capture(),
+                    })?
+                    .get("custom")
+                    .unwrap_or(&Value::Null)
+                    .clone();
+                Ok(Self {
+                    custom: custom_config,
+                    template: template.to_string(),
+                })
             }
             None => Err(SandcastleError::Service {
                 code: ServiceErrorCode::InvalidConfiguration,
@@ -95,20 +103,7 @@ impl SandcastleConfiguration {
         }
     }
 
-    fn from_yaml(yaml: &str) -> Result<Self, SandcastleError> {
-        println!("From YAML: {}", yaml);
-        let config: SandcastleConfiguration =
-            serde_yaml::from_str(yaml).map_err(|e| SandcastleError::Service {
-                code: ServiceErrorCode::InvalidConfiguration,
-                message: e.to_string(),
-                reason: yaml.to_string(),
-                backtrace: Backtrace::capture(),
-            })?;
-        Ok(config)
-    }
-
     pub fn get_custom_value(&self, path: &str) -> Option<String> {
-        println!("Getting custom value for path: {}", path);
         let path_parts = path
             .trim_start_matches(".Custom.")
             .split(".")
@@ -117,6 +112,7 @@ impl SandcastleConfiguration {
         let mut current = &self.custom;
 
         for part in path_parts {
+            println!("Part: {}", part);
             current = current.get(part.as_str())?;
         }
 
@@ -135,8 +131,11 @@ mod tests {
           baseDomain: sandcastle.dev
           whatever:
             key: value
+        ---
+        whatever:
+          key: value
         "#;
-        let config = SandcastleConfiguration::from_yaml(custom).unwrap();
+        let config = SandcastleConfiguration::from_string(custom).unwrap();
         let value = config.get_custom_value(".Custom.baseDomain");
         assert_eq!(value, Some("sandcastle.dev".to_string()));
 
