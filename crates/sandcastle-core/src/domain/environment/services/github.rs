@@ -25,9 +25,8 @@ impl From<Octocrab> for GitHub {
 
 #[async_trait]
 impl VCSService for GitHub {
-    #[instrument(skip(self))]
     async fn download_file(&self, request: DownloadFileRequest) -> Result<String, SandcastleError> {
-        tracing::info!("Downloading file from GitHub");
+        tracing::info!("Downloading file {} from GitHub", request.path);
         let mut file = self
             .client
             .repos_by_id(request.repository_id)
@@ -64,12 +63,11 @@ impl VCSService for GitHub {
         Ok(file)
     }
 
-    #[instrument(skip(self))]
     async fn fetch_pr_last_commit_sha(
         &self,
         request: FetchPRLastCommitSHARequest,
     ) -> Result<String, SandcastleError> {
-        tracing::info!("Fetching last commit SHA from GitHub");
+        tracing::info!("Fetching last commit SHA from GitHub for PR {}", request.pr_number);
         let repository = self
             .client
             .repos_by_id(request.repository_id)

@@ -171,18 +171,10 @@ impl ReconcileContext {
         repository: &Repository,
         commit_sha: &str,
     ) -> Result<SandcastleConfiguration> {
-        let refs_url = repository
-            .git_refs_url
-            .clone()
-            .unwrap()
-            .to_string()
-            .replace("{/sha}", commit_sha);
-        let config_url = format!("{refs_url}/.github/sandcastle.yaml");
-        
         let configuration_file_content = vcs_service
             .download_file(DownloadFileRequest {
                 repository_id: (*repository.id),
-                path: config_url,
+                path: ".github/sandcastle.yaml".to_string(),
                 r#ref: commit_sha.to_string(),
                 content_type: "application/yaml".to_string(),
             })
