@@ -1,12 +1,12 @@
 use async_trait::async_trait;
-use tracing::instrument;
+use tracing::{info, instrument};
 
 use crate::{
     domain::environment::{
         models::{
             CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction, ReconcileContext,
         },
-        ports::Reconcile,
+        ports::{GitOpsPlatformService, Reconcile},
     },
     error::SandcastleError,
 };
@@ -15,6 +15,15 @@ use crate::{
 impl Reconcile for CreateOrUpdateArgocdApplicationAction {
     #[instrument(skip(self, context))]
     async fn reconcile(&self, context: ReconcileContext) -> Result<(), SandcastleError> {
+        info!("Creating or updating ArgoCD application");
+
+        context
+            .gitops_platform_service
+            .create_or_update_application(&self.application)
+            .await?;
+
+        info!("Successfully created or updated ArgoCD application");
+
         Ok(())
     }
 }
@@ -23,6 +32,15 @@ impl Reconcile for CreateOrUpdateArgocdApplicationAction {
 impl Reconcile for DeleteArgocdApplicationAction {
     #[instrument(skip(self, context))]
     async fn reconcile(&self, context: ReconcileContext) -> Result<(), SandcastleError> {
+        info!("Deleting ArgoCD application");
+
+        context
+            .gitops_platform_service
+            .delete_application(&self.application)
+            .await?;
+
+        info!("Successfully deleted ArgoCD application");
+
         Ok(())
     }
 }

@@ -1,20 +1,20 @@
 mod environment;
-mod gitops;
 mod github;
+mod gitops;
 
 use enum_dispatch::enum_dispatch;
 
+pub use github::*;
 pub use gitops::*;
 use octocrab::Octocrab;
-pub use github::*;
 
 use crate::domain::environment::models::*;
+#[cfg(test)]
+use crate::domain::environment::ports::MockVCSService as MockVCS;
 use crate::domain::environment::ports::*;
 use crate::domain::repositories::models::Authentication;
 use crate::domain::repositories::models::RepositoryConfiguration;
 use crate::error::SandcastleError;
-#[cfg(test)]
-use crate::domain::environment::ports::MockVCSService as MockVCS;
 
 #[enum_dispatch(VCSService)]
 #[derive(Clone)]

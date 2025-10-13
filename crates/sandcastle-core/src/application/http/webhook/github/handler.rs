@@ -1,4 +1,4 @@
-use axum::extract::Json;
+use axum::extract::{Json, State};
 use axum::http::{HeaderName, HeaderValue};
 use axum_extra::{
     TypedHeader,
@@ -6,11 +6,17 @@ use axum_extra::{
     routing::TypedPath,
 };
 use axum_macros::FromRequestParts;
-use octocrab::models::webhook_events::{WebhookEvent, WebhookEventPayload, WebhookEventType};
+use octocrab::models::webhook_events::{WebhookEvent, WebhookEventType};
 use sandcastle_utils::declare_header;
 use serde::Deserialize;
 use serde_json::Value;
-use tracing::info;
+use tracing::{error, info, instrument};
+
+use crate::application::ApplicationState;
+use crate::application::reconciliation::ReconciliationService;
+use crate::domain::environment::models::ReconcileContext;
+use crate::domain::environment::services::VCS;
+use crate::domain::repositories::ports::RepositoryConfigurationService;
 
 #[derive(TypedPath, Deserialize)]
 #[typed_path("/api/v1/github/webhook")]
@@ -44,42 +50,101 @@ pub struct GithubWebhookHeaders {
 
 /// Handle a GitHub webhook.
 #[axum_macros::debug_handler]
+#[instrument(skip(headers, state, payload), fields(hook_id = %headers.hook_id.0))]
 pub async fn handle_webhook(
     _: HandleWebhookRoute,
     headers: GithubWebhookHeaders,
+    State(state): State<ApplicationState>,
     Json(payload): Json<Value>,
 ) -> () {
-    println!("Delivery ID: {}", headers.delivery.0);
-    println!("Hook ID: {}", headers.hook_id.0);
-    println!(
-        "Installation Target ID: {}",
-        headers.installation_target_id.0
-    );
-    println!(
-        "Installation Target Type: {}",
-        headers.installation_target_type.0
-    );
-    println!("Signature: {}", headers.signature.0);
-    println!("Signature 256: {}", headers.signature_256.0);
-
-    println!(
-        "Payload: {}",
-        serde_json::to_string_pretty(&payload).unwrap()
+    info!(
+        delivery_id = %headers.delivery.0,
+        hook_id = %headers.hook_id.0,
+        installation_target_id = %headers.installation_target_id.0,
+        installation_target_type = %headers.installation_target_type.0,
+        "Received GitHub Event"
     );
 
     let event_header = headers.event.into_inner();
-    let event_header_str = serde_json::to_string(&event_header).unwrap();
+    let event_header_str = match serde_json::to_string(&event_header) {
+        Ok(s) => s,
+        Err(e) => {
+            error!(error = %e, "Failed to serialize event header");
+            return;
+        }
+    };
+
     let webhook_event =
-        WebhookEvent::try_from_header_and_body(&event_header_str, &payload.to_string()).unwrap();
-    let event_payload = event_header.parse_specific_payload(payload).unwrap();
-    match event_payload {
-        WebhookEventPayload::IssueComment(payload) => {
-            tracing::info!("repository: {:?}", webhook_event.repository);
-            tracing::info!("sender: {:?}", webhook_event.sender);
-            tracing::info!("installation: {:?}", webhook_event.installation);
+        match WebhookEvent::try_from_header_and_body(&event_header_str, &payload.to_string()) {
+            Ok(event) => event,
+            Err(e) => {
+                error!(error = %e, "Failed to parse webhook event");
+                return;
+            }
+        };
+
+    let event_payload = match event_header.parse_specific_payload(payload) {
+        Ok(payload) => payload,
+        Err(e) => {
+            error!(error = %e, "Failed to parse event payload");
+            return;
         }
-        _ => {
-            info!("received unhandled event {:?}", event_payload);
+    };
+
+    let repository = match webhook_event.repository.clone().map(|r| r.html_url).flatten() {
+        Some(repository) => repository.to_string(),
+        None => {
+            error!(
+                "Repository not found in event payload, cannot infer authentication configuration"
+            );
+            return;
         }
+    };
+
+    let repository_configuration = match state
+        .repository_configuration_service
+        .get_repository_configuration(&repository)
+        .await
+    {
+        Ok(Some(configuration)) => configuration,
+        Ok(None) => {
+            error!("Repository configuration not found, is the repository configured ?");
+            return;
+        }
+        Err(e) => {
+            error!(error = %e, "Failed to get repository configuration");
+            return;
+        }
+    };
+
+    let vcs_service = match VCS::try_from(repository_configuration) {
+        Ok(vcs_service) => vcs_service,
+        Err(e) => {
+            error!(error = %e, "Failed to get VCS service");
+            return;
+        }
+    };
+
+    let context = match ReconcileContext::from_github_event(
+        headers.hook_id.0.to_string(),
+        webhook_event,
+        event_payload,
+        vcs_service,
+    )
+    .await
+    {
+        Ok(Some(ctx)) => ctx,
+        Ok(None) => {
+            info!("Event is not relevant, skipping reconciliation");
+            return;
+        }
+        Err(e) => {
+            error!(error = %e, "Failed to create reconcile context");
+            return;
+        }
+    };
+
+    if let Err(e) = ReconciliationService::reconcile(context).await {
+        error!(error = %e, "Reconciliation failed");
     }
 }

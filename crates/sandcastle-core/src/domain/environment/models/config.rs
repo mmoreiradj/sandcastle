@@ -68,6 +68,7 @@ impl FromStr for ConfigPath {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SandcastleConfiguration {
     pub custom: SandcastleCustomValues,
+    pub application: String,
 }
 
 pub type SandcastleCustomValues = Value;
@@ -85,18 +86,17 @@ impl SandcastleConfiguration {
                 let config = Self::from_yaml(part)?;
                 Ok(config)
             }
-            None => {
-                Err(SandcastleError::Service {
-                    code: ServiceErrorCode::InvalidConfiguration,
-                    message: "No configuration found in file".to_string(),
-                    reason: string.to_string(),
-                    backtrace: Backtrace::capture(),
-                })
-            }
+            None => Err(SandcastleError::Service {
+                code: ServiceErrorCode::InvalidConfiguration,
+                message: "No configuration found in file".to_string(),
+                reason: string.to_string(),
+                backtrace: Backtrace::capture(),
+            }),
         }
     }
 
     fn from_yaml(yaml: &str) -> Result<Self, SandcastleError> {
+        println!("From YAML: {}", yaml);
         let config: SandcastleConfiguration =
             serde_yaml::from_str(yaml).map_err(|e| SandcastleError::Service {
                 code: ServiceErrorCode::InvalidConfiguration,
@@ -108,6 +108,7 @@ impl SandcastleConfiguration {
     }
 
     pub fn get_custom_value(&self, path: &str) -> Option<String> {
+        println!("Getting custom value for path: {}", path);
         let path_parts = path
             .trim_start_matches(".Custom.")
             .split(".")
@@ -153,9 +154,7 @@ mod tests {
     fn test_from_string() {
         let application_yaml =
             include_str!("../../../../tests/fixtures/example_application_1.yaml");
-        let config = SandcastleConfiguration::from_string(application_yaml);
-        assert!(config.is_ok());
-        let config = config.unwrap();
+        let config = SandcastleConfiguration::from_string(application_yaml).unwrap();
         assert_eq!(
             config.get_custom_value(".Custom.baseDomain"),
             Some("sandcastle.dev".to_string())

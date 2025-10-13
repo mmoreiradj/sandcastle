@@ -14,9 +14,9 @@ use crate::{
     error::SandcastleError,
 };
 use octocrab::models::{
-        Repository,
-        webhook_events::{WebhookEvent, WebhookEventPayload},
-    };
+    Repository,
+    webhook_events::{WebhookEvent, WebhookEventPayload},
+};
 use regex::Regex;
 
 #[derive(Clone)]
@@ -31,6 +31,8 @@ pub struct ReconcileContext {
     pub gitops_platform_service: GitOpsPlatform,
     /// Sandcastle configuration
     pub config: SandcastleConfiguration,
+    /// The trigger that initiated this reconciliation
+    pub trigger: super::ReconcileTrigger,
 }
 
 impl ReconcileContext {
@@ -68,15 +70,18 @@ impl ReconcileContext {
     ) -> Result<Option<Self>> {
         match payload {
             WebhookEventPayload::IssueComment(payload) => {
-                // determine wether this is a comment we are interested in
                 let comment_body = if let Some(body) = payload.comment.body {
                     body
                 } else {
-                    // nothing to do, this isn't a comment we are interested in
                     return Ok(None);
                 };
 
-                // this is always Some
+                let command = super::Command::parse(&comment_body)?;
+                let trigger = match command {
+                    Some(cmd) => super::ReconcileTrigger::CommentCommand(cmd),
+                    None => return Ok(None),
+                };
+
                 let repository = event.repository.unwrap();
 
                 let last_commit_sha = vcs_service
@@ -85,21 +90,12 @@ impl ReconcileContext {
                         pr_number: payload.issue.number,
                     })
                     .await?;
-                let refs_url = repository.git_refs_url.clone().unwrap();
-                let config_url = refs_url.to_string().replace("{/sha}", &last_commit_sha);
-                let configuration_file_content = vcs_service
-                    .download_file(DownloadFileRequest {
-                        repository_id: (*repository.id),
-                        path: config_url,
-                        r#ref: last_commit_sha.clone(),
-                        content_type: "application/yaml".to_string(),
-                    })
-                    .await?;
-                let config = SandcastleConfiguration::from_string(&configuration_file_content)?;
+                
+                let config = Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
 
-                Ok(Some(Self {
+                Ok(Some(Self::build(
                     id,
-                    vcs: VcsContext {
+                    VcsContext {
                         comment: CommentContext { body: comment_body },
                         repository: RepositoryContext::from(&repository),
                         pull_request: PullRequestContext {
@@ -109,13 +105,108 @@ impl ReconcileContext {
                         },
                     },
                     vcs_service,
-                    gitops_platform_service: GitOpsPlatform::ArgoCD(
-                        crate::domain::environment::services::ArgoCD,
-                    ),
                     config,
-                }))
+                    trigger,
+                )))
+            }
+            WebhookEventPayload::Push(payload) => {
+                let repository = event.repository.unwrap();
+                let commit_sha = payload.after;
+
+                let config = Self::fetch_config(&vcs_service, &repository, &commit_sha).await?;
+
+                Ok(Some(Self::build(
+                    id,
+                    VcsContext {
+                        comment: CommentContext {
+                            body: String::new(),
+                        },
+                        repository: RepositoryContext::from(&repository),
+                        pull_request: PullRequestContext {
+                            number: 0,
+                            title: format!("Push to {}", payload.r#ref),
+                            last_commit_sha: commit_sha,
+                        },
+                    },
+                    vcs_service,
+                    config,
+                    super::ReconcileTrigger::PushEvent,
+                )))
+            }
+            WebhookEventPayload::PullRequest(payload) => {
+                if payload.action != octocrab::models::webhook_events::payload::PullRequestWebhookEventAction::Closed {
+                    return Ok(None);
+                }
+
+                let repository = event.repository.unwrap();
+                let pr = payload.pull_request;
+                let last_commit_sha = pr.head.sha;
+
+                let config = Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
+
+                Ok(Some(Self::build(
+                    id,
+                    VcsContext {
+                        comment: CommentContext {
+                            body: String::new(),
+                        },
+                        repository: RepositoryContext::from(&repository),
+                        pull_request: PullRequestContext {
+                            number: pr.number,
+                            title: pr.title.unwrap_or_default(),
+                            last_commit_sha,
+                        },
+                    },
+                    vcs_service,
+                    config,
+                    super::ReconcileTrigger::PullRequestClosed,
+                )))
             }
             _ => Ok(None),
+        }
+    }
+
+    async fn fetch_config(
+        vcs_service: &VCS,
+        repository: &Repository,
+        commit_sha: &str,
+    ) -> Result<SandcastleConfiguration> {
+        let refs_url = repository
+            .git_refs_url
+            .clone()
+            .unwrap()
+            .to_string()
+            .replace("{/sha}", commit_sha);
+        let config_url = format!("{refs_url}/.github/sandcastle.yaml");
+        
+        let configuration_file_content = vcs_service
+            .download_file(DownloadFileRequest {
+                repository_id: (*repository.id),
+                path: config_url,
+                r#ref: commit_sha.to_string(),
+                content_type: "application/yaml".to_string(),
+            })
+            .await?;
+        
+        SandcastleConfiguration::from_string(&configuration_file_content)
+    }
+
+    fn build(
+        id: String,
+        vcs: VcsContext,
+        vcs_service: VCS,
+        config: SandcastleConfiguration,
+        trigger: super::ReconcileTrigger,
+    ) -> Self {
+        Self {
+            id,
+            vcs,
+            vcs_service,
+            gitops_platform_service: GitOpsPlatform::ArgoCD(
+                crate::domain::environment::services::ArgoCD,
+            ),
+            config,
+            trigger,
         }
     }
 
@@ -212,16 +303,9 @@ impl ReconcileActions {
 #[cfg(test)]
 mod tests {
     use googletest::prelude::*;
-    use http::{Request, Response};
-    use kube::{Client, client::Body};
     use octocrab::models::webhook_events::WebhookEventType;
 
-    use crate::domain::{
-        environment::{ports::MockVCSService, services::ArgoCD},
-        repositories::{
-            ports::MockRepositoryConfigurationService, services::RepositoryConfigurations,
-        },
-    };
+    use crate::domain::environment::{ports::MockVCSService, services::ArgoCD};
     use googletest::Result;
 
     use super::*;
@@ -251,6 +335,9 @@ mod tests {
             vcs_service: VCS::MockVCS(MockVCSService::new()),
             gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
             config: config,
+            trigger: crate::domain::environment::models::ReconcileTrigger::CommentCommand(
+                crate::domain::environment::models::Command::Deploy,
+            ),
         };
         context
     }

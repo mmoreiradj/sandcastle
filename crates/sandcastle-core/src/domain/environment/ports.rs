@@ -36,7 +36,7 @@ pub trait VCSService: Clone + Send + Sync {
     ) -> Result<String, SandcastleError>;
 }
 
-mock!{
+mock! {
     pub VCSService {}
 
     #[async_trait]

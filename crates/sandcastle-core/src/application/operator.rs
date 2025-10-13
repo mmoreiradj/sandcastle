@@ -74,8 +74,8 @@ fn error_policy(
     Action::requeue(Duration::from_secs(5 * 60))
 }
 
-pub async fn run(client: Client, context: OperatorContext) {
-    let secrets = Api::<Secret>::namespaced(client.clone(), &context.namespace);
+pub async fn run(context: OperatorContext) {
+    let secrets = Api::<Secret>::namespaced(context.client.clone(), &context.namespace);
 
     if let Err(e) = secrets.list(&ListParams::default().limit(1)).await {
         tracing::error!("CRD is not queryable; {e:?}. Is the CRD installed?");
