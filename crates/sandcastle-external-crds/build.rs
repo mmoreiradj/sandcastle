@@ -37,6 +37,7 @@ fn main() {
         fs::write(&temp_yaml_path, yaml_content).expect("Failed to write temporary YAML file");
 
         let output = Command::new("kopium")
+            // .arg("--hide-prelude")
             .arg("-Af")
             .arg(&temp_yaml_path)
             .output()
@@ -48,6 +49,12 @@ fn main() {
 
         let rust_code =
             String::from_utf8(output.stdout).expect("Failed to parse kopium output as UTF-8");
+
+        let mut lines: Vec<&str> = rust_code.lines().collect();
+        if lines.len() > 1 {
+            lines.remove(1);
+        }
+        let rust_code = lines.join("\n");
 
         let target_path = src_dir.join(filename);
         fs::write(&target_path, rust_code)
