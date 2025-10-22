@@ -4,7 +4,8 @@ use mockall::mock;
 
 use crate::{
     domain::environment::models::{
-        DownloadFileRequest, FetchPRLastCommitSHARequest, ReconcileContext,
+        CreateOrUpdateArgocdApplicationRequest, DownloadFileRequest, FetchPRLastCommitSHARequest,
+        ReconcileContext,
     },
     error::SandcastleError,
 };
@@ -20,8 +21,27 @@ pub trait Reconcile: Clone + Send + Sync {
 #[async_trait]
 #[enum_dispatch]
 pub trait GitOpsPlatformService: Clone + Send + Sync {
-    async fn create_or_update_application(&self, application: &str) -> Result<(), SandcastleError>;
-    async fn delete_application(&self, application: &str) -> Result<(), SandcastleError>;
+    async fn create_or_update_application(
+        &self,
+        request: CreateOrUpdateArgocdApplicationRequest,
+    ) -> Result<(), SandcastleError>;
+    async fn delete_application(&self, applications: &[String]) -> Result<(), SandcastleError>;
+}
+
+mock! {
+    pub GitOpsPlatformService {}
+
+    #[async_trait]
+    impl GitOpsPlatformService for GitOpsPlatformService {
+        async fn create_or_update_application(&self, request: CreateOrUpdateArgocdApplicationRequest) -> Result<(), SandcastleError>;
+        async fn delete_application(&self, applications: &[String]) -> Result<(), SandcastleError>;
+    }
+
+    impl Clone for GitOpsPlatformService {
+        fn clone(&self) -> Self {
+            self.clone()
+        }
+    }
 }
 
 /// A trait for a VCS service

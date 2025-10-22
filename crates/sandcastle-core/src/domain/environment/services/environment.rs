@@ -4,7 +4,8 @@ use tracing::{info, instrument};
 use crate::{
     domain::environment::{
         models::{
-            CreateOrUpdateArgocdApplicationAction, DeleteArgocdApplicationAction, ReconcileContext,
+            CreateOrUpdateArgocdApplicationAction, CreateOrUpdateArgocdApplicationRequest,
+            DeleteArgocdApplicationAction, ReconcileContext,
         },
         ports::{GitOpsPlatformService, Reconcile},
     },
@@ -19,7 +20,10 @@ impl Reconcile for CreateOrUpdateArgocdApplicationAction {
 
         context
             .gitops_platform_service
-            .create_or_update_application(&self.application)
+            .create_or_update_application(CreateOrUpdateArgocdApplicationRequest {
+                applications: self.applications.clone(),
+                labels: context.labels(),
+            })
             .await?;
 
         info!("Successfully created or updated ArgoCD application");
@@ -36,7 +40,7 @@ impl Reconcile for DeleteArgocdApplicationAction {
 
         context
             .gitops_platform_service
-            .delete_application(&self.application)
+            .delete_application(&self.applications)
             .await?;
 
         info!("Successfully deleted ArgoCD application");

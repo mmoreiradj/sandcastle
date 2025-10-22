@@ -18,20 +18,20 @@ use crate::error::SandcastleError;
 
 #[enum_dispatch(VCSService)]
 #[derive(Clone)]
-pub enum VCS {
+pub enum Vcs {
     GitHub,
     #[cfg(test)]
     MockVCS,
 }
 
-impl TryFrom<RepositoryConfiguration> for VCS {
+impl TryFrom<&RepositoryConfiguration> for Vcs {
     type Error = SandcastleError;
 
-    fn try_from(value: RepositoryConfiguration) -> Result<Self, Self::Error> {
+    fn try_from(value: &RepositoryConfiguration) -> Result<Self, Self::Error> {
         match &value.authentication {
             Authentication::GitHubApp(_) => {
-                let octocrab = Octocrab::try_from(&value)?;
-                Ok(VCS::GitHub(GitHub::from(octocrab)))
+                let octocrab = Octocrab::try_from(value)?;
+                Ok(Vcs::GitHub(GitHub::from(octocrab)))
             }
         }
     }
@@ -41,4 +41,6 @@ impl TryFrom<RepositoryConfiguration> for VCS {
 #[derive(Clone)]
 pub enum GitOpsPlatform {
     ArgoCD,
+    #[cfg(test)]
+    MockGitOpsPlatform,
 }

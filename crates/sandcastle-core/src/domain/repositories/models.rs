@@ -1,4 +1,4 @@
-use std::backtrace::Backtrace;
+use std::{backtrace::Backtrace, str::FromStr};
 
 use octocrab::Octocrab;
 use snafu::ResultExt;
@@ -6,9 +6,33 @@ use snafu::ResultExt;
 use crate::error::{SandcastleError, ServiceErrorCode};
 
 #[derive(Debug, Clone)]
+pub enum GitOpsPlatformType {
+    ArgoCD,
+}
+
+impl FromStr for GitOpsPlatformType {
+    type Err = SandcastleError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "argocd" => GitOpsPlatformType::ArgoCD,
+            _ => {
+                return Err(SandcastleError::Service {
+                    code: ServiceErrorCode::InvalidConfiguration,
+                    message: "Invalid gitops platform".to_string(),
+                    reason: s.to_string(),
+                    backtrace: Backtrace::capture(),
+                });
+            }
+        })
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct RepositoryConfiguration {
     pub repository_url: String,
     pub authentication: Authentication,
+    pub gitops_platform: GitOpsPlatformType,
 }
 
 impl TryFrom<&RepositoryConfiguration> for Octocrab {

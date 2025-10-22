@@ -50,7 +50,8 @@ fn main() {
             String::from_utf8(output.stdout).expect("Failed to parse kopium output as UTF-8");
 
         let target_path = src_dir.join(filename);
-        fs::write(&target_path, rust_code).expect(&format!("Failed to write {}", filename));
+        fs::write(&target_path, rust_code)
+            .unwrap_or_else(|_| panic!("Failed to write {}", filename));
 
         fs::remove_file(&temp_yaml_path).ok();
     }

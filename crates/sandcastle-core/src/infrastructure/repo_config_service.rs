@@ -4,7 +4,7 @@ use k8s_openapi::api::core::v1::Secret;
 
 use crate::{
     domain::repositories::models::{
-        Authentication, GitHubAppAuthentication, RepositoryConfiguration,
+        Authentication, GitHubAppAuthentication, GitOpsPlatformType, RepositoryConfiguration,
     },
     error::{SandcastleError, ServiceErrorCode},
 };
@@ -15,6 +15,7 @@ pub struct GithubAppSecretData {
     pub app_id: u64,
     pub app_installation_id: u64,
     pub private_key: String,
+    pub gitops_platform: GitOpsPlatformType,
 }
 
 impl From<GithubAppSecretData> for RepositoryConfiguration {
@@ -26,6 +27,7 @@ impl From<GithubAppSecretData> for RepositoryConfiguration {
                 installation_id: secret.app_installation_id,
                 private_key: secret.private_key,
             }),
+            gitops_platform: secret.gitops_platform,
         }
     }
 }
@@ -104,11 +106,22 @@ impl GithubAppSecretData {
             })?
             .clone();
 
+        let gitops_platform = merged_data
+            .get("gitops_platform")
+            .ok_or_else(|| SandcastleError::Service {
+                code: ServiceErrorCode::SecretParsingFailed,
+                message: "Missing 'gitops_platform' field in secret".to_string(),
+                reason: "Required field 'gitops_platform' not found in secret data".to_string(),
+                backtrace: std::backtrace::Backtrace::capture(),
+            })?
+            .parse::<GitOpsPlatformType>()?;
+
         Ok(Self {
             url,
             app_id,
             app_installation_id,
             private_key,
+            gitops_platform,
         })
     }
 }
@@ -141,6 +154,10 @@ mod tests {
                     .as_bytes()
                     .to_vec(),
             ),
+        );
+        data.insert(
+            "gitops_platform".to_string(),
+            ByteString("argocd".as_bytes().to_vec()),
         );
 
         let secret = Secret {
@@ -175,6 +192,7 @@ mod tests {
             "private_key".to_string(),
             "-----BEGIN RSA PRIVATE KEY-----\ntest_key\n-----END RSA PRIVATE KEY-----".to_string(),
         );
+        string_data.insert("gitops_platform".to_string(), "argocd".to_string());
 
         let secret = Secret {
             data: None,
@@ -214,6 +232,7 @@ mod tests {
         );
         string_data.insert("app_id".to_string(), "12345".to_string());
         string_data.insert("app_installation_id".to_string(), "67890".to_string());
+        string_data.insert("gitops_platform".to_string(), "argocd".to_string());
 
         let secret = Secret {
             data: Some(data),
@@ -242,6 +261,7 @@ mod tests {
             "https://github.com/test/repo.git".to_string(),
         );
         string_data.insert("app_id".to_string(), "12345".to_string());
+        string_data.insert("gitops_platform".to_string(), "argocd".to_string());
 
         let secret = Secret {
             data: None,
@@ -268,6 +288,7 @@ mod tests {
         string_data.insert("app_id".to_string(), "not_a_number".to_string());
         string_data.insert("app_installation_id".to_string(), "67890".to_string());
         string_data.insert("private_key".to_string(), "test_key".to_string());
+        string_data.insert("gitops_platform".to_string(), "argocd".to_string());
 
         let secret = Secret {
             data: None,

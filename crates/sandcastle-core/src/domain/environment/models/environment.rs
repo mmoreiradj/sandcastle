@@ -9,7 +9,7 @@ use crate::{
     domain::environment::{
         models::config::{BuiltinConfigKey, SandcastleConfiguration},
         ports::{Reconcile, VCSService},
-        services::{GitOpsPlatform, VCS},
+        services::{GitOpsPlatform, Vcs},
     },
     error::SandcastleError,
 };
@@ -26,7 +26,7 @@ pub struct ReconcileContext {
     /// The VCS context
     pub vcs: VcsContext,
     /// The VCS service
-    pub vcs_service: VCS,
+    pub vcs_service: Vcs,
     /// The GitOps platform service
     pub gitops_platform_service: GitOpsPlatform,
     /// Sandcastle configuration
@@ -66,7 +66,8 @@ impl ReconcileContext {
         id: String,
         event: WebhookEvent,
         payload: WebhookEventPayload,
-        vcs_service: VCS,
+        vcs_service: Vcs,
+        gitops_platform_service: GitOpsPlatform,
     ) -> Result<Option<Self>> {
         match payload {
             WebhookEventPayload::IssueComment(payload) => {
@@ -90,8 +91,9 @@ impl ReconcileContext {
                         pr_number: payload.issue.number,
                     })
                     .await?;
-                
-                let config = Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
+
+                let config =
+                    Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
 
                 Ok(Some(Self::build(
                     id,
@@ -105,6 +107,7 @@ impl ReconcileContext {
                         },
                     },
                     vcs_service,
+                    gitops_platform_service,
                     config,
                     trigger,
                 )))
@@ -129,6 +132,7 @@ impl ReconcileContext {
                         },
                     },
                     vcs_service,
+                    gitops_platform_service,
                     config,
                     super::ReconcileTrigger::PushEvent,
                 )))
@@ -142,7 +146,8 @@ impl ReconcileContext {
                 let pr = payload.pull_request;
                 let last_commit_sha = pr.head.sha;
 
-                let config = Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
+                let config =
+                    Self::fetch_config(&vcs_service, &repository, &last_commit_sha).await?;
 
                 Ok(Some(Self::build(
                     id,
@@ -158,6 +163,7 @@ impl ReconcileContext {
                         },
                     },
                     vcs_service,
+                    gitops_platform_service,
                     config,
                     super::ReconcileTrigger::PullRequestClosed,
                 )))
@@ -167,7 +173,7 @@ impl ReconcileContext {
     }
 
     async fn fetch_config(
-        vcs_service: &VCS,
+        vcs_service: &Vcs,
         repository: &Repository,
         commit_sha: &str,
     ) -> Result<SandcastleConfiguration> {
@@ -179,14 +185,15 @@ impl ReconcileContext {
                 content_type: "application/yaml".to_string(),
             })
             .await?;
-        
+
         SandcastleConfiguration::from_string(&configuration_file_content)
     }
 
     fn build(
         id: String,
         vcs: VcsContext,
-        vcs_service: VCS,
+        vcs_service: Vcs,
+        gitops_platform_service: GitOpsPlatform,
         config: SandcastleConfiguration,
         trigger: super::ReconcileTrigger,
     ) -> Self {
@@ -194,9 +201,7 @@ impl ReconcileContext {
             id,
             vcs,
             vcs_service,
-            gitops_platform_service: GitOpsPlatform::ArgoCD(
-                crate::domain::environment::services::ArgoCD,
-            ),
+            gitops_platform_service,
             config,
             trigger,
         }
@@ -219,6 +224,22 @@ impl ReconcileContext {
             BuiltinConfigKey::LastCommitSHA => Some(self.vcs.pull_request.last_commit_sha.clone()),
             BuiltinConfigKey::PRNumber => Some(self.vcs.pull_request.number.to_string()),
         }
+    }
+
+    pub fn labels(&self) -> Vec<(String, String)> {
+        vec![
+            (
+                "environment".to_string(),
+                self.config
+                    .get_custom_value(".Sandcastle.EnvironmentName")
+                    .unwrap_or_default(),
+            ),
+            ("repository".to_string(), self.vcs.repository.name.clone()),
+            (
+                "pull-request".to_string(),
+                self.vcs.pull_request.number.to_string(),
+            ),
+        ]
     }
 }
 
@@ -266,14 +287,14 @@ pub struct CommentContext {
 #[derive(Debug, Clone)]
 pub struct CreateOrUpdateArgocdApplicationAction {
     /// The GitOps File
-    pub application: String,
+    pub applications: Vec<String>,
 }
 
 /// Action to delete an Argocd Application
 #[derive(Debug, Clone)]
 pub struct DeleteArgocdApplicationAction {
     /// The GitOps File
-    pub application: String,
+    pub applications: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -298,7 +319,7 @@ mod tests {
     use googletest::prelude::*;
     use octocrab::models::webhook_events::WebhookEventType;
 
-    use crate::domain::environment::{ports::MockVCSService, services::ArgoCD};
+    use crate::domain::environment::ports::{MockGitOpsPlatformService, MockVCSService};
     use googletest::Result;
 
     use super::*;
@@ -325,8 +346,10 @@ mod tests {
                     body: "sandcastle deploy".to_string(),
                 },
             },
-            vcs_service: VCS::MockVCS(MockVCSService::new()),
-            gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
+            vcs_service: Vcs::MockVCS(MockVCSService::new()),
+            gitops_platform_service: GitOpsPlatform::MockGitOpsPlatform(
+                MockGitOpsPlatformService::new(),
+            ),
             config: config,
             trigger: crate::domain::environment::models::ReconcileTrigger::CommentCommand(
                 crate::domain::environment::models::Command::Deploy,
@@ -377,7 +400,8 @@ mod tests {
             "1".to_string(),
             event,
             payload,
-            VCS::MockVCS(mock_vcs_service),
+            Vcs::MockVCS(mock_vcs_service),
+            GitOpsPlatform::MockGitOpsPlatform(MockGitOpsPlatformService::new()),
         )
         .await
         .unwrap()

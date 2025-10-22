@@ -2,7 +2,6 @@ use std::backtrace::Backtrace;
 
 use async_trait::async_trait;
 use octocrab::Octocrab;
-use tracing::instrument;
 
 use crate::{
     domain::environment::{
@@ -67,7 +66,10 @@ impl VCSService for GitHub {
         &self,
         request: FetchPRLastCommitSHARequest,
     ) -> Result<String, SandcastleError> {
-        tracing::info!("Fetching last commit SHA from GitHub for PR {}", request.pr_number);
+        tracing::info!(
+            "Fetching last commit SHA from GitHub for PR {}",
+            request.pr_number
+        );
         let repository = self
             .client
             .repos_by_id(request.repository_id)

@@ -61,7 +61,10 @@ impl RepositoryConfigurationService for DefaultRepositoryConfigurationService {
         &self,
         repository_configuration: RepositoryConfiguration,
     ) -> Result<()> {
-        tracing::debug!("Upserting repository configuration for {}", repository_configuration.repository_url);
+        tracing::debug!(
+            "Upserting repository configuration for {}",
+            repository_configuration.repository_url
+        );
         self.repository_configurations.write().await.insert(
             repository_configuration.repository_url.clone(),
             repository_configuration,

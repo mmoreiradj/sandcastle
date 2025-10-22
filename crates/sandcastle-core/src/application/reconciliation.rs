@@ -28,30 +28,27 @@ impl ReconciliationService {
     }
 
     fn determine_action(context: &ReconcileContext) -> Result<ReconcileActions, SandcastleError> {
-        let templated_application = context.template(&context.config.template)?;
-
+        let templated_applications = context.template(&context.config.template)?;
+        let applications = templated_applications
+            .split("---")
+            .map(|application| application.to_string())
+            .collect::<Vec<String>>();
         match &context.trigger {
             ReconcileTrigger::CommentCommand(Command::Deploy) => {
                 Ok(ReconcileActions::CreateOrUpdateArgocdApplication(
-                    CreateOrUpdateArgocdApplicationAction {
-                        application: templated_application,
-                    },
+                    CreateOrUpdateArgocdApplicationAction { applications },
                 ))
             }
-            ReconcileTrigger::CommentCommand(Command::Destroy) => Ok(
-                ReconcileActions::DeleteArgocdApplication(DeleteArgocdApplicationAction {
-                    application: templated_application,
-                }),
-            ),
+            ReconcileTrigger::CommentCommand(Command::Destroy) => {
+                Ok(ReconcileActions::DeleteArgocdApplication(
+                    DeleteArgocdApplicationAction { applications },
+                ))
+            }
             ReconcileTrigger::PushEvent => Ok(ReconcileActions::CreateOrUpdateArgocdApplication(
-                CreateOrUpdateArgocdApplicationAction {
-                    application: templated_application,
-                },
+                CreateOrUpdateArgocdApplicationAction { applications },
             )),
             ReconcileTrigger::PullRequestClosed => Ok(ReconcileActions::DeleteArgocdApplication(
-                DeleteArgocdApplicationAction {
-                    application: templated_application,
-                },
+                DeleteArgocdApplicationAction { applications },
             )),
         }
     }
@@ -62,11 +59,11 @@ mod tests {
     use super::*;
     use crate::domain::environment::{
         models::{
-            CommentContext, PullRequestContext, RepositoryContext, config::SandcastleConfiguration,
-            VcsContext,
+            CommentContext, PullRequestContext, RepositoryContext, VcsContext,
+            config::SandcastleConfiguration,
         },
-        ports::MockVCSService,
-        services::{ArgoCD, GitOpsPlatform, VCS},
+        ports::{MockGitOpsPlatformService, MockVCSService},
+        services::{ArgoCD, GitOpsPlatform, Vcs},
     };
 
     fn test_context(trigger: ReconcileTrigger) -> ReconcileContext {
@@ -92,8 +89,10 @@ mod tests {
                     body: String::new(),
                 },
             },
-            vcs_service: VCS::MockVCS(MockVCSService::new()),
-            gitops_platform_service: GitOpsPlatform::ArgoCD(ArgoCD),
+            vcs_service: Vcs::MockVCS(MockVCSService::new()),
+            gitops_platform_service: GitOpsPlatform::MockGitOpsPlatform(
+                MockGitOpsPlatformService::new(),
+            ),
             config,
             trigger,
         }
@@ -106,8 +105,18 @@ mod tests {
 
         match action {
             ReconcileActions::CreateOrUpdateArgocdApplication(action) => {
-                assert!(action.application.contains("kind: Application"));
-                assert!(action.application.contains("frontend-test-repo"));
+                assert!(
+                    action
+                        .applications
+                        .iter()
+                        .all(|application| application.contains("kind: Application"))
+                );
+                assert!(
+                    action
+                        .applications
+                        .iter()
+                        .all(|application| application.contains("frontend-test-repo"))
+                );
             }
             _ => panic!("Expected CreateOrUpdateArgocdApplication action"),
         }
@@ -120,7 +129,12 @@ mod tests {
 
         match action {
             ReconcileActions::DeleteArgocdApplication(action) => {
-                assert!(action.application.contains("kind: Application"));
+                assert!(
+                    action
+                        .applications
+                        .iter()
+                        .all(|application| application.contains("kind: Application"))
+                );
             }
             _ => panic!("Expected DeleteArgocdApplication action"),
         }
@@ -133,7 +147,12 @@ mod tests {
 
         match action {
             ReconcileActions::CreateOrUpdateArgocdApplication(action) => {
-                assert!(action.application.contains("kind: Application"));
+                assert!(
+                    action
+                        .applications
+                        .iter()
+                        .all(|application| application.contains("kind: Application"))
+                );
             }
             _ => panic!("Expected CreateOrUpdateArgocdApplication action"),
         }
@@ -146,7 +165,12 @@ mod tests {
 
         match action {
             ReconcileActions::DeleteArgocdApplication(action) => {
-                assert!(action.application.contains("kind: Application"));
+                assert!(
+                    action
+                        .applications
+                        .iter()
+                        .all(|application| application.contains("kind: Application"))
+                );
             }
             _ => panic!("Expected DeleteArgocdApplication action"),
         }

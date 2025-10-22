@@ -49,9 +49,9 @@ impl Display for ServiceErrorCode {
 #[snafu(visibility(pub))]
 pub enum SandcastleError {
     #[snafu(display("{}: {}", message, source))]
-    KubeClientError {
+    Serde {
         message: String,
-        source: kube::Error,
+        source: serde_json::Error,
         backtrace: Backtrace,
     },
     #[snafu(display("{}: {}", message, source))]
@@ -72,6 +72,12 @@ pub enum SandcastleError {
         message: String,
         #[snafu(source(from(Box<dyn std::error::Error + Send + Sync>, Some)))]
         source: Option<Box<dyn std::error::Error + Send + Sync>>,
+        backtrace: Backtrace,
+    },
+    #[snafu(display("{}: {}", message, source))]
+    Kube {
+        message: String,
+        source: kube::Error,
         backtrace: Backtrace,
     },
     #[snafu(display("Finalizer error: {source}"))]

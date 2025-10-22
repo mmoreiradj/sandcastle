@@ -15,7 +15,7 @@ use tracing::{error, info, instrument};
 use crate::application::ApplicationState;
 use crate::application::reconciliation::ReconciliationService;
 use crate::domain::environment::models::ReconcileContext;
-use crate::domain::environment::services::VCS;
+use crate::domain::environment::services::Vcs;
 use crate::domain::repositories::ports::RepositoryConfigurationService;
 
 #[derive(TypedPath, Deserialize)]
@@ -91,7 +91,7 @@ pub async fn handle_webhook(
         }
     };
 
-    let repository = match webhook_event.repository.clone().map(|r| r.html_url).flatten() {
+    let repository = match webhook_event.repository.clone().and_then(|r| r.html_url) {
         Some(repository) => repository.to_string(),
         None => {
             error!(
@@ -117,7 +117,7 @@ pub async fn handle_webhook(
         }
     };
 
-    let vcs_service = match VCS::try_from(repository_configuration) {
+    let vcs_service = match Vcs::try_from(&repository_configuration) {
         Ok(vcs_service) => vcs_service,
         Err(e) => {
             error!(error = %e, "Failed to get VCS service");
@@ -125,11 +125,14 @@ pub async fn handle_webhook(
         }
     };
 
+    let gitops_service = state.gitops_platform(&repository_configuration.gitops_platform);
+
     let context = match ReconcileContext::from_github_event(
         headers.hook_id.0.to_string(),
         webhook_event,
         event_payload,
         vcs_service,
+        gitops_service,
     )
     .await
     {

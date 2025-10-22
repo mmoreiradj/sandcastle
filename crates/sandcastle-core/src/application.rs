@@ -1,18 +1,28 @@
 use kube::{Client, Config};
 
-use crate::domain::repositories::services::{
-    DefaultRepositoryConfigurationService, RepositoryConfigurations,
+use crate::{
+    Result,
+    domain::{
+        environment::services::{ArgoCD, GitOpsPlatform},
+        repositories::{
+            models::GitOpsPlatformType,
+            services::{DefaultRepositoryConfigurationService, RepositoryConfigurations},
+        },
+    },
 };
 
 mod http;
 mod operator;
 pub(crate) mod reconciliation;
 
+const ARGOCD_NAMESPACE: &str = "argocd";
+
 /// State shared beetween the HTTP and Operator
 #[derive(Clone)]
 pub(crate) struct ApplicationState {
     pub(crate) kube_client: Client,
     pub(crate) namespace: String,
+    pub(crate) argocd_namespace: String,
     pub(crate) repository_configuration_service: RepositoryConfigurations,
 }
 
@@ -23,7 +33,9 @@ impl ApplicationState {
         Ok(Self {
             kube_client,
             namespace: config.default_namespace,
-            repository_configuration_service: DefaultRepositoryConfigurationService::default().into(),
+            argocd_namespace: ARGOCD_NAMESPACE.to_string(),
+            repository_configuration_service: DefaultRepositoryConfigurationService::default()
+                .into(),
         })
     }
 
@@ -32,6 +44,15 @@ impl ApplicationState {
             client: self.kube_client.clone(),
             repository_configuration_service: self.repository_configuration_service.clone(),
             namespace: self.namespace.clone(),
+        }
+    }
+
+    pub fn gitops_platform(&self, gitops_platform_type: &GitOpsPlatformType) -> GitOpsPlatform {
+        match gitops_platform_type {
+            GitOpsPlatformType::ArgoCD => GitOpsPlatform::ArgoCD(ArgoCD::new(
+                self.kube_client.clone(),
+                self.argocd_namespace.clone(),
+            )),
         }
     }
 }
