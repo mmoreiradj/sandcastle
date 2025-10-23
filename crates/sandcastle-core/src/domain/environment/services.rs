@@ -10,9 +10,9 @@ use octocrab::Octocrab;
 
 use crate::domain::environment::models::*;
 #[cfg(test)]
-use crate::domain::environment::ports::MockVCSService as MockVCS;
-#[cfg(test)]
 use crate::domain::environment::ports::MockGitOpsPlatformService as MockGitOpsPlatform;
+#[cfg(test)]
+use crate::domain::environment::ports::MockVCSService as MockVCS;
 use crate::domain::environment::ports::*;
 use crate::domain::repositories::models::Authentication;
 use crate::domain::repositories::models::RepositoryConfiguration;
