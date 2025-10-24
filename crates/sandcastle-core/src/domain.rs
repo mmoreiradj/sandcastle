@@ -1,2 +1,2 @@
 pub(crate) mod environment;
-pub(crate) mod repositories;
+pub mod repositories;

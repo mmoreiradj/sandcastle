@@ -1,9 +1,20 @@
+use std::path::PathBuf;
+
+use colored::Colorize;
 use kube::{Client, Config};
+use sandcastle_external_crds::argocd::application::Application;
 
 use crate::{
     Result,
     domain::{
-        environment::services::{ArgoCD, GitOpsPlatform},
+        environment::{
+            models::{
+                Command, CommentContext, PullRequestContext, ReconcileContext, ReconcileTrigger,
+                RepositoryContext, VcsContext, config::SandcastleConfiguration,
+            },
+            ports::{MockGitOpsPlatformService, MockVCSService},
+            services::{ArgoCD, GitOpsPlatform, Vcs},
+        },
         repositories::{
             models::GitOpsPlatformType,
             services::{DefaultRepositoryConfigurationService, RepositoryConfigurations},
@@ -69,5 +80,82 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
         tracing::info!("Operator started");
         Ok(())
       }
+    }
+}
+
+pub async fn test_application(
+    file: PathBuf,
+    gitops_platform_type: GitOpsPlatformType,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let content = std::fs::read_to_string(file)?;
+    let config = SandcastleConfiguration::from_string(&content)?;
+    let context = ReconcileContext {
+        config: config.clone(),
+        id: "test-123".to_string(),
+        vcs: VcsContext {
+            repository: RepositoryContext {
+                name: "test-repo".to_string(),
+                private: false,
+                url: "https://github.com/test/repo".to_string(),
+            },
+            pull_request: PullRequestContext {
+                number: 42,
+                title: "Test PR".to_string(),
+                last_commit_sha: "abc123".to_string(),
+            },
+            comment: CommentContext {
+                body: "test comment".to_string(),
+            },
+        },
+        vcs_service: Vcs::MockVCS(MockVCSService::new()),
+        gitops_platform_service: GitOpsPlatform::MockGitOpsPlatform(
+            MockGitOpsPlatformService::new(),
+        ),
+        trigger: ReconcileTrigger::CommentCommand(Command::Deploy),
+    };
+    let applications = context.template(&config.template)?;
+    match gitops_platform_type {
+        GitOpsPlatformType::ArgoCD => Ok(applications
+            .split("---")
+            .map(|application_str| {
+                let application_str = application_str.trim();
+                let application: Result<Application, serde_yaml::Error> =
+                    serde_yaml::from_str(&application_str);
+                match application {
+                    Ok(_) => {
+                        format!(
+                            r#"{}
+{application_str}
+"#,
+                            "# This application is valid".green(),
+                        )
+                    }
+                    Err(e) => {
+                        format!(
+                            r#"{}
+{application_str}
+"#,
+                            format!("# This application is invalid: {e:#?}").red(),
+                        )
+                    }
+                }
+            })
+            .collect::<String>()),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use insta::assert_snapshot;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_test_application() {
+        let file = PathBuf::from("tests/fixtures/example_application_2.yaml");
+        let applications = test_application(file, GitOpsPlatformType::ArgoCD)
+            .await
+            .unwrap();
+        assert_snapshot!(applications);
     }
 }

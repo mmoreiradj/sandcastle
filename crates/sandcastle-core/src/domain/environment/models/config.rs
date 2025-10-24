@@ -112,7 +112,6 @@ impl SandcastleConfiguration {
         let mut current = &self.custom;
 
         for part in path_parts {
-            println!("Part: {}", part);
             current = current.get(part.as_str())?;
         }
 

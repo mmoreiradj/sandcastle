@@ -1,7 +1,7 @@
 use crate::error::SandcastleError;
 
 pub mod application;
-mod domain;
+pub mod domain;
 mod error;
 mod infrastructure;
 

@@ -2603,6 +2603,7 @@ dependencies = [
  "axum-macros",
  "axum-tracing-opentelemetry",
  "chrono",
+ "colored",
  "enum_dispatch",
  "futures",
  "googletest",

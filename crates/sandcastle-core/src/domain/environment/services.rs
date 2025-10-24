@@ -9,9 +9,7 @@ pub use gitops::*;
 use octocrab::Octocrab;
 
 use crate::domain::environment::models::*;
-#[cfg(test)]
 use crate::domain::environment::ports::MockGitOpsPlatformService as MockGitOpsPlatform;
-#[cfg(test)]
 use crate::domain::environment::ports::MockVCSService as MockVCS;
 use crate::domain::environment::ports::*;
 use crate::domain::repositories::models::Authentication;
@@ -22,7 +20,6 @@ use crate::error::SandcastleError;
 #[derive(Clone)]
 pub enum Vcs {
     GitHub,
-    #[cfg(test)]
     MockVCS,
 }
 
@@ -43,6 +40,5 @@ impl TryFrom<&RepositoryConfiguration> for Vcs {
 #[derive(Clone)]
 pub enum GitOpsPlatform {
     ArgoCD,
-    #[cfg(test)]
     MockGitOpsPlatform,
 }
