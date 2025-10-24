@@ -1,0 +1,42 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: argo-cd
+  namespace: kube-system
+spec:
+  chart: argo-cd
+  version: 8.5.7
+  repo: https://argoproj.github.io/argo-helm
+  targetNamespace: argo-cd
+  createNamespace: true
+  valuesContent: |
+    global:
+      domain: argo.localhost
+
+    configs:
+      secret:
+        argocdServerAdminPassword: '$2y$10$KiIjCvtpzSnmW.G6U4ZcAOtrXgp.VGhQ8yn3ajusP8Nowwjbd8.Ty'
+      params:
+        server.insecure: true
+
+    certificate:
+      enabled: false
+
+    redis-ha:
+      enabled: false
+
+    controller:
+      replicas: 1
+
+    server:
+      replicas: 1
+      ingress:
+        enabled: true
+        className: traefik
+        tls: false
+
+    repoServer:
+      replicas: 1
+
+    applicationSet:
+      replicas: 1
