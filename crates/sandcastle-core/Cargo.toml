@@ -39,6 +39,7 @@ jsonwebtoken.workspace = true
 regex = "1.12.1"
 mockall.workspace = true
 colored = "3.0.0"
+clap = { version = "4.5.50", features = ["derive", "env"] }
 
 [dev-dependencies]
 insta.workspace = true

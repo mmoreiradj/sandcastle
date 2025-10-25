@@ -37,11 +37,9 @@ impl GitOpsPlatformService for ArgoCD {
         &self,
         request: CreateOrUpdateArgocdApplicationRequest,
     ) -> Result<(), SandcastleError> {
-        let client = self.kube_client.clone();
-        let argocd_applications = Api::<Application>::namespaced(client, &self.argocd_namespace);
         for application_str in request.applications {
             let mut application: Application =
-                serde_json::from_str(&application_str).context(SerdeSnafu {
+                serde_yaml::from_str(&application_str).context(SerdeSnafu {
                     message: "Failed to parse ArgoCD application into application object"
                         .to_string(),
                 })?;
@@ -53,9 +51,16 @@ impl GitOpsPlatformService for ArgoCD {
                 application.metadata.labels = Some(BTreeMap::from_iter(request.labels.clone()));
             }
             let application_name = application.name_any();
+            let application_namespace = application
+                .metadata
+                .namespace
+                .clone()
+                .unwrap_or(self.argocd_namespace.clone());
+            let argocd_applications =
+                Api::<Application>::namespaced(self.kube_client.clone(), &application_namespace);
             match argocd_applications.get(&application_name).await {
                 Ok(application) => {
-                    let pp = PatchParams::default();
+                    let pp = PatchParams::apply("sandcastle");
                     let patch = Patch::Apply(&application);
                     argocd_applications
                         .patch(&application_name, &pp, &patch)

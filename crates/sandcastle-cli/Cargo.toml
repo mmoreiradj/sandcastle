@@ -7,3 +7,4 @@ edition = "2024"
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 sandcastle-core = { workspace = true }
 clap = { version = "4.5.48", features = ["derive"] }
+dotenvy = "0.15.7"

@@ -28,6 +28,11 @@ pub(crate) mod reconciliation;
 
 const ARGOCD_NAMESPACE: &str = "argocd";
 
+#[derive(Debug, Clone)]
+pub struct ApplicationConfig {
+    pub argocd_namespace: String,
+}
+
 /// State shared beetween the HTTP and Operator
 #[derive(Clone)]
 pub(crate) struct ApplicationState {
@@ -38,13 +43,13 @@ pub(crate) struct ApplicationState {
 }
 
 impl ApplicationState {
-    pub async fn new() -> Result<Self, Box<dyn std::error::Error>> {
+    pub async fn new(application_config: ApplicationConfig) -> Result<Self, Box<dyn std::error::Error>> {
         let kube_client = Client::try_default().await?;
         let config = Config::infer().await?;
         Ok(Self {
             kube_client,
             namespace: config.default_namespace,
-            argocd_namespace: ARGOCD_NAMESPACE.to_string(),
+            argocd_namespace: application_config.argocd_namespace,
             repository_configuration_service: DefaultRepositoryConfigurationService::default()
                 .into(),
         })
@@ -68,8 +73,8 @@ impl ApplicationState {
     }
 }
 
-pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
-    let state = ApplicationState::new().await?;
+pub async fn start(application_config: ApplicationConfig) -> Result<(), Box<dyn std::error::Error>> {
+    let state = ApplicationState::new(application_config).await?;
     let context = state.operator_context();
     tokio::select! {
       _ = http::start(state.clone()) => {

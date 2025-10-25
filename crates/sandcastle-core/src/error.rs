@@ -51,7 +51,7 @@ pub enum SandcastleError {
     #[snafu(display("{}: {}", message, source))]
     Serde {
         message: String,
-        source: serde_json::Error,
+        source: serde_yaml::Error,
         backtrace: Backtrace,
     },
     #[snafu(display("{}: {}", message, source))]
