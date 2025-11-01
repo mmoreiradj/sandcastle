@@ -18,7 +18,7 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 reqwest.workspace = true
 serde_yaml.workspace = true
 uuid.workspace = true
-chrono.workspace = true
+chrono = { workspace = true, features = ["serde"] }
 semver.workspace = true
 sha2.workspace = true
 prometheus-client = "0.23.1"

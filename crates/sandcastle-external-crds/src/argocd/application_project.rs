@@ -5,107 +5,58 @@
 mod prelude {
     pub use kube::CustomResource;
     pub use schemars::JsonSchema;
-    pub use serde::{Deserialize, Serialize};
+    pub use serde::{Serialize, Deserialize};
     pub use std::collections::BTreeMap;
 }
 use self::prelude::*;
 
 /// AppProjectSpec is the specification of an AppProject
 #[derive(CustomResource, Serialize, Deserialize, Clone, Debug, JsonSchema)]
-#[kube(
-    group = "argoproj.io",
-    version = "v1alpha1",
-    kind = "AppProject",
-    plural = "appprojects"
-)]
+#[kube(group = "argoproj.io", version = "v1alpha1", kind = "AppProject", plural = "appprojects")]
 #[kube(namespaced)]
 #[kube(status = "AppProjectStatus")]
 pub struct AppProjectSpec {
     /// ClusterResourceBlacklist contains list of blacklisted cluster level resources
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "clusterResourceBlacklist"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clusterResourceBlacklist")]
     pub cluster_resource_blacklist: Option<Vec<AppProjectClusterResourceBlacklist>>,
     /// ClusterResourceWhitelist contains list of whitelisted cluster level resources
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "clusterResourceWhitelist"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "clusterResourceWhitelist")]
     pub cluster_resource_whitelist: Option<Vec<AppProjectClusterResourceWhitelist>>,
     /// Description contains optional project description
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     /// DestinationServiceAccounts holds information about the service accounts to be impersonated for the application sync operation for each destination.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "destinationServiceAccounts"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "destinationServiceAccounts")]
     pub destination_service_accounts: Option<Vec<AppProjectDestinationServiceAccounts>>,
     /// Destinations contains list of destinations available for deployment
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub destinations: Option<Vec<AppProjectDestinations>>,
     /// NamespaceResourceBlacklist contains list of blacklisted namespace level resources
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namespaceResourceBlacklist"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namespaceResourceBlacklist")]
     pub namespace_resource_blacklist: Option<Vec<AppProjectNamespaceResourceBlacklist>>,
     /// NamespaceResourceWhitelist contains list of whitelisted namespace level resources
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namespaceResourceWhitelist"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namespaceResourceWhitelist")]
     pub namespace_resource_whitelist: Option<Vec<AppProjectNamespaceResourceWhitelist>>,
     /// OrphanedResources specifies if controller should monitor orphaned resources of apps in this project
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "orphanedResources"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "orphanedResources")]
     pub orphaned_resources: Option<AppProjectOrphanedResources>,
     /// PermitOnlyProjectScopedClusters determines whether destinations can only reference clusters which are project-scoped
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "permitOnlyProjectScopedClusters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "permitOnlyProjectScopedClusters")]
     pub permit_only_project_scoped_clusters: Option<bool>,
     /// Roles are user defined RBAC roles associated with this project
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub roles: Option<Vec<AppProjectRoles>>,
     /// SignatureKeys contains a list of PGP key IDs that commits in Git must be signed with in order to be allowed for sync
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "signatureKeys"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "signatureKeys")]
     pub signature_keys: Option<Vec<AppProjectSignatureKeys>>,
     /// SourceNamespaces defines the namespaces application resources are allowed to be created in
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceNamespaces"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceNamespaces")]
     pub source_namespaces: Option<Vec<String>>,
     /// SourceRepos contains list of repository URLs which can be used for deployment
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceRepos"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceRepos")]
     pub source_repos: Option<Vec<String>>,
     /// SyncWindows controls when syncs can be run for apps in this project
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncWindows"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncWindows")]
     pub sync_windows: Option<Vec<AppProjectSyncWindows>>,
 }
 
@@ -232,11 +183,7 @@ pub struct AppProjectSignatureKeys {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct AppProjectSyncWindows {
     /// UseAndOperator use AND operator for matching applications, namespaces and clusters instead of the default OR operator
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "andOperator"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "andOperator")]
     pub and_operator: Option<bool>,
     /// Applications contains a list of applications that the window will apply to
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -254,11 +201,7 @@ pub struct AppProjectSyncWindows {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
     /// ManualSync enables manual syncs when they would otherwise be blocked
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "manualSync"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "manualSync")]
     pub manual_sync: Option<bool>,
     /// Namespaces contains a list of namespaces that the window will apply to
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -275,11 +218,7 @@ pub struct AppProjectSyncWindows {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct AppProjectStatus {
     /// JWTTokensByRole contains a list of JWT tokens issued for a given role
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "jwtTokensByRole"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jwtTokensByRole")]
     pub jwt_tokens_by_role: Option<BTreeMap<String, AppProjectStatusJwtTokensByRole>>,
 }
 

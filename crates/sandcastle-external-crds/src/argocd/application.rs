@@ -3,11 +3,11 @@
 
 #[allow(unused_imports)]
 mod prelude {
-    pub use k8s_openapi::apimachinery::pkg::util::intstr::IntOrString;
     pub use kube::CustomResource;
     pub use schemars::JsonSchema;
-    pub use serde::{Deserialize, Serialize};
+    pub use serde::{Serialize, Deserialize};
     pub use std::collections::BTreeMap;
+    pub use k8s_openapi::apimachinery::pkg::util::intstr::IntOrString;
 }
 use self::prelude::*;
 
@@ -18,11 +18,7 @@ pub struct ApplicationOperation {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationOperationInfo>>,
     /// InitiatedBy contains information about who initiated the operations
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "initiatedBy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "initiatedBy")]
     pub initiated_by: Option<ApplicationOperationInitiatedBy>,
     /// Retry controls the strategy to apply if a sync fails
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -70,11 +66,7 @@ pub struct ApplicationOperationRetryBackoff {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
     /// MaxDuration is the maximum amount of time allowed for the backoff strategy
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "maxDuration"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
     pub max_duration: Option<String>,
 }
 
@@ -82,11 +74,7 @@ pub struct ApplicationOperationRetryBackoff {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationOperationSync {
     /// SelfHealAttemptsCount contains the number of auto-heal attempts
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "autoHealAttemptsCount"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "autoHealAttemptsCount")]
     pub auto_heal_attempts_count: Option<i64>,
     /// DryRun specifies to perform a `kubectl apply --dry-run` without actually performing the sync
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "dryRun")]
@@ -117,18 +105,10 @@ pub struct ApplicationOperationSync {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationOperationSyncSources>>,
     /// SyncOptions provide per-sync sync-options, e.g. Validate=false
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncOptions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
     pub sync_options: Option<Vec<String>>,
     /// SyncStrategy describes how to perform the sync
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncStrategy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncStrategy")]
     pub sync_strategy: Option<ApplicationOperationSyncSyncStrategy>,
 }
 
@@ -177,11 +157,7 @@ pub struct ApplicationOperationSyncSource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -239,33 +215,17 @@ pub struct ApplicationOperationSyncSourceDirectoryJsonnetTlas {
 pub struct ApplicationOperationSyncSourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationOperationSyncSourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -274,48 +234,28 @@ pub struct ApplicationOperationSyncSourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationOperationSyncSourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -337,11 +277,7 @@ pub struct ApplicationOperationSyncSourceHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationOperationSyncSourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -356,95 +292,47 @@ pub struct ApplicationOperationSyncSourceHelmParameters {
 pub struct ApplicationOperationSyncSourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -474,21 +362,13 @@ pub struct ApplicationOperationSyncSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationOperationSyncSourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -576,11 +456,7 @@ pub struct ApplicationOperationSyncSources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -638,33 +514,17 @@ pub struct ApplicationOperationSyncSourcesDirectoryJsonnetTlas {
 pub struct ApplicationOperationSyncSourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationOperationSyncSourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -673,48 +533,28 @@ pub struct ApplicationOperationSyncSourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationOperationSyncSourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -736,11 +576,7 @@ pub struct ApplicationOperationSyncSourcesHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationOperationSyncSourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -755,95 +591,47 @@ pub struct ApplicationOperationSyncSourcesHelmParameters {
 pub struct ApplicationOperationSyncSourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -873,21 +661,13 @@ pub struct ApplicationOperationSyncSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationOperationSyncSourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -975,23 +755,14 @@ pub struct ApplicationOperationSyncSyncStrategyHook {
 
 /// ApplicationSpec represents desired application state. Contains link to repository with application definition and additional parameters link definition revision.
 #[derive(CustomResource, Serialize, Deserialize, Clone, Debug, JsonSchema)]
-#[kube(
-    group = "argoproj.io",
-    version = "v1alpha1",
-    kind = "Application",
-    plural = "applications"
-)]
+#[kube(group = "argoproj.io", version = "v1alpha1", kind = "Application", plural = "applications")]
 #[kube(namespaced)]
 #[kube(status = "ApplicationStatus")]
 pub struct ApplicationSpec {
     /// Destination is a reference to the target Kubernetes server and namespace
     pub destination: ApplicationDestination,
     /// IgnoreDifferences is a list of resources and their fields which should be ignored during comparison
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreDifferences"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
     pub ignore_differences: Option<Vec<ApplicationIgnoreDifferences>>,
     /// Info contains a list of information (URLs, email addresses, and plain text) that relates to the application
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1004,31 +775,19 @@ pub struct ApplicationSpec {
     /// Setting to zero will store no history. This will reduce storage used.
     /// Increasing will increase the space used to store the history, so we do not recommend increasing it.
     /// Default is 10.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "revisionHistoryLimit"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "revisionHistoryLimit")]
     pub revision_history_limit: Option<i64>,
     /// Source is a reference to the location of the application's manifests or chart
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<ApplicationSource>,
     /// SourceHydrator provides a way to push hydrated manifests back to git before syncing them to the cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceHydrator"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
     pub source_hydrator: Option<ApplicationSourceHydrator>,
     /// Sources is a reference to the location of the application's manifests or chart
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationSources>>,
     /// SyncPolicy controls when and how a sync will be performed
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncPolicy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncPolicy")]
     pub sync_policy: Option<ApplicationSyncPolicy>,
 }
 
@@ -1052,26 +811,14 @@ pub struct ApplicationDestination {
 pub struct ApplicationIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "jqPathExpressions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "jsonPointers"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
     /// ManagedFieldsManagers is a list of trusted managers. Fields mutated by those managers will take precedence over the
     /// desired state defined in the SCM and won't be displayed in diffs
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "managedFieldsManagers"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1118,11 +865,7 @@ pub struct ApplicationSource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -1180,33 +923,17 @@ pub struct ApplicationSourceDirectoryJsonnetTlas {
 pub struct ApplicationSourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationSourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1215,48 +942,28 @@ pub struct ApplicationSourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1278,11 +985,7 @@ pub struct ApplicationSourceHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1297,95 +1000,47 @@ pub struct ApplicationSourceHelmParameters {
 pub struct ApplicationSourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1415,21 +1070,13 @@ pub struct ApplicationSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1565,11 +1212,7 @@ pub struct ApplicationSources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -1627,33 +1270,17 @@ pub struct ApplicationSourcesDirectoryJsonnetTlas {
 pub struct ApplicationSourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationSourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1662,48 +1289,28 @@ pub struct ApplicationSourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationSourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1725,11 +1332,7 @@ pub struct ApplicationSourcesHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1744,95 +1347,47 @@ pub struct ApplicationSourcesHelmParameters {
 pub struct ApplicationSourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1862,21 +1417,13 @@ pub struct ApplicationSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -1938,21 +1485,13 @@ pub struct ApplicationSyncPolicy {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automated: Option<ApplicationSyncPolicyAutomated>,
     /// ManagedNamespaceMetadata controls metadata in the given namespace (if CreateNamespace=true)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "managedNamespaceMetadata"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
     pub managed_namespace_metadata: Option<ApplicationSyncPolicyManagedNamespaceMetadata>,
     /// Retry controls failed sync retry behavior
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retry: Option<ApplicationSyncPolicyRetry>,
     /// Options allow you to specify whole app sync-options
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncOptions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
     pub sync_options: Option<Vec<String>>,
 }
 
@@ -1960,11 +1499,7 @@ pub struct ApplicationSyncPolicy {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationSyncPolicyAutomated {
     /// AllowEmpty allows apps have zero live resources (default: false)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "allowEmpty"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "allowEmpty")]
     pub allow_empty: Option<bool>,
     /// Enable allows apps to explicitly control automated sync
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2007,11 +1542,7 @@ pub struct ApplicationSyncPolicyRetryBackoff {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
     /// MaxDuration is the maximum amount of time allowed for the backoff strategy
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "maxDuration"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
     pub max_duration: Option<String>,
 }
 
@@ -2022,11 +1553,7 @@ pub struct ApplicationStatus {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub conditions: Option<Vec<ApplicationStatusConditions>>,
     /// ControllerNamespace indicates the namespace in which the application controller is located
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "controllerNamespace"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "controllerNamespace")]
     pub controller_namespace: Option<String>,
     /// Health contains information about the application's current health status
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2036,56 +1563,28 @@ pub struct ApplicationStatus {
     pub history: Option<Vec<ApplicationStatusHistory>>,
     /// ObservedAt indicates when the application state was updated without querying latest git state
     /// Deprecated: controller no longer updates ObservedAt field
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "observedAt"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "observedAt")]
     pub observed_at: Option<String>,
     /// OperationState contains information about any ongoing operations, such as a sync
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "operationState"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "operationState")]
     pub operation_state: Option<ApplicationStatusOperationState>,
     /// ReconciledAt indicates when the application state was reconciled using the latest git version
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "reconciledAt"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "reconciledAt")]
     pub reconciled_at: Option<String>,
     /// ResourceHealthSource indicates where the resource health status is stored: inline if not set or appTree
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "resourceHealthSource"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "resourceHealthSource")]
     pub resource_health_source: Option<String>,
     /// Resources is a list of Kubernetes resources managed by this application
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resources: Option<Vec<ApplicationStatusResources>>,
     /// SourceHydrator stores information about the current state of source hydration
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceHydrator"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
     pub source_hydrator: Option<ApplicationStatusSourceHydrator>,
     /// SourceType specifies the type of this application
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceType"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceType")]
     pub source_type: Option<String>,
     /// SourceTypes specifies the type of the sources included in the application
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceTypes"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceTypes")]
     pub source_types: Option<Vec<String>>,
     /// Summary contains a list of URLs and container images used by this application
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2099,11 +1598,7 @@ pub struct ApplicationStatus {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusConditions {
     /// LastTransitionTime is the time the condition was last observed
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "lastTransitionTime"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastTransitionTime")]
     pub last_transition_time: Option<String>,
     /// Message contains human-readable message indicating details about condition
     pub message: String,
@@ -2116,14 +1611,10 @@ pub struct ApplicationStatusConditions {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHealth {
     /// LastTransitionTime is the time the HealthStatus was set or updated
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "lastTransitionTime"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastTransitionTime")]
     pub last_transition_time: Option<String>,
     /// Message is a human-readable informational message describing the health status
-    ///
+    /// 
     /// Deprecated: this field is not used and will be removed in a future release.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
@@ -2136,11 +1627,7 @@ pub struct ApplicationStatusHealth {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHistory {
     /// DeployStartedAt holds the time the sync operation started
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "deployStartedAt"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "deployStartedAt")]
     pub deploy_started_at: Option<String>,
     /// DeployedAt holds the time the sync operation completed
     #[serde(rename = "deployedAt")]
@@ -2148,11 +1635,7 @@ pub struct ApplicationStatusHistory {
     /// ID is an auto incrementing identifier of the RevisionHistory
     pub id: i64,
     /// InitiatedBy contains information about who initiated the operations
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "initiatedBy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "initiatedBy")]
     pub initiated_by: Option<ApplicationStatusHistoryInitiatedBy>,
     /// Revision holds the revision the sync was performed against
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2212,11 +1695,7 @@ pub struct ApplicationStatusHistorySource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -2274,33 +1753,17 @@ pub struct ApplicationStatusHistorySourceDirectoryJsonnetTlas {
 pub struct ApplicationStatusHistorySourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationStatusHistorySourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2309,48 +1772,28 @@ pub struct ApplicationStatusHistorySourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusHistorySourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2372,11 +1815,7 @@ pub struct ApplicationStatusHistorySourceHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHistorySourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2391,95 +1830,47 @@ pub struct ApplicationStatusHistorySourceHelmParameters {
 pub struct ApplicationStatusHistorySourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2509,21 +1900,13 @@ pub struct ApplicationStatusHistorySourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHistorySourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2611,11 +1994,7 @@ pub struct ApplicationStatusHistorySources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -2673,33 +2052,17 @@ pub struct ApplicationStatusHistorySourcesDirectoryJsonnetTlas {
 pub struct ApplicationStatusHistorySourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationStatusHistorySourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2708,48 +2071,28 @@ pub struct ApplicationStatusHistorySourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusHistorySourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2771,11 +2114,7 @@ pub struct ApplicationStatusHistorySourcesHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHistorySourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2790,95 +2129,47 @@ pub struct ApplicationStatusHistorySourcesHelmParameters {
 pub struct ApplicationStatusHistorySourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2908,21 +2199,13 @@ pub struct ApplicationStatusHistorySourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusHistorySourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -2981,11 +2264,7 @@ pub struct ApplicationStatusHistorySourcesPluginParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationState {
     /// FinishedAt contains time of operation completion
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "finishedAt"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "finishedAt")]
     pub finished_at: Option<String>,
     /// Message holds any pertinent messages when attempting to perform operation (typically errors).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2995,21 +2274,13 @@ pub struct ApplicationStatusOperationState {
     /// Phase is the current phase of the operation
     pub phase: String,
     /// RetryCount contains time of operation retries
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "retryCount"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "retryCount")]
     pub retry_count: Option<i64>,
     /// StartedAt contains time of operation start
     #[serde(rename = "startedAt")]
     pub started_at: String,
     /// SyncResult is the result of a Sync operation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncResult"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncResult")]
     pub sync_result: Option<ApplicationStatusOperationStateSyncResult>,
 }
 
@@ -3020,11 +2291,7 @@ pub struct ApplicationStatusOperationStateOperation {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<Vec<ApplicationStatusOperationStateOperationInfo>>,
     /// InitiatedBy contains information about who initiated the operations
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "initiatedBy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "initiatedBy")]
     pub initiated_by: Option<ApplicationStatusOperationStateOperationInitiatedBy>,
     /// Retry controls the strategy to apply if a sync fails
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3072,11 +2339,7 @@ pub struct ApplicationStatusOperationStateOperationRetryBackoff {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub factor: Option<i64>,
     /// MaxDuration is the maximum amount of time allowed for the backoff strategy
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "maxDuration"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "maxDuration")]
     pub max_duration: Option<String>,
 }
 
@@ -3084,11 +2347,7 @@ pub struct ApplicationStatusOperationStateOperationRetryBackoff {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateOperationSync {
     /// SelfHealAttemptsCount contains the number of auto-heal attempts
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "autoHealAttemptsCount"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "autoHealAttemptsCount")]
     pub auto_heal_attempts_count: Option<i64>,
     /// DryRun specifies to perform a `kubectl apply --dry-run` without actually performing the sync
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "dryRun")]
@@ -3119,18 +2378,10 @@ pub struct ApplicationStatusOperationStateOperationSync {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sources: Option<Vec<ApplicationStatusOperationStateOperationSyncSources>>,
     /// SyncOptions provide per-sync sync-options, e.g. Validate=false
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncOptions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncOptions")]
     pub sync_options: Option<Vec<String>>,
     /// SyncStrategy describes how to perform the sync
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "syncStrategy"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "syncStrategy")]
     pub sync_strategy: Option<ApplicationStatusOperationStateOperationSyncSyncStrategy>,
 }
 
@@ -3179,11 +2430,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -3209,8 +2456,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceDirectory {
 pub struct ApplicationStatusOperationStateOperationSyncSourceDirectoryJsonnet {
     /// ExtVars is a list of Jsonnet External Variables
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars:
-        Option<Vec<ApplicationStatusOperationStateOperationSyncSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<Vec<ApplicationStatusOperationStateOperationSyncSourceDirectoryJsonnetExtVars>>,
     /// Additional library search dirs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
@@ -3242,34 +2488,17 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceDirectoryJsonnetTla
 pub struct ApplicationStatusOperationStateOperationSyncSourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
-    pub file_parameters:
-        Option<Vec<ApplicationStatusOperationStateOperationSyncSourceHelmFileParameters>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    pub file_parameters: Option<Vec<ApplicationStatusOperationStateOperationSyncSourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3278,48 +2507,28 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusOperationStateOperationSyncSourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3341,11 +2550,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceHelmFileParameters 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateOperationSyncSourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3360,95 +2565,47 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceHelmParameters {
 pub struct ApplicationStatusOperationStateOperationSyncSourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3478,21 +2635,13 @@ pub struct ApplicationStatusOperationStateOperationSyncSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateOperationSyncSourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3580,11 +2729,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -3610,8 +2755,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesDirectory {
 pub struct ApplicationStatusOperationStateOperationSyncSourcesDirectoryJsonnet {
     /// ExtVars is a list of Jsonnet External Variables
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars:
-        Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesDirectoryJsonnetExtVars>>,
     /// Additional library search dirs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
@@ -3643,34 +2787,17 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesDirectoryJsonnetTl
 pub struct ApplicationStatusOperationStateOperationSyncSourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
-    pub file_parameters:
-        Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesHelmFileParameters>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    pub file_parameters: Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3679,48 +2806,28 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3742,11 +2849,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesHelmFileParameters
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateOperationSyncSourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3761,95 +2864,47 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesHelmParameters {
 pub struct ApplicationStatusOperationStateOperationSyncSourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3879,21 +2934,13 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateOperationSyncSourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -3920,8 +2967,7 @@ pub struct ApplicationStatusOperationStateOperationSyncSourcesPlugin {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parameters:
-        Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesPluginParameters>>,
+    pub parameters: Option<Vec<ApplicationStatusOperationStateOperationSyncSourcesPluginParameters>>,
 }
 
 /// EnvEntry represents an entry in the application's environment
@@ -3984,13 +3030,8 @@ pub struct ApplicationStatusOperationStateOperationSyncSyncStrategyHook {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateSyncResult {
     /// ManagedNamespaceMetadata contains the current sync state of managed namespace metadata
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "managedNamespaceMetadata"
-    )]
-    pub managed_namespace_metadata:
-        Option<ApplicationStatusOperationStateSyncResultManagedNamespaceMetadata>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedNamespaceMetadata")]
+    pub managed_namespace_metadata: Option<ApplicationStatusOperationStateSyncResultManagedNamespaceMetadata>,
     /// Resources contains a list of sync result items for each individual resource in a sync operation
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resources: Option<Vec<ApplicationStatusOperationStateSyncResultResources>>,
@@ -4083,11 +3124,7 @@ pub struct ApplicationStatusOperationStateSyncResultSource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -4113,8 +3150,7 @@ pub struct ApplicationStatusOperationStateSyncResultSourceDirectory {
 pub struct ApplicationStatusOperationStateSyncResultSourceDirectoryJsonnet {
     /// ExtVars is a list of Jsonnet External Variables
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars:
-        Option<Vec<ApplicationStatusOperationStateSyncResultSourceDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<Vec<ApplicationStatusOperationStateSyncResultSourceDirectoryJsonnetExtVars>>,
     /// Additional library search dirs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
@@ -4146,34 +3182,17 @@ pub struct ApplicationStatusOperationStateSyncResultSourceDirectoryJsonnetTlas {
 pub struct ApplicationStatusOperationStateSyncResultSourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
-    pub file_parameters:
-        Option<Vec<ApplicationStatusOperationStateSyncResultSourceHelmFileParameters>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    pub file_parameters: Option<Vec<ApplicationStatusOperationStateSyncResultSourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4182,48 +3201,28 @@ pub struct ApplicationStatusOperationStateSyncResultSourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusOperationStateSyncResultSourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4245,11 +3244,7 @@ pub struct ApplicationStatusOperationStateSyncResultSourceHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateSyncResultSourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4264,95 +3259,47 @@ pub struct ApplicationStatusOperationStateSyncResultSourceHelmParameters {
 pub struct ApplicationStatusOperationStateSyncResultSourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4382,21 +3329,13 @@ pub struct ApplicationStatusOperationStateSyncResultSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateSyncResultSourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4484,11 +3423,7 @@ pub struct ApplicationStatusOperationStateSyncResultSources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -4514,8 +3449,7 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesDirectory {
 pub struct ApplicationStatusOperationStateSyncResultSourcesDirectoryJsonnet {
     /// ExtVars is a list of Jsonnet External Variables
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "extVars")]
-    pub ext_vars:
-        Option<Vec<ApplicationStatusOperationStateSyncResultSourcesDirectoryJsonnetExtVars>>,
+    pub ext_vars: Option<Vec<ApplicationStatusOperationStateSyncResultSourcesDirectoryJsonnetExtVars>>,
     /// Additional library search dirs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub libs: Option<Vec<String>>,
@@ -4547,34 +3481,17 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesDirectoryJsonnetTlas 
 pub struct ApplicationStatusOperationStateSyncResultSourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
-    pub file_parameters:
-        Option<Vec<ApplicationStatusOperationStateSyncResultSourcesHelmFileParameters>>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
+    pub file_parameters: Option<Vec<ApplicationStatusOperationStateSyncResultSourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4583,48 +3500,28 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusOperationStateSyncResultSourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4646,11 +3543,7 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateSyncResultSourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4665,95 +3558,47 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesHelmParameters {
 pub struct ApplicationStatusOperationStateSyncResultSourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4783,21 +3628,13 @@ pub struct ApplicationStatusOperationStateSyncResultSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusOperationStateSyncResultSourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -4874,18 +3711,10 @@ pub struct ApplicationStatusResources {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub namespace: Option<String>,
     /// RequiresDeletionConfirmation is true if the resource requires explicit user confirmation before deletion.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "requiresDeletionConfirmation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requiresDeletionConfirmation")]
     pub requires_deletion_confirmation: Option<bool>,
     /// RequiresPruning is true if the resource needs to be pruned (deleted) as part of synchronization.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "requiresPruning"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "requiresPruning")]
     pub requires_pruning: Option<bool>,
     /// Status represents the synchronization state of the resource (e.g., Synced, OutOfSync).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4903,13 +3732,9 @@ pub struct ApplicationStatusResources {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusResourcesHealth {
     /// LastTransitionTime is the time the HealthStatus was set or updated
-    ///
+    /// 
     /// Deprecated: this field is not used and will be removed in a future release.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "lastTransitionTime"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastTransitionTime")]
     pub last_transition_time: Option<String>,
     /// Message is a human-readable informational message describing the health status
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4923,18 +3748,10 @@ pub struct ApplicationStatusResourcesHealth {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSourceHydrator {
     /// CurrentOperation holds the status of the hydrate operation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "currentOperation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "currentOperation")]
     pub current_operation: Option<ApplicationStatusSourceHydratorCurrentOperation>,
     /// LastSuccessfulOperation holds info about the most recent successful hydration
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "lastSuccessfulOperation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "lastSuccessfulOperation")]
     pub last_successful_operation: Option<ApplicationStatusSourceHydratorLastSuccessfulOperation>,
 }
 
@@ -4945,29 +3762,17 @@ pub struct ApplicationStatusSourceHydratorCurrentOperation {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "drySHA")]
     pub dry_sha: Option<String>,
     /// FinishedAt indicates when the hydrate operation finished
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "finishedAt"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "finishedAt")]
     pub finished_at: Option<String>,
     /// HydratedSHA holds the resolved revision (sha) of the hydrated source as of the most recent reconciliation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "hydratedSHA"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydratedSHA")]
     pub hydrated_sha: Option<String>,
     /// Message contains a message describing the current status of the hydrate operation
     pub message: String,
     /// Phase indicates the status of the hydrate operation
     pub phase: ApplicationStatusSourceHydratorCurrentOperationPhase,
     /// SourceHydrator holds the hydrator config used for the hydrate operation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceHydrator"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
     pub source_hydrator: Option<ApplicationStatusSourceHydratorCurrentOperationSourceHydrator>,
     /// StartedAt indicates when the hydrate operation started
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "startedAt")]
@@ -5037,20 +3842,11 @@ pub struct ApplicationStatusSourceHydratorLastSuccessfulOperation {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "drySHA")]
     pub dry_sha: Option<String>,
     /// HydratedSHA holds the resolved revision (sha) of the hydrated source as of the most recent reconciliation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "hydratedSHA"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydratedSHA")]
     pub hydrated_sha: Option<String>,
     /// SourceHydrator holds the hydrator config used for the hydrate operation
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "sourceHydrator"
-    )]
-    pub source_hydrator:
-        Option<ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydrator>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "sourceHydrator")]
+    pub source_hydrator: Option<ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydrator>,
 }
 
 /// SourceHydrator holds the hydrator config used for the hydrate operation
@@ -5062,8 +3858,7 @@ pub struct ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydrator 
     /// HydrateTo specifies an optional "staging" location to push hydrated manifests to. An external system would then
     /// have to move manifests to the SyncSource, e.g. by pull request.
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "hydrateTo")]
-    pub hydrate_to:
-        Option<ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydratorHydrateTo>,
+    pub hydrate_to: Option<ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydratorHydrateTo>,
     /// SyncSource specifies where to sync hydrated manifests from.
     #[serde(rename = "syncSource")]
     pub sync_source: ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydratorSyncSource,
@@ -5106,11 +3901,7 @@ pub struct ApplicationStatusSourceHydratorLastSuccessfulOperationSourceHydratorS
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSummary {
     /// ExternalURLs holds all external URLs of application child resources.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "externalURLs"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "externalURLs")]
     pub external_ur_ls: Option<Vec<String>>,
     /// Images holds all images of application child resources.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5121,11 +3912,7 @@ pub struct ApplicationStatusSummary {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSync {
     /// ComparedTo contains information about what has been compared
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "comparedTo"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "comparedTo")]
     pub compared_to: Option<ApplicationStatusSyncComparedTo>,
     /// Revision contains information about the revision the comparison has been performed to
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5143,11 +3930,7 @@ pub struct ApplicationStatusSyncComparedTo {
     /// Destination is a reference to the application's destination used for comparison
     pub destination: ApplicationStatusSyncComparedToDestination,
     /// IgnoreDifferences is a reference to the application's ignored differences used for comparison
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreDifferences"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreDifferences")]
     pub ignore_differences: Option<Vec<ApplicationStatusSyncComparedToIgnoreDifferences>>,
     /// Source is a reference to the application's source used for comparison
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5177,26 +3960,14 @@ pub struct ApplicationStatusSyncComparedToDestination {
 pub struct ApplicationStatusSyncComparedToIgnoreDifferences {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "jqPathExpressions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jqPathExpressions")]
     pub jq_path_expressions: Option<Vec<String>>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "jsonPointers"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "jsonPointers")]
     pub json_pointers: Option<Vec<String>>,
     pub kind: String,
     /// ManagedFieldsManagers is a list of trusted managers. Fields mutated by those managers will take precedence over the
     /// desired state defined in the SCM and won't be displayed in diffs
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "managedFieldsManagers"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "managedFieldsManagers")]
     pub managed_fields_managers: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5237,11 +4008,7 @@ pub struct ApplicationStatusSyncComparedToSource {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -5299,33 +4066,17 @@ pub struct ApplicationStatusSyncComparedToSourceDirectoryJsonnetTlas {
 pub struct ApplicationStatusSyncComparedToSourceHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationStatusSyncComparedToSourceHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5334,48 +4085,28 @@ pub struct ApplicationStatusSyncComparedToSourceHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusSyncComparedToSourceHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5397,11 +4128,7 @@ pub struct ApplicationStatusSyncComparedToSourceHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSyncComparedToSourceHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5416,95 +4143,47 @@ pub struct ApplicationStatusSyncComparedToSourceHelmParameters {
 pub struct ApplicationStatusSyncComparedToSourceKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5534,21 +4213,13 @@ pub struct ApplicationStatusSyncComparedToSourceKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSyncComparedToSourceKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -5636,11 +4307,7 @@ pub struct ApplicationStatusSyncComparedToSources {
     /// TargetRevision defines the revision of the source to sync the application to.
     /// In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
     /// In case of Helm, this is a semver tag for the Chart's version.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "targetRevision"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "targetRevision")]
     pub target_revision: Option<String>,
 }
 
@@ -5698,33 +4365,17 @@ pub struct ApplicationStatusSyncComparedToSourcesDirectoryJsonnetTlas {
 pub struct ApplicationStatusSyncComparedToSourcesHelm {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// FileParameters are file parameters to the helm template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "fileParameters"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fileParameters")]
     pub file_parameters: Option<Vec<ApplicationStatusSyncComparedToSourcesHelmFileParameters>>,
     /// IgnoreMissingValueFiles prevents helm template from failing when valueFiles do not exist locally by not appending them to helm template --values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingValueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingValueFiles")]
     pub ignore_missing_value_files: Option<bool>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// Namespace is an optional namespace to template with. If left empty, defaults to the app's destination namespace.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5733,48 +4384,28 @@ pub struct ApplicationStatusSyncComparedToSourcesHelm {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ApplicationStatusSyncComparedToSourcesHelmParameters>>,
     /// PassCredentials pass credentials to all domains (Helm's --pass-credentials)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "passCredentials"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "passCredentials")]
     pub pass_credentials: Option<bool>,
     /// ReleaseName is the Helm release name to use. If omitted it will use the application name
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "releaseName"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "releaseName")]
     pub release_name: Option<String>,
     /// SkipCrds skips custom resource definition installation step (Helm's --skip-crds)
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipCrds")]
     pub skip_crds: Option<bool>,
     /// SkipSchemaValidation skips JSON schema validation (Helm's --skip-schema-validation)
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "skipSchemaValidation"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipSchemaValidation")]
     pub skip_schema_validation: Option<bool>,
     /// SkipTests skips test manifest installation step (Helm's --skip-tests).
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "skipTests")]
     pub skip_tests: Option<bool>,
     /// ValuesFiles is a list of Helm value files to use when generating a template
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valueFiles"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valueFiles")]
     pub value_files: Option<Vec<String>>,
     /// Values specifies Helm values to be passed to helm template, typically defined as a block. ValuesObject takes precedence over Values, so use one or the other.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub values: Option<String>,
     /// ValuesObject specifies Helm values to be passed to helm template, defined as a map. This takes precedence over Values.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "valuesObject"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "valuesObject")]
     pub values_object: Option<BTreeMap<String, serde_json::Value>>,
     /// Version is the Helm version to use for templating ("3")
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5796,11 +4427,7 @@ pub struct ApplicationStatusSyncComparedToSourcesHelmFileParameters {
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSyncComparedToSourcesHelmParameters {
     /// ForceString determines whether to tell Helm to interpret booleans and numbers as strings
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceString"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceString")]
     pub force_string: Option<bool>,
     /// Name is the name of the Helm parameter
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5815,95 +4442,47 @@ pub struct ApplicationStatusSyncComparedToSourcesHelmParameters {
 pub struct ApplicationStatusSyncComparedToSourcesKustomize {
     /// APIVersions specifies the Kubernetes resource API versions to pass to Helm when templating manifests. By default,
     /// Argo CD uses the API versions of the target cluster. The format is [group/]version/kind.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "apiVersions"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "apiVersions")]
     pub api_versions: Option<Vec<String>>,
     /// CommonAnnotations is a list of additional annotations to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotations")]
     pub common_annotations: Option<BTreeMap<String, String>>,
     /// CommonAnnotationsEnvsubst specifies whether to apply env variables substitution for annotation values
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonAnnotationsEnvsubst"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonAnnotationsEnvsubst")]
     pub common_annotations_envsubst: Option<bool>,
     /// CommonLabels is a list of additional labels to add to rendered manifests
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "commonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "commonLabels")]
     pub common_labels: Option<BTreeMap<String, String>>,
     /// Components specifies a list of kustomize components to add to the kustomization before building
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<String>>,
     /// ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonAnnotations"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonAnnotations")]
     pub force_common_annotations: Option<bool>,
     /// ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "forceCommonLabels"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "forceCommonLabels")]
     pub force_common_labels: Option<bool>,
     /// IgnoreMissingComponents prevents kustomize from failing when components do not exist locally by not appending them to kustomization file
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "ignoreMissingComponents"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "ignoreMissingComponents")]
     pub ignore_missing_components: Option<bool>,
     /// Images is a list of Kustomize image override specifications
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<String>>,
     /// KubeVersion specifies the Kubernetes API version to pass to Helm when templating manifests. By default, Argo CD
     /// uses the Kubernetes version of the target cluster.
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "kubeVersion"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "kubeVersion")]
     pub kube_version: Option<String>,
     /// LabelIncludeTemplates specifies whether to apply common labels to resource templates or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelIncludeTemplates"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelIncludeTemplates")]
     pub label_include_templates: Option<bool>,
     /// LabelWithoutSelector specifies whether to apply common labels to resource selectors or not
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelWithoutSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelWithoutSelector")]
     pub label_without_selector: Option<bool>,
     /// NamePrefix is a prefix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "namePrefix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "namePrefix")]
     pub name_prefix: Option<String>,
     /// NameSuffix is a suffix appended to resources for Kustomize apps
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "nameSuffix"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "nameSuffix")]
     pub name_suffix: Option<String>,
     /// Namespace sets the namespace that Kustomize adds to all resources
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5933,21 +4512,13 @@ pub struct ApplicationStatusSyncComparedToSourcesKustomizePatches {
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct ApplicationStatusSyncComparedToSourcesKustomizePatchesTarget {
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "annotationSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "annotationSelector")]
     pub annotation_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        rename = "labelSelector"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "labelSelector")]
     pub label_selector: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

@@ -19,6 +19,61 @@ use octocrab::models::{
 };
 use regex::Regex;
 
+mod crd {
+    use chrono::{DateTime, Utc};
+    use kube::CustomResource;
+    use schemars::JsonSchema;
+    use serde::{Deserialize, Serialize};
+
+    
+
+    #[derive(CustomResource, Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    #[kube(
+        kind = "Environment",
+        group = "sandcastle.io",
+        version = "v1alpha1",
+        plural = "environments",
+        namespaced = true,
+        status = "EnvironmentStatus",
+    )]
+    pub struct EnvironmentSpec {
+    }
+    
+    #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    pub enum EnvironmentConditionStatusType {
+        Ready,
+        NotReady,
+        Unknown,
+    }
+
+    #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    pub enum EnvironmentConditionType {
+        ApplicationSynced,
+        Ready,
+    }
+
+    #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    #[serde(rename_all = "camelCase")]
+    pub struct EnvironmentConditionStatus {
+        pub last_transition_time: DateTime<Utc>,
+        pub message: String,
+        pub reason: String,
+        pub status: EnvironmentStatus,
+        #[serde(rename = "type")]
+        pub type_: EnvironmentCondition,
+    }
+
+    #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    pub enum EnvironmentCondition {
+        Ready,
+    }
+
+    #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+    pub struct EnvironmentStatus {
+        pub conditions: Vec<EnvironmentConditionStatus>,
+    }
+}
+
 #[derive(Clone)]
 pub struct ReconcileContext {
     /// The ID of the reconcile context

@@ -125,7 +125,7 @@ pub async fn test_application(
             .map(|application_str| {
                 let application_str = application_str.trim();
                 let application: Result<Application, serde_yaml::Error> =
-                    serde_yaml::from_str(&application_str);
+                    serde_yaml::from_str(application_str);
                 match application {
                     Ok(_) => {
                         format!(
